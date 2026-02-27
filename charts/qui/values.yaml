@@ -1,0 +1,68 @@
+# Default values for qui.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/autobrr/qui
+  tag: "v1.14.1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 7476
+
+persistence:
+  config:
+    enabled: true
+    storageClass: freenas-iscsi-csi
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    # volumeName: "" # Optional: Specify an existing PV to bind to
+  torrents:
+    enabled: true
+    # Must match qBittorrent's data path exactly for Local Filesystem Access.
+    mountPath: /torrents
+    existingClaim: ""
+    storageClass: s45-nfs
+    accessMode: ReadWriteMany
+    size: 1Ti
+    # volumeName: "" # Optional: Specify an existing PV to bind to
+
+env:
+  TZ: "America/New_York"
+  QUI__BASE_URL: ""
+  QUI__LOG_LEVEL: "info"
+
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+  limits:
+    memory: 1Gi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  hosts: []
+  tls: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
