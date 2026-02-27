@@ -1,0 +1,17 @@
+suite: Service tests
+templates:
+  - templates/service.yaml
+tests:
+  - it: renders service with default port
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ports[0].port
+          value: 8090
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http

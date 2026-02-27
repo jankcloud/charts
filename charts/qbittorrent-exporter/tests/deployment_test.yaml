@@ -1,0 +1,39 @@
+suite: Deployment tests
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: renders deployment with default replicas and exporter container
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: qbittorrent-exporter
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 8090
+
+  - it: renders custom replica count and image tag
+    set:
+      replicaCount: 2
+      image:
+        tag: v9.9.9
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/martabal/qbittorrent-exporter:v9.9.9
+
+  - it: includes prometheus scrape annotations in pod template
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations
+          value:
+            prometheus.io/scrape: 'true'
+            prometheus.io/port: '8090'
+            prometheus.io/path: /metrics
