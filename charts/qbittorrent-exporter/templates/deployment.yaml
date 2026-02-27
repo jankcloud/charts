@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "qbittorrent-exporter.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "qbittorrent-exporter.selectorLabels" . | nindent 6 }}
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: qbittorrent-exporter
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
@@ -32,12 +32,6 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         readinessProbe:
-          tcpSocket:
-            port: http
-          initialDelaySeconds: 15
-          periodSeconds: 10
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
-          tcpSocket:
-            port: http
-          initialDelaySeconds: 15
-          periodSeconds: 10
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
