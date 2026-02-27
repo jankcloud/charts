@@ -1,5 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
+{{- $persistence := .Values.persistence | default dict }}
+{{- $configPersistence := $persistence.config | default dict }}
+{{- $additionalVolumes := .Values.additionalVolumes | default list }}
 metadata:
   name: {{ include "qui.fullname" . }}
   labels:
@@ -7,14 +10,14 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
-    type: Recreate
+    type: {{ .Values.strategy | default "Recreate" }}
   selector:
     matchLabels:
       {{- include "qui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "qui.selectorLabels" . | nindent 8 }}
+        {{- include "qui.labels" . | nindent 8 }}
     spec:
       containers:
       - name: qui
@@ -35,25 +38,36 @@ spec:
           {{- toYaml .Values.readinessProbe | nindent 10 }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        {{- if or ($configPersistence.enabled | default false) (gt (len $additionalVolumes) 0) }}
         volumeMounts:
-        {{- if .Values.persistence.config.enabled }}
+        {{- if ($configPersistence.enabled | default false) }}
         - name: config
           mountPath: /config
         {{- end }}
-        {{- if .Values.persistence.torrents.enabled }}
-        - name: torrents
-          mountPath: {{ .Values.persistence.torrents.mountPath }}
+        {{- range $volume := $additionalVolumes }}
+        {{- $volumeName := required "additionalVolumes[].name is required" $volume.name }}
+        {{- $mountPath := required "additionalVolumes[].mountPath is required" $volume.mountPath }}
+        - name: {{ $volumeName }}
+          mountPath: {{ $mountPath | quote }}
+          {{- if ($volume.readOnly | default false) }}
+          readOnly: true
+          {{- end }}
         {{- end }}
+        {{- end }}
+      {{- if or ($configPersistence.enabled | default false) (gt (len $additionalVolumes) 0) }}
       volumes:
-      {{- if .Values.persistence.config.enabled }}
+      {{- if ($configPersistence.enabled | default false) }}
       - name: config
         persistentVolumeClaim:
           claimName: {{ include "qui.fullname" . }}-config
       {{- end }}
-      {{- if .Values.persistence.torrents.enabled }}
-      - name: torrents
+      {{- range $volume := $additionalVolumes }}
+      {{- $volumeName := required "additionalVolumes[].name is required" $volume.name }}
+      {{- $existingClaim := $volume.existingClaim | default "" }}
+      - name: {{ $volumeName }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.torrents.existingClaim | default (printf "%s-torrents" (include "qui.fullname" .)) }}
+          claimName: {{ $existingClaim | default (printf "%s-%s" (include "qui.fullname" $) $volumeName) }}
+      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
