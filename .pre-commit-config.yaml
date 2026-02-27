@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: helm-lint-charts
+        name: Helm lint charts
+        entry: bash -c "set -o pipefail; helm lint charts || true"
+        language: system
+        files: ^(charts/)
+

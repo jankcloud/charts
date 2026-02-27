@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         {{- include "qbittorrent-exporter.selectorLabels" . | nindent 8 }}
-      annotations:  
+      annotations:
         {{- toYaml .Values.prometheus.annotations | nindent 8 }}
     spec:
       containers:
