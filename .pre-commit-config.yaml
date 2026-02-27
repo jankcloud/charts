@@ -7,11 +7,7 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
 
-  - repo: local
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.30
     hooks:
-      - id: helm-lint-charts
-        name: Helm lint charts
-        entry: bash -c "set -o pipefail; helm lint charts --strict"
-        language: system
-        files: ^(charts/)
-
+      - id: helmlint
