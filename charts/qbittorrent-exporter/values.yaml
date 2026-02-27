@@ -1,0 +1,47 @@
+image:
+  repository: ghcr.io/martabal/qbittorrent-exporter
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8090
+
+prometheus:
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '8090'
+    prometheus.io/path: '/metrics'
+
+env:
+  QBITTORRENT_BASE_URL: "http://qbittorrent:8080"
+  QBITTORRENT_USERNAME: "admin"
+  QBITTORRENT_PASSWORD: "adminadmin"
+  EXPORTER_PORT: "8090"
+  LOG_LEVEL: "INFO"
+  ENABLE_TRACKER: "true"
+  ENABLE_HIGH_CARDINALITY: "false"
+
+resources:
+  requests:
+    memory: 250Mi
+    cpu: 50m
+  limits:
+    memory: 1000Mi
+
+metrics:
+  path: /metrics
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  hosts: []
+  tls: []
