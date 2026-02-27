@@ -1,5 +1,3 @@
-# Default values for qui.
-
 replicaCount: 1
 
 image:
@@ -11,22 +9,22 @@ service:
   type: ClusterIP
   port: 7476
 
-persistence:
-  config:
-    enabled: true
-    storageClass: freenas-iscsi-csi
-    accessMode: ReadWriteOnce
-    size: 2Gi
-    # volumeName: "" # Optional: Specify an existing PV to bind to
-  torrents:
-    enabled: true
-    # Must match qBittorrent's data path exactly for Local Filesystem Access.
-    mountPath: /torrents
-    existingClaim: ""
-    storageClass: s45-nfs
-    accessMode: ReadWriteMany
-    size: 1Ti
-    # volumeName: "" # Optional: Specify an existing PV to bind to
+# persistence:
+#   config:
+#     enabled: true
+#     storageClass:
+#     accessMode: ReadWriteOnce
+#     size: 2Gi
+#     # volumeName: "" # Optional: Specify an existing PV to bind to
+#   torrents:
+#     enabled: true
+#     # Must match qBittorrent's data path exactly for Local Filesystem Access.
+#     mountPath: /torrents
+#     existingClaim: ""
+#     storageClass: 
+#     accessMode: ReadWriteMany
+#     size: 1Ti
+#     # volumeName: "" # Optional: Specify an existing PV to bind to
 
 env:
   TZ: "America/New_York"
