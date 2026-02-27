@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cleanuparr.fullname" . }}
+  labels:
+    {{- include "cleanuparr.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "cleanuparr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cleanuparr.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: cleanuparr
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.port }}
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.persistence.config.enabled }}
+        - name: config
+          mountPath: /config
+        {{- end }}
+        {{- if and .Values.persistence.torrents.enabled .Values.persistence.torrents.existingClaim }}
+        - name: torrents
+          mountPath: {{ .Values.persistence.torrents.mountPath | default "/torrents" }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 10
+      volumes:
+      {{- if .Values.persistence.config.enabled }}
+      - name: config
+        persistentVolumeClaim:
+          claimName: {{ include "cleanuparr.fullname" . }}-config
+      {{- end }}
+      {{- if and .Values.persistence.torrents.enabled .Values.persistence.torrents.existingClaim }}
+      - name: torrents
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.torrents.existingClaim }}
+      {{- end }}

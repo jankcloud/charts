@@ -1,0 +1,18 @@
+{{- if .Values.persistence.config.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "cleanuparr.fullname" . }}-config
+  labels:
+    {{- include "cleanuparr.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.config.accessMode }}
+  storageClassName: {{ .Values.persistence.config.storageClass }}
+  {{- if .Values.persistence.config.volumeName }}
+  volumeName: {{ .Values.persistence.config.volumeName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size }}
+{{- end }}
