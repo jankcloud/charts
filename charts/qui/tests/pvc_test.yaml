@@ -1,0 +1,57 @@
+suite: PVC tests
+templates:
+  - templates/pvc.yaml
+tests:
+  - it: does not render pvc resources by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders only config pvc when config persistence is enabled
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 4Gi
+          storageClass: fast
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-qui-config
+      - equal:
+          path: spec.resources.requests.storage
+          value: 4Gi
+      - equal:
+          path: spec.storageClassName
+          value: fast
+
+  - it: renders additional volume pvc when existingClaim is empty
+    set:
+      additionalVolumes:
+        - name: torrents
+          existingClaim: ""
+          mountPath: /torrents
+          pvc:
+            size: 20Gi
+            accessMode: ReadWriteMany
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-qui-torrents
+      - equal:
+          path: spec.resources.requests.storage
+          value: 20Gi
+
+  - it: does not render additional volume pvc when existingClaim is provided
+    set:
+      additionalVolumes:
+        - name: media
+          existingClaim: shared-media
+          mountPath: /media
+    asserts:
+      - hasDocuments:
+          count: 0

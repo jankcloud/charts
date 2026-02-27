@@ -1,4 +1,5 @@
 replicaCount: 1
+strategy: Recreate
 
 image:
   repository: ghcr.io/autobrr/qui
@@ -9,22 +10,23 @@ service:
   type: ClusterIP
   port: 7476
 
-# persistence:
-#   config:
-#     enabled: true
-#     storageClass:
-#     accessMode: ReadWriteOnce
-#     size: 2Gi
-#     # volumeName: "" # Optional: Specify an existing PV to bind to
-#   torrents:
-#     enabled: true
-#     # Must match qBittorrent's data path exactly for Local Filesystem Access.
-#     mountPath: /torrents
-#     existingClaim: ""
-#     storageClass: 
+persistence:
+  config:
+    enabled: false
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    volumeName: ""
+
+additionalVolumes: []
+# - name: torrents
+#   mountPath: /torrents
+#   existingClaim: ""
+#   pvc:
 #     accessMode: ReadWriteMany
 #     size: 1Ti
-#     # volumeName: "" # Optional: Specify an existing PV to bind to
+#     storageClass: ""
+#     volumeName: ""
 
 env:
   TZ: "America/New_York"

@@ -1,0 +1,31 @@
+suite: Ingress tests
+templates:
+  - templates/ingress.yaml
+tests:
+  - it: does not render ingress by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders ingress when enabled with host and path
+    set:
+      ingress:
+        enabled: true
+        className: nginx
+        hosts:
+          - host: qui.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+      - equal:
+          path: spec.rules[0].host
+          value: qui.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /

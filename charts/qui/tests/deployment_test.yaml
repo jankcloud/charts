@@ -1,0 +1,67 @@
+suite: Deployment tests
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: renders deployment with default strategy and no persistent volumes
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - notExists:
+          path: spec.template.spec.volumes
+      - notExists:
+          path: spec.template.spec.containers[0].volumeMounts
+
+  - it: renders config pvc mount when config persistence is enabled
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 5Gi
+          accessMode: ReadWriteOnce
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-qui-config
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /config
+
+  - it: uses existing torrents claim when provided
+    set:
+      additionalVolumes:
+        - name: torrents
+          existingClaim: existing-torrents
+          mountPath: /downloads
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: torrents
+            persistentVolumeClaim:
+              claimName: existing-torrents
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: torrents
+            mountPath: /downloads
+
+  - it: creates named claim reference for additional volume without existingClaim
+    set:
+      additionalVolumes:
+        - name: media
+          mountPath: /media
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: media
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-qui-media

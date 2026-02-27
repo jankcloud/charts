@@ -1,4 +1,7 @@
-{{- if .Values.persistence.config.enabled }}
+{{- $persistence := .Values.persistence | default dict }}
+{{- $configPersistence := $persistence.config | default dict }}
+{{- $additionalVolumes := .Values.additionalVolumes | default list }}
+{{- if ($configPersistence.enabled | default false) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,31 +10,40 @@ metadata:
     {{- include "qui.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - {{ .Values.persistence.config.accessMode }}
-  storageClassName: {{ .Values.persistence.config.storageClass }}
-  {{- if .Values.persistence.config.volumeName }}
-  volumeName: {{ .Values.persistence.config.volumeName }}
+    - {{ $configPersistence.accessMode | default "ReadWriteOnce" }}
+  {{- with $configPersistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+  {{- if $configPersistence.volumeName }}
+  volumeName: {{ $configPersistence.volumeName }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.persistence.config.size }}
+      storage: {{ $configPersistence.size | default "2Gi" }}
 {{- end }}
-{{- if and .Values.persistence.torrents.enabled (not .Values.persistence.torrents.existingClaim) }}
+{{- range $volume := $additionalVolumes }}
+{{- $volumeName := required "additionalVolumes[].name is required" $volume.name }}
+{{- $existingClaim := $volume.existingClaim | default "" }}
+{{- $volumePvc := $volume.pvc | default dict }}
+{{- if not $existingClaim }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "qui.fullname" . }}-torrents
+  name: {{ include "qui.fullname" $ }}-{{ $volumeName }}
   labels:
-    {{- include "qui.labels" . | nindent 4 }}
+    {{- include "qui.labels" $ | nindent 4 }}
 spec:
   accessModes:
-    - {{ .Values.persistence.torrents.accessMode }}
-  storageClassName: {{ .Values.persistence.torrents.storageClass }}
-  {{- if .Values.persistence.torrents.volumeName }}
-  volumeName: {{ .Values.persistence.torrents.volumeName }}
+    - {{ $volumePvc.accessMode | default "ReadWriteMany" }}
+  {{- with $volumePvc.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+  {{- if $volumePvc.volumeName }}
+  volumeName: {{ $volumePvc.volumeName }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.persistence.torrents.size }}
+      storage: {{ $volumePvc.size | default "1Ti" }}
+{{- end }}
 {{- end }}
