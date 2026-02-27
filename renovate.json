@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "prHourlyLimit": 0,
+  "helm-values": {
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+  },
+  "kubernetes": {
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+  }
+}
