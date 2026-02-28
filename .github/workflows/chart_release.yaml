@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: chart_release
+  cancel-in-progress: false
 jobs:
   release:
     runs-on: ubuntu-latest
