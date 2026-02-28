@@ -72,8 +72,15 @@ jobs:
               continue
             fi
 
-            echo "Creating tag ${tag_name} for ${chart_file} (${old_version:-none} -> ${new_version})"
-            git tag -a "$tag_name" "$AFTER_SHA" -m "Release ${chart_name} chart ${new_version}"
+            # Find the last commit in the push range that touched this chart file.
+            tag_target="$(git log -1 --format=%H "${BEFORE_SHA}..${AFTER_SHA}" -- "$chart_file" || echo "")"
+            if [[ -z "$tag_target" ]]; then
+              # Fallback to AFTER_SHA if, for some reason, no commit is found.
+              tag_target="$AFTER_SHA"
+            fi
+
+            echo "Creating tag ${tag_name} for ${chart_file} at ${tag_target} (${old_version:-none} -> ${new_version})"
+            git tag -a "$tag_name" "$tag_target" -m "Release ${chart_name} chart ${new_version}"
             git push origin "refs/tags/${tag_name}"
             created_count=$((created_count + 1))
           done
