@@ -1,0 +1,85 @@
+suite: Service tests
+templates:
+  - templates/service.yaml
+tests:
+  - it: renders service with default web port
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].port
+          value: 7476
+
+  - it: does not add metrics port or scrape annotations by default
+    asserts:
+      - notContains:
+          path: spec.ports
+          content:
+            name: metrics
+      - notExists:
+          path: metadata.annotations.prometheus\.io/scrape
+
+  - it: adds metrics service port when metrics are enabled
+    set:
+      metrics:
+        enabled: true
+        port: 9074
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: metrics
+            port: 9074
+            protocol: TCP
+            targetPort: metrics
+
+  - it: adds Prometheus scrape annotations when enabled
+    set:
+      metrics:
+        enabled: true
+        port: 9074
+      prometheus:
+        scrapeAnnotations:
+          enabled: true
+          path: /metrics
+    asserts:
+      - equal:
+          path: metadata.annotations.prometheus\.io/scrape
+          value: "true"
+      - equal:
+          path: metadata.annotations.prometheus\.io/port
+          value: "9074"
+      - equal:
+          path: metadata.annotations.prometheus\.io/path
+          value: /metrics
+
+  - it: adds arbitrary service annotations via service.annotations
+    set:
+      service:
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: qui.example.com
+    asserts:
+      - equal:
+          path: metadata.annotations.external-dns\.alpha\.kubernetes\.io/hostname
+          value: qui.example.com
+
+  - it: merges service annotations with Prometheus scrape annotations
+    set:
+      metrics:
+        enabled: true
+      prometheus:
+        scrapeAnnotations:
+          enabled: true
+      service:
+        annotations:
+          test.annotation/key: value
+    asserts:
+      - equal:
+          path: metadata.annotations.test\.annotation/key
+          value: value
+      - equal:
+          path: metadata.annotations.prometheus\.io/scrape
+          value: "true"
