@@ -10,6 +10,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: zola_publish
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,20 +21,70 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v6
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola@0.19.1
       - name: Build only
-        uses: shalzz/zola-deploy-action@v0.22.1
-        env:
-          BUILD_ONLY: true
-          BUILD_FLAGS: --drafts
+        run: zola build --drafts
 
   build_and_deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Checkout main
+      - name: Checkout main source
         uses: actions/checkout@v6
-      - name: Build and deploy
-        uses: shalzz/zola-deploy-action@v0.22.1
-        env:
-          PAGES_BRANCH: gh-pages
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          fetch-depth: 0
+          path: source
+
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola@0.19.1
+
+      - name: Build site
+        working-directory: source
+        run: zola build
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+          path: gh-pages
+
+      - name: Sync generated site output only
+        run: |
+          set -euo pipefail
+
+          manifest_file="gh-pages/.zola-managed-files"
+          new_manifest_file="/tmp/zola-managed-files-new"
+
+          if [ -f "$manifest_file" ]; then
+            while IFS= read -r relative_path; do
+              [ -z "$relative_path" ] && continue
+              rm -rf "gh-pages/$relative_path"
+            done < "$manifest_file"
+          fi
+
+          rsync -av source/public/ gh-pages/
+
+          cd source/public
+          find . -mindepth 1 -print | sed 's#^\./##' | sort > "$new_manifest_file"
+          cd - >/dev/null
+
+          mv "$new_manifest_file" "$manifest_file"
+
+      - name: Commit and push updated site artifacts
+        run: |
+          cd gh-pages
+          git config user.name "jankbot"
+          git config user.email "jankbot@users.noreply.github.com"
+          git add --all .
+          if git diff --cached --quiet; then
+            echo "No generated site changes to publish."
+            exit 0
+          fi
+          git commit -m "Publish Zola site artifacts"
+          git push origin gh-pages
