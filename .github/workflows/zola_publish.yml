@@ -6,8 +6,10 @@ permissions:
 on:
   push:
     branches:
-      - main
+      - gh-pages
   pull_request:
+    branches:
+      - gh-pages
   workflow_dispatch:
 
 concurrency:
@@ -17,9 +19,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
+    if: github.event_name == 'pull_request'
     steps:
-      - name: Checkout main
+      - name: Checkout source
         uses: actions/checkout@v6
       - name: Install Zola
         uses: taiki-e/install-action@v2
@@ -30,13 +32,13 @@ jobs:
 
   build_and_deploy:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request'
     steps:
-      - name: Checkout main source
+      - name: Checkout gh-pages
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          path: source
+          ref: gh-pages
 
       - name: Install Zola
         uses: taiki-e/install-action@v2
@@ -44,41 +46,17 @@ jobs:
           tool: zola@0.19.1
 
       - name: Build site
-        working-directory: source
         run: zola build
-
-      - name: Checkout gh-pages
-        uses: actions/checkout@v6
-        with:
-          ref: gh-pages
-          fetch-depth: 0
-          path: gh-pages
 
       - name: Sync generated site output only
         run: |
           set -euo pipefail
 
-          manifest_file="gh-pages/.zola-managed-files"
-          new_manifest_file="/tmp/zola-managed-files-new"
-
-          if [ -f "$manifest_file" ]; then
-            while IFS= read -r relative_path; do
-              [ -z "$relative_path" ] && continue
-              rm -rf "gh-pages/$relative_path"
-            done < "$manifest_file"
-          fi
-
-          rsync -av source/public/ gh-pages/
-
-          cd source/public
-          find . -mindepth 1 -print | sed 's#^\./##' | sort > "$new_manifest_file"
-          cd - >/dev/null
-
-          mv "$new_manifest_file" "$manifest_file"
+          rsync -av public/ ./
+          rm -rf public
 
       - name: Commit and push updated site artifacts
         run: |
-          cd gh-pages
           git config user.name "jankbot"
           git config user.email "jankbot@users.noreply.github.com"
           git add --all .
