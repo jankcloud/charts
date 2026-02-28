@@ -61,9 +61,17 @@ jobs:
             fi
 
             previous_version="$(git show "${COMMIT_SHA}^:${chart_file}" 2>/dev/null | awk '/^version:/{print $2; exit}' || true)"
-            if [[ -n "$previous_version" && "$previous_version" == "$chart_version" ]]; then
-              echo "Chart version was not incremented in '$chart_file'"
-              exit 1
+            if [[ -n "$previous_version" ]]; then
+              semver_gt() {
+                [ "$1" = "$2" ] && return 1
+                local smallest
+                smallest="$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -n1)"
+                [ "$smallest" != "$1" ]
+              }
+              if ! semver_gt "$chart_version" "$previous_version"; then
+                echo "Chart version '$chart_version' must be greater than previous version '$previous_version' in '$chart_file'"
+                exit 1
+              fi
             fi
           fi
 
