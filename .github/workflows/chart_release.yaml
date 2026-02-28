@@ -2,8 +2,10 @@ name: Publish Helm Charts
 
 on:
   push:
-    tags:
-      - "chart-*"
+    branches:
+      - main
+    paths:
+      - 'charts/**'
 
 permissions:
   contents: write
@@ -19,74 +21,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      - name: Validate tag and chart version
-        env:
-          TAG_NAME: ${{ github.ref_name }}
-        run: |
-          set -euo pipefail
-
-          # Resolve the tagged commit SHA explicitly (handles annotated tags)
-          COMMIT_SHA="$(git rev-parse "${GITHUB_REF}^{commit}")"
-          if [[ ! "$TAG_NAME" =~ ^chart-([A-Za-z0-9._-]+)-([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            echo "Tag '$TAG_NAME' must match 'chart-<chart-name>-X.Y.Z (strict SemVer, no pre-release or build metadata)'"
-            exit 1
-          fi
-
-          chart_name="${BASH_REMATCH[1]}"
-          chart_version="${BASH_REMATCH[2]}"
-
-          # Guard against path traversal in chart_name
-          if [[ "$chart_name" == *"/"* || "$chart_name" == *".."* ]]; then
-            echo "Invalid chart name '$chart_name': must not contain '/' or '..'"
-            exit 1
-          fi
-          chart_file="charts/${chart_name}/Chart.yaml"
-
-          if [[ ! -f "$chart_file" ]]; then
-            echo "Chart file '$chart_file' was not found"
-            exit 1
-          fi
-
-          file_version="$(awk '/^version:/{print $2; exit}' "$chart_file")"
-          if [[ "$file_version" != "$chart_version" ]]; then
-            echo "Tag version '$chart_version' does not match ${chart_file} version '$file_version'"
-            exit 1
-          fi
-
-          if git rev-parse "${COMMIT_SHA}^" >/dev/null 2>&1; then
-            if ! git diff --name-only "${COMMIT_SHA}^" "${COMMIT_SHA}" | grep -Fxq "$chart_file"; then
-              echo "Tagged commit must include a change to '$chart_file'"
-              exit 1
-            fi
-
-            previous_version="$(git show "${COMMIT_SHA}^:${chart_file}" 2>/dev/null | awk '/^version:/{print $2; exit}' || true)"
-            if [[ -n "$previous_version" ]]; then
-              semver_gt() {
-                if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || [[ ! "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                  echo "semver_gt: invalid version format (expected X.Y.Z): '$1' '$2'" >&2
-                  return 1
-                fi
-                local -a v1 v2
-                IFS=. read -ra v1 <<< "$1"
-                IFS=. read -ra v2 <<< "$2"
-                for i in 0 1 2; do
-                  if (( v1[i] > v2[i] )); then return 0; fi
-                  if (( v1[i] < v2[i] )); then return 1; fi
-                done
-                return 1
-              }
-              if ! semver_gt "$chart_version" "$previous_version"; then
-                echo "Chart version '$chart_version' must be greater than previous version '$previous_version' in '$chart_file'"
-                exit 1
-              fi
-            fi
-          fi
-
-          echo "Validated ${chart_name} version ${chart_version}"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v4
 
       - name: Configure Git
         run: |
