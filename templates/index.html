@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JankCloud Charts</title>
+  <style>
+    :root {
+      --bg: #070b16;
+      --bg-muted: #0f172a;
+      --surface: rgba(15, 23, 42, 0.72);
+      --surface-strong: rgba(15, 23, 42, 0.9);
+      --text: #e2e8f0;
+      --text-muted: #9fb0c9;
+      --heading: #f8fafc;
+      --primary: #60a5fa;
+      --primary-strong: #3b82f6;
+      --border: rgba(148, 163, 184, 0.25);
+      --shadow: 0 12px 30px rgba(2, 6, 23, 0.45);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% -10%, rgba(96, 165, 250, 0.25), transparent 40%),
+        radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.2), transparent 38%),
+        linear-gradient(160deg, var(--bg) 0%, #0b1226 45%, #111827 100%);
+      line-height: 1.5;
+      padding: 2rem 1rem 3.5rem;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(14, 165, 233, 0.06));
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      right: -80px;
+      top: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(96, 165, 250, 0.28) 0%, rgba(96, 165, 250, 0) 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #bfdbfe;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      background: rgba(96, 165, 250, 0.16);
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: 999px;
+      padding: 0.36rem 0.72rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.65rem, 3.5vw, 2.55rem);
+      color: var(--heading);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0.75rem 0 1.35rem;
+      max-width: 70ch;
+      color: var(--text-muted);
+      font-size: clamp(1rem, 1.3vw, 1.08rem);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .quick-actions {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .copy-callout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 0.5rem 0.7rem;
+      color: #c6d5eb;
+      max-width: 100%;
+    }
+
+    .copy-callout-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #9fb0c9;
+      white-space: nowrap;
+    }
+
+    .copy-callout code {
+      font-size: 0.78rem;
+      color: #dbeafe;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(147, 197, 253, 0.2);
+      border-radius: 8px;
+      padding: 0.28rem 0.45rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.62);
+      border-radius: 999px;
+      padding: 0.38rem 0.72rem;
+      font-size: 0.85rem;
+      color: #c6d5eb;
+      backdrop-filter: blur(2px);
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 0;
+      list-style: none;
+      margin: 0;
+    }
+
+    .chart-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chart-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(96, 165, 250, 0.6);
+      background: var(--surface-strong);
+    }
+
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .chart-name {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--heading);
+      overflow-wrap: anywhere;
+    }
+
+    .tag {
+      font-size: 0.74rem;
+      color: #bfdbfe;
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      border-radius: 999px;
+      padding: 0.2rem 0.52rem;
+      background: rgba(96, 165, 250, 0.13);
+      white-space: nowrap;
+    }
+
+    .details {
+      display: grid;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin: 0;
+    }
+
+    .details span {
+      color: #d2dded;
+      font-weight: 600;
+    }
+
+    .chart-link {
+      margin-top: auto;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      padding: 0.62rem 0.86rem;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+      transition: filter 160ms ease, transform 160ms ease;
+    }
+
+    .chart-link:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .actions {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.62rem 0.72rem;
+      border: 1px solid rgba(147, 197, 253, 0.24);
+      color: #f8fafc;
+      background: rgba(30, 41, 59, 0.82);
+      transition: filter 160ms ease, transform 160ms ease, background 160ms ease;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      border-color: rgba(147, 197, 253, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-tertiary {
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    .btn.is-copied {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: rgba(134, 239, 172, 0.35);
+      color: #f0fdf4;
+    }
+
+    .empty {
+      border: 1px dashed rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.45);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      color: #c3d2e7;
+    }
+
+    footer {
+      margin-top: 1rem;
+      color: #8ca1be;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1.2rem 0.8rem 2rem;
+      }
+
+      .hero {
+        border-radius: 20px;
+      }
+
+      .chart-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .copy-callout {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% set index = load_data(path="index.yaml", format="yaml", required=false) %}
+
+    {% if index and index.entries %}
+      {% set entries = index.entries %}
+      {% set chart_count = entries | length %}
+      {% set generated = index.generated | default(value="Unknown") %}
+    {% else %}
+      {% set entries = false %}
+      {% set chart_count = 0 %}
+      {% set generated = "Unknown" %}
+    {% endif %}
+
+    <header class="hero">
+      <div class="eyebrow">Helm Repository</div>
+      <h1>JankCloud Charts</h1>
+      <p class="subtitle">{{ config.description | default(value="Discover and install JankCloud authored charts published from this repository.") }}</p>
+      <div class="meta">
+        <div class="pill">Charts: {{ chart_count }}</div>
+        <div class="pill">Generated: {{ generated }}</div>
+        <div class="pill">Source: <code>index.yaml</code></div>
+      </div>
+      <div class="quick-actions">
+        <div class="copy-callout">
+            <code>helm repository add jankcloud https://jankcloud.github.io/charts</code>
+            <button
+                type="button"
+                class="btn btn-primary js-copy-command"
+                data-command="helm repository add jankcloud https://jankcloud.github.io/charts"
+                data-label="copy-helm-repo-command"
+                >
+                Copy
+            </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      {% if not index %}
+        <p class="empty">`index.yaml` could not be loaded. Ensure it exists at the repository root before building with Zola.</p>
+      {% elif not entries %}
+        <p class="empty">No chart entries were found in `index.yaml` yet.</p>
+      {% else %}
+        <ul class="charts">
+          {% for name, versions in entries %}
+            {% set latest = versions[0] %}
+            {% set values_url = "https://github.com/jankcloud/charts/blob/main/charts/" ~ name ~ "/values.yaml" %}
+            {% if latest.urls and latest.urls | length > 0 %}
+              {% set chart_url = latest.urls[0] %}
+            {% else %}
+              {% set chart_url = latest.url | default(value="#") %}
+            {% endif %}
+
+            <li class="chart-card">
+              <div class="chart-head">
+                <h2 class="chart-name">{{ name }}</h2>
+                <span class="tag">v{{ latest.version | default(value="n/a") }}</span>
+              </div>
+
+              <p class="details">
+                <span>App Version:</span>
+                {{ latest.appVersion | default(value="n/a") }}
+              </p>
+
+              <div class="actions">
+                <a class="btn btn-primary" href="{{ chart_url }}" target="_blank" rel="noopener noreferrer">Download</a>
+                <a class="btn btn-tertiary" href="{{ values_url }}" target="_blank" rel="noopener noreferrer">View Values</a>
+                <button
+                  type="button"
+                  class="btn btn-secondary js-copy-install"
+                  data-chart="{{ name }}"
+                  data-label="Deploy .tar.gz"
+                >
+                  Deploy Chart
+                </button>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      async function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+
+      function setCopiedState(button) {
+        const originalLabel = button.dataset.label || button.textContent;
+        button.dataset.originalLabel = originalLabel;
+        button.textContent = "Copied!";
+        button.classList.add("is-copied");
+
+        window.setTimeout(function () {
+          button.textContent = button.dataset.originalLabel || originalLabel;
+          button.classList.remove("is-copied");
+        }, 1500);
+      }
+
+      function setCopyError(button) {
+        const originalLabel = button.dataset.label || button.textContent;
+        button.textContent = "Copy failed";
+        window.setTimeout(function () {
+          button.textContent = originalLabel;
+        }, 1500);
+      }
+
+      document.querySelectorAll(".js-copy-command").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          try {
+            await copyToClipboard(button.dataset.command || "");
+            setCopiedState(button);
+          } catch (error) {
+            setCopyError(button);
+          }
+        });
+      });
+
+      document.querySelectorAll(".js-copy-install").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const chart = button.dataset.chart || "<chart-name>";
+          const installSnippet = [
+            "helm repository add jankcloud https://jankcloud.github.io/charts",
+            "helm repo update",
+            "helm install my-" + chart + " jankcloud/" + chart
+          ].join("\n");
+
+          try {
+            await copyToClipboard(installSnippet);
+            setCopiedState(button);
+          } catch (error) {
+            setCopyError(button);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
