@@ -1,9 +1,24 @@
 apiVersion: v1
 kind: Service
+{{- $annotations := dict }}
+{{- with .Values.service.annotations }}
+{{- $annotations = merge $annotations . }}
+{{- end }}
+{{- if and .Values.metrics.enabled .Values.prometheus.scrapeAnnotations.enabled }}
+{{- $annotations = merge $annotations (dict
+  "prometheus.io/scrape" "true"
+  "prometheus.io/port" (.Values.metrics.port | toString)
+  "prometheus.io/path" (.Values.prometheus.scrapeAnnotations.path | default .Values.metrics.path)
+) }}
+{{- end }}
 metadata:
   name: {{ include "qui.fullname" . }}
   labels:
     {{- include "qui.labels" . | nindent 4 }}
+  {{- if gt (len $annotations) 0 }}
+  annotations:
+    {{- toYaml $annotations | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -11,5 +26,11 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.metrics.enabled }}
+    - port: {{ .Values.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    {{- end }}
   selector:
     {{- include "qui.selectorLabels" . | nindent 4 }}

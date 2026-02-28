@@ -9,6 +9,26 @@ image:
 service:
   type: ClusterIP
   port: 7476
+  annotations: {}
+
+metrics:
+  enabled: false
+  host: 0.0.0.0
+  port: 9074
+  path: /metrics
+  basicAuthUsers: ""
+
+prometheus:
+  scrapeAnnotations:
+    enabled: false
+    path: /metrics
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
 
 persistence:
   config:

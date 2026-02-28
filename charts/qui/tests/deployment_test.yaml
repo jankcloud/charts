@@ -65,3 +65,44 @@ tests:
             name: media
             persistentVolumeClaim:
               claimName: RELEASE-NAME-qui-media
+
+  - it: sets metrics disabled env by default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: QUI__METRICS_ENABLED
+            value: "false"
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+
+  - it: renders metrics env vars and port when metrics are enabled
+    set:
+      metrics:
+        enabled: true
+        host: 0.0.0.0
+        port: 9074
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: QUI__METRICS_ENABLED
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: QUI__METRICS_HOST
+            value: "0.0.0.0"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: QUI__METRICS_PORT
+            value: "9074"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+            containerPort: 9074
+            protocol: TCP
