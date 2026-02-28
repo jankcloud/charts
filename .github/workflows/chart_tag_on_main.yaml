@@ -1,0 +1,81 @@
+name: Tag Changed Chart Versions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "charts/*/Chart.yaml"
+
+permissions:
+  contents: write
+
+jobs:
+  tag-chart-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Create tags for bumped chart versions
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            BEFORE_SHA="$(git rev-list --max-parents=0 "$AFTER_SHA" | tail -n1)"
+          fi
+
+          mapfile -t changed_chart_files < <(git diff --name-only "$BEFORE_SHA" "$AFTER_SHA" -- 'charts/*/Chart.yaml')
+
+          if [[ ${#changed_chart_files[@]} -eq 0 ]]; then
+            echo "No chart metadata changes detected"
+            exit 0
+          fi
+
+          created_count=0
+
+          for chart_file in "${changed_chart_files[@]}"; do
+            if [[ ! -f "$chart_file" ]]; then
+              echo "Skipping removed chart file: $chart_file"
+              continue
+            fi
+
+            chart_name="$(basename "$(dirname "$chart_file")")"
+            new_version="$(awk '/^version:/{print $2; exit}' "$chart_file")"
+
+            if [[ -z "$new_version" ]]; then
+              echo "Skipping $chart_file because no chart version was found"
+              continue
+            fi
+
+            old_version="$(git show "$BEFORE_SHA:$chart_file" 2>/dev/null | awk '/^version:/{print $2; exit}' || true)"
+
+            if [[ "$old_version" == "$new_version" ]]; then
+              echo "No version bump in $chart_file ($new_version)"
+              continue
+            fi
+
+            tag_name="chart-${chart_name}-${new_version}"
+
+            if git ls-remote --exit-code --tags origin "refs/tags/${tag_name}" >/dev/null 2>&1; then
+              echo "Tag ${tag_name} already exists, skipping"
+              continue
+            fi
+
+            echo "Creating tag ${tag_name} for ${chart_file} (${old_version:-none} -> ${new_version})"
+            git tag -a "$tag_name" "$AFTER_SHA" -m "Release ${chart_name} chart ${new_version}"
+            git push origin "refs/tags/${tag_name}"
+            created_count=$((created_count + 1))
+          done
+
+          echo "Created ${created_count} chart release tag(s)"

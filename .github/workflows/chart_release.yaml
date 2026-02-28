@@ -1,0 +1,75 @@
+name: Publish Helm Charts
+
+on:
+  push:
+    tags:
+      - "chart-*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag and chart version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$TAG_NAME" =~ ^chart-(.+)-([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)$ ]]; then
+            echo "Tag '$TAG_NAME' must match 'chart-<chart-name>-<chart-version>'"
+            exit 1
+          fi
+
+          chart_name="${BASH_REMATCH[1]}"
+          chart_version="${BASH_REMATCH[2]}"
+          chart_file="charts/${chart_name}/Chart.yaml"
+
+          if [[ ! -f "$chart_file" ]]; then
+            echo "Chart file '$chart_file' was not found"
+            exit 1
+          fi
+
+          file_version="$(awk '/^version:/{print $2; exit}' "$chart_file")"
+          if [[ "$file_version" != "$chart_version" ]]; then
+            echo "Tag version '$chart_version' does not match ${chart_file} version '$file_version'"
+            exit 1
+          fi
+
+          if git rev-parse "${COMMIT_SHA}^" >/dev/null 2>&1; then
+            if ! git diff --name-only "${COMMIT_SHA}^" "${COMMIT_SHA}" | grep -Fxq "$chart_file"; then
+              echo "Tagged commit must include a change to '$chart_file'"
+              exit 1
+            fi
+
+            previous_version="$(git show "${COMMIT_SHA}^:${chart_file}" 2>/dev/null | awk '/^version:/{print $2; exit}' || true)"
+            if [[ -n "$previous_version" && "$previous_version" == "$chart_version" ]]; then
+              echo "Chart version was not incremented in '$chart_file'"
+              exit 1
+            fi
+          fi
+
+          echo "Validated ${chart_name} version ${chart_version}"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        with:
+          charts_dir: charts
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
