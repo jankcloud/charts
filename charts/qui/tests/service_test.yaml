@@ -20,7 +20,7 @@ tests:
           content:
             name: metrics
       - notExists:
-          path: metadata.annotations.prometheus\.io/scrape
+          path: metadata.annotations["prometheus.io/scrape"]
 
   - it: adds metrics service port when metrics are enabled
     set:
@@ -47,13 +47,13 @@ tests:
           path: /metrics
     asserts:
       - equal:
-          path: metadata.annotations.prometheus\.io/scrape
+          path: 'metadata.annotations["prometheus.io/scrape"]'
           value: "true"
       - equal:
-          path: metadata.annotations.prometheus\.io/port
+          path: 'metadata.annotations["prometheus.io/port"]'
           value: "9074"
       - equal:
-          path: metadata.annotations.prometheus\.io/path
+          path: 'metadata.annotations["prometheus.io/path"]'
           value: /metrics
 
   - it: adds arbitrary service annotations via service.annotations
@@ -63,7 +63,7 @@ tests:
           external-dns.alpha.kubernetes.io/hostname: qui.example.com
     asserts:
       - equal:
-          path: metadata.annotations.external-dns\.alpha\.kubernetes\.io/hostname
+          path: 'metadata.annotations["external-dns.alpha.kubernetes.io/hostname"]'
           value: qui.example.com
 
   - it: merges service annotations with Prometheus scrape annotations
@@ -78,8 +78,8 @@ tests:
           test.annotation/key: value
     asserts:
       - equal:
-          path: metadata.annotations.test\.annotation/key
+          path: 'metadata.annotations["test.annotation/key"]'
           value: value
       - equal:
-          path: metadata.annotations.prometheus\.io/scrape
+          path: 'metadata.annotations["prometheus.io/scrape"]'
           value: "true"
