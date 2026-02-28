@@ -28,8 +28,8 @@ jobs:
 
           # Resolve the tagged commit SHA explicitly (handles annotated tags)
           COMMIT_SHA="$(git rev-parse "${GITHUB_REF}^{commit}")"
-          if [[ ! "$TAG_NAME" =~ ^chart-([A-Za-z0-9._-]+)-([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)$ ]]; then
-            echo "Tag '$TAG_NAME' must match 'chart-<chart-name>-<chart-version>'"
+          if [[ ! "$TAG_NAME" =~ ^chart-([A-Za-z0-9._-]+)-([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "Tag '$TAG_NAME' must match 'chart-<chart-name>-X.Y.Z (strict SemVer, no pre-release or build metadata)'"
             exit 1
           fi
 
@@ -63,10 +63,18 @@ jobs:
             previous_version="$(git show "${COMMIT_SHA}^:${chart_file}" 2>/dev/null | awk '/^version:/{print $2; exit}' || true)"
             if [[ -n "$previous_version" ]]; then
               semver_gt() {
-                [ "$1" = "$2" ] && return 1
-                local smallest
-                smallest="$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -n1)"
-                [ "$smallest" != "$1" ]
+                if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || [[ ! "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                  echo "semver_gt: invalid version format (expected X.Y.Z): '$1' '$2'" >&2
+                  return 1
+                fi
+                local -a v1 v2
+                IFS=. read -ra v1 <<< "$1"
+                IFS=. read -ra v2 <<< "$2"
+                for i in 0 1 2; do
+                  if (( v1[i] > v2[i] )); then return 0; fi
+                  if (( v1[i] < v2[i] )); then return 1; fi
+                done
+                return 1
               }
               if ! semver_gt "$chart_version" "$previous_version"; then
                 echo "Chart version '$chart_version' must be greater than previous version '$previous_version' in '$chart_file'"
