@@ -1,0 +1,26 @@
+apiVersion: v1
+entries:
+  qbittorrent-exporter:
+  - apiVersion: v2
+    appVersion: v1.13.3
+    created: "2026-02-28T18:17:37.710202598Z"
+    description: A Helm chart for qBittorrent Prometheus Exporter - exports metrics
+      from qBittorrent to Prometheus
+    digest: 2059965b08df3769b1318aaee047a808f10427ab38781270b98d8bcd7a14fd02
+    name: qbittorrent-exporter
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/qbittorrent-exporter-1.0.1/qbittorrent-exporter-1.0.1.tgz
+    version: 1.0.1
+  qui:
+  - apiVersion: v2
+    appVersion: 1.14.1
+    created: "2026-02-28T18:17:37.815146766Z"
+    description: A Helm chart for Qui
+    digest: 99b76d70accad5e6cc23d55784c78a9a1ddb31b6be476cdc79639414c8c2a45f
+    name: qui
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/qui-1.2.0/qui-1.2.0.tgz
+    version: 1.2.0
+generated: "2026-02-28T18:17:37.815152575Z"
