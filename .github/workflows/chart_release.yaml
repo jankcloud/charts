@@ -25,13 +25,19 @@ jobs:
 
           # Resolve the tagged commit SHA explicitly (handles annotated tags)
           COMMIT_SHA="$(git rev-parse "${GITHUB_REF}^{commit}")"
-          if [[ ! "$TAG_NAME" =~ ^chart-(.+)-([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)$ ]]; then
+          if [[ ! "$TAG_NAME" =~ ^chart-([A-Za-z0-9._-]+)-([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)$ ]]; then
             echo "Tag '$TAG_NAME' must match 'chart-<chart-name>-<chart-version>'"
             exit 1
           fi
 
           chart_name="${BASH_REMATCH[1]}"
           chart_version="${BASH_REMATCH[2]}"
+
+          # Guard against path traversal in chart_name
+          if [[ "$chart_name" == *"/"* || "$chart_name" == *".."* ]]; then
+            echo "Invalid chart name '$chart_name': must not contain '/' or '..'"
+            exit 1
+          fi
           chart_file="charts/${chart_name}/Chart.yaml"
 
           if [[ ! -f "$chart_file" ]]; then
