@@ -1,0 +1,6 @@
+dependencies:
+- name: arr-common
+  repository: file://../arr-common
+  version: 0.1.0
+digest: sha256:cbb72fccdff40c6addaa063db7c40fdafede5dac120d6cf38361953f23495503
+generated: "2026-03-01T21:26:20.482297754Z"

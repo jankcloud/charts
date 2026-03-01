@@ -1,0 +1,189 @@
+suite: Ingress
+templates:
+  - templates/ingress.yaml
+tests:
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: disabled by default
+  # ---------------------------------------------------------------------------
+  - it: does not render an Ingress by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: basic ingress
+  # ---------------------------------------------------------------------------
+  - it: renders a networking.k8s.io/v1 Ingress when enabled
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+
+  - it: sets the release name as the Ingress name
+    set:
+      ingress:
+        enabled: true
+        hosts: []
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-sonarr
+
+  - it: sets ingressClassName when provided
+    set:
+      ingress:
+        enabled: true
+        className: nginx
+        hosts: []
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: does not set ingressClassName when className is empty
+    set:
+      ingress:
+        enabled: true
+        className: ""
+        hosts: []
+    asserts:
+      - notExists:
+          path: spec.ingressClassName
+
+  - it: renders host rules correctly
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: sonarr.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+
+  - it: always points the backend at the sonarr service http port
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: RELEASE-NAME-sonarr
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.name
+          value: http
+
+  - it: renders multiple paths for a single host
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+              - path: /api
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[1].path
+          value: /api
+
+  - it: renders multiple host rules
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.internal
+            paths:
+              - path: /
+                pathType: Prefix
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: sonarr.internal
+      - equal:
+          path: spec.rules[1].host
+          value: sonarr.example.com
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: TLS
+  # ---------------------------------------------------------------------------
+  - it: renders TLS section when tls is set
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: sonarr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: sonarr-tls
+            hosts:
+              - sonarr.example.com
+    asserts:
+      - equal:
+          path: spec.tls[0].secretName
+          value: sonarr-tls
+      - contains:
+          path: spec.tls[0].hosts
+          content: sonarr.example.com
+
+  - it: does not render a TLS section when tls is empty
+    set:
+      ingress:
+        enabled: true
+        hosts: []
+        tls: []
+    asserts:
+      - notExists:
+          path: spec.tls
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: annotations
+  # ---------------------------------------------------------------------------
+  - it: applies ingress annotations when set
+    set:
+      ingress:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        hosts: []
+    asserts:
+      - equal:
+          path: 'metadata.annotations["nginx.ingress.kubernetes.io/proxy-body-size"]'
+          value: "0"
