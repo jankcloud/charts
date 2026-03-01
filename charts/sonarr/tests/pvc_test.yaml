@@ -1,0 +1,136 @@
+suite: PVC
+templates:
+  - templates/pvc.yaml
+tests:
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: nothing rendered by default
+  # ---------------------------------------------------------------------------
+  - it: renders no PVCs when persistence is disabled and additionalVolumes is empty
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: config PVC
+  # ---------------------------------------------------------------------------
+  - it: renders the config PVC when persistence.config.enabled is true
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 4Gi
+          accessMode: ReadWriteOnce
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-sonarr-config
+      - equal:
+          path: spec.accessModes[0]
+          value: ReadWriteOnce
+      - equal:
+          path: spec.resources.requests.storage
+          value: 4Gi
+
+  - it: sets storageClassName on config PVC when storageClass is provided
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 2Gi
+          storageClass: fast-ssd
+    asserts:
+      - equal:
+          path: spec.storageClassName
+          value: fast-ssd
+
+  - it: does not set storageClassName when storageClass is empty
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 2Gi
+          storageClass: ""
+    asserts:
+      - notExists:
+          path: spec.storageClassName
+
+  - it: sets volumeName on config PVC when volumeName is provided
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 2Gi
+          volumeName: my-sonarr-config-pv
+    asserts:
+      - equal:
+          path: spec.volumeName
+          value: my-sonarr-config-pv
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: additionalVolumes auto PVC
+  # ---------------------------------------------------------------------------
+  - it: creates a PVC for an additionalVolume without existingClaim
+    set:
+      additionalVolumes:
+        - name: tv
+          mountPath: /tv
+          pvc:
+            accessMode: ReadWriteMany
+            size: 5Ti
+            storageClass: nfs-client
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-sonarr-tv
+      - equal:
+          path: spec.accessModes[0]
+          value: ReadWriteMany
+      - equal:
+          path: spec.resources.requests.storage
+          value: 5Ti
+      - equal:
+          path: spec.storageClassName
+          value: nfs-client
+
+  - it: does not create a PVC for an additionalVolume that has an existingClaim
+    set:
+      additionalVolumes:
+        - name: tv
+          mountPath: /tv
+          existingClaim: my-tv-pvc
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: combined config + additional volumes
+  # ---------------------------------------------------------------------------
+  - it: renders one PVC per auto-provisioned volume plus the config PVC
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 2Gi
+      additionalVolumes:
+        - name: tv
+          mountPath: /tv
+          pvc:
+            size: 1Ti
+        - name: downloads
+          mountPath: /downloads
+          pvc:
+            size: 500Gi
+        - name: existing-media
+          mountPath: /media
+          existingClaim: shared-media
+    asserts:
+      # config + tv + downloads = 3 (existing-media is skipped)
+      - hasDocuments:
+          count: 3

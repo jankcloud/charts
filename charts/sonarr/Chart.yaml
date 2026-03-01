@@ -1,0 +1,25 @@
+apiVersion: v2
+name: sonarr
+description: A Helm chart for deploying Sonarr
+type: application
+version: 1.0.0
+appVersion: "4.0.14"
+home: https://sonarr.tv
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+  - https://github.com/Sonarr/Sonarr
+keywords:
+  - sonarr
+  - servarr
+  - pvr
+  - usenet
+  - bittorrent
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.0"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults
