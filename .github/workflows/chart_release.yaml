@@ -32,24 +32,5 @@ jobs:
         uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: charts
-          skip_upload: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install Zola
-        uses: taiki-e/install-action@v2
-        with:
-          tool: zola@0.19.1
-
-      - name: Build Zola
-        run: zola -c zola.toml build
-
-      - name: Add Helm index to public
-        run: |
-          cp index.yaml public/index.yaml
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public
