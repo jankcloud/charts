@@ -28,7 +28,7 @@ jobs:
         with:
           tool: zola@0.19.1
       - name: Build only
-        run: zola build --drafts
+        run: zola -c zola.toml build --drafts
 
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
           tool: zola@0.19.1
 
       - name: Build site
-        run: zola build
+        run: zola -c zola.toml build
 
       - name: Sync generated site output only
         run: |
