@@ -42,7 +42,7 @@ jobs:
           tool: zola@0.19.1
 
       - name: Build Zola
-        run: zola build
+        run: zola -c zola.toml build
 
       - name: Add Helm index to public
         run: |
