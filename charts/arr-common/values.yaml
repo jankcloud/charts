@@ -1,0 +1,123 @@
+exports:
+  defaults:
+
+    nameOverride: ""
+    fullnameOverride: ""
+
+    replicaCount: 1
+
+    strategy:
+      type: Recreate
+
+    image:
+      repository: ""
+      tag: ""
+      pullPolicy: IfNotPresent
+
+    env: {}
+      # PUID: "1000"
+      # PGID: "1000"
+      # TZ: "Europe/London"
+
+    service:
+      type: ClusterIP
+      port: 80
+      annotations: {}
+
+    persistence:
+      config:
+        enabled: false
+        storageClass: ""
+        accessMode: ReadWriteOnce
+        size: 2Gi
+        volumeName: ""
+
+    additionalVolumes: []
+      # - name: media
+      #   mountPath: /media
+      #   existingClaim: ""
+      #   readOnly: false
+      #   pvc:
+      #     accessMode: ReadWriteMany
+      #     size: 1Ti
+      #     storageClass: ""
+      #     volumeName: ""
+
+    ingress:
+      enabled: false
+      className: ""
+      annotations: {}
+      # hosts:
+      #   - host: chart-example.local
+      #     paths:
+      #       - path: /
+      #         pathType: Prefix
+      hosts: []
+      tls: []
+
+    probes:
+      liveness:
+        httpGet:
+          path: /
+          port: http
+        initialDelaySeconds: 30
+        periodSeconds: 30
+        timeoutSeconds: 5
+        failureThreshold: 5
+      readiness:
+        httpGet:
+          path: /
+          port: http
+        initialDelaySeconds: 20
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 5
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 1Gi
+
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+      scrapeTimeout: 10s
+      labels: {}
+      annotations: {}
+
+    exportarr:
+      enabled: false
+      image:
+        repository: ghcr.io/onedr0p/exportarr
+        tag: v2.0.1
+        pullPolicy: IfNotPresent
+      port: 9707
+      env:
+        URL: "http://localhost"
+        APIKEY: ""
+
+    gluetun:
+      enabled: false
+      image:
+        repository: ghcr.io/qdm12/gluetun
+        tag: v3.40.0
+        pullPolicy: IfNotPresent
+      env: {}
+      # Name of a pre-existing Kubernetes Secret whose keys will be loaded as
+      # environment variables in the Gluetun container via envFrom.secretRef.
+      # Set this OR gluetun.env — never both.
+      existingSecret: ""
+
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    initContainers: []
+
+    sidecars: []
+
+    extraVolumes: []
+
+    extraVolumeMounts: []
