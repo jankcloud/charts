@@ -46,7 +46,7 @@ jobs:
           tool: zola@0.19.1
 
       - name: Build site
-        run: zola build
+        run: zola -c zola.toml build
 
       - name: Sync generated site output only
         run: |
