@@ -1,0 +1,470 @@
+suite: Deployment
+templates:
+  - templates/deployment.yaml
+tests:
+
+  # ---------------------------------------------------------------------------
+  # Basic shape
+  # ---------------------------------------------------------------------------
+  - it: renders a Deployment by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+
+  - it: uses the release name as the resource name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-sonarr
+
+  - it: carries the standard Helm label set
+    asserts:
+      - isSubset:
+          path: metadata.labels
+          content:
+            app.kubernetes.io/name: sonarr
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+
+  # ---------------------------------------------------------------------------
+  # Sonarr-specific defaults
+  # ---------------------------------------------------------------------------
+  - it: uses the linuxserver sonarr image
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^ghcr.io/linuxserver/sonarr:"
+
+  - it: exposes port 8989 named http
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: http
+            containerPort: 8989
+            protocol: TCP
+
+  - it: sets PUID PGID and TZ env vars by default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: PUID
+            value: "1000"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: PGID
+            value: "1000"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TZ
+            value: "America/New_York"
+
+  - it: uses /ping for liveness and readiness probes
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /ping
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /ping
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: http
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: strategy
+  # ---------------------------------------------------------------------------
+  - it: defaults to Recreate strategy
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+
+  - it: allows strategy to be overridden to RollingUpdate
+    set:
+      strategy:
+        type: RollingUpdate
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: no volumes by default
+  # ---------------------------------------------------------------------------
+  - it: renders no volumes or volumeMounts when persistence is disabled
+    asserts:
+      - notExists:
+          path: spec.template.spec.volumes
+      - notExists:
+          path: spec.template.spec.containers[0].volumeMounts
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: config persistence
+  # ---------------------------------------------------------------------------
+  - it: mounts /config when persistence.config is enabled
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 4Gi
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-sonarr-config
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /config
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: additionalVolumes — main container only
+  # ---------------------------------------------------------------------------
+  - it: mounts additionalVolumes into the main container
+    set:
+      additionalVolumes:
+        - name: tv
+          mountPath: /tv
+          existingClaim: existing-tv
+          readOnly: false
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: tv
+            persistentVolumeClaim:
+              claimName: existing-tv
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: tv
+            mountPath: /tv
+
+  - it: uses generated claim name when existingClaim is absent
+    set:
+      additionalVolumes:
+        - name: downloads
+          mountPath: /downloads
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: downloads
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-sonarr-downloads
+
+  - it: mounts additionalVolumes as readOnly when readOnly is true
+    set:
+      additionalVolumes:
+        - name: nfs-media
+          mountPath: /media
+          existingClaim: shared-media
+          readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: nfs-media
+            mountPath: /media
+            readOnly: true
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: extraVolumeMounts — main container only
+  # ---------------------------------------------------------------------------
+  - it: appends extraVolumeMounts to the main container
+    set:
+      extraVolumes:
+        - name: custom-scripts
+          configMap:
+            name: sonarr-scripts
+      extraVolumeMounts:
+        - name: custom-scripts
+          mountPath: /scripts
+          readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: custom-scripts
+            mountPath: /scripts
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: custom-scripts
+            configMap:
+              name: sonarr-scripts
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: initContainers pass-through
+  # ---------------------------------------------------------------------------
+  - it: renders initContainers when provided
+    set:
+      initContainers:
+        - name: init-permissions
+          image: busybox:1.36
+          command: ["sh", "-c", "chown -R 1000:1000 /config"]
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      persistence:
+        config:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: init-permissions
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: busybox:1.36
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: sidecars pass-through
+  # ---------------------------------------------------------------------------
+  - it: appends extra sidecar containers when provided
+    set:
+      sidecars:
+        - name: log-shipper
+          image: fluent/fluent-bit:3.0
+          env:
+            - name: SOME_VAR
+              value: some-value
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: log-shipper
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: Gluetun disabled by default
+  # ---------------------------------------------------------------------------
+  - it: does not render a gluetun container by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers
+          content:
+            name: gluetun
+          any: true
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: Gluetun inline env
+  # ---------------------------------------------------------------------------
+  - it: injects gluetun container with inline env vars when enabled
+    set:
+      gluetun:
+        enabled: true
+        image:
+          repository: ghcr.io/qdm12/gluetun
+          tag: v3.40.0
+          pullPolicy: IfNotPresent
+        env:
+          VPN_SERVICE_PROVIDER: mullvad
+          VPN_TYPE: wireguard
+          WIREGUARD_PRIVATE_KEY: "s3cr3t"
+        existingSecret: ""
+    asserts:
+      - contains:
+          path: spec.template.spec.containers
+          content:
+            name: gluetun
+          any: true
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: gluetun
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.capabilities.add[0]
+          value: NET_ADMIN
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: VPN_SERVICE_PROVIDER
+            value: mullvad
+
+  - it: does not add a gluetun-credentials volume in inline env mode
+    set:
+      gluetun:
+        enabled: true
+        image:
+          repository: ghcr.io/qdm12/gluetun
+          tag: v3.40.0
+          pullPolicy: IfNotPresent
+        env:
+          VPN_SERVICE_PROVIDER: mullvad
+        existingSecret: ""
+    asserts:
+      # No volumes at all are created in inline-env mode (no PVCs, no secrets).
+      - notExists:
+          path: spec.template.spec.volumes
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: Gluetun existingSecret
+  # ---------------------------------------------------------------------------
+  - it: loads gluetun credentials from an existing secret via envFrom
+    set:
+      gluetun:
+        enabled: true
+        image:
+          repository: ghcr.io/qdm12/gluetun
+          tag: v3.40.0
+          pullPolicy: IfNotPresent
+        env: {}
+        existingSecret: my-vpn-secret
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].envFrom[0].secretRef.name
+          value: my-vpn-secret
+      - notExists:
+          path: spec.template.spec.containers[1].env
+
+  - it: mounts a gluetun-credentials volume when existingSecret is set
+    set:
+      gluetun:
+        enabled: true
+        image:
+          repository: ghcr.io/qdm12/gluetun
+          tag: v3.40.0
+          pullPolicy: IfNotPresent
+        env: {}
+        existingSecret: my-vpn-secret
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: gluetun-credentials
+            secret:
+              secretName: my-vpn-secret
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: Exportarr disabled by default
+  # ---------------------------------------------------------------------------
+  - it: does not render an exportarr container by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers
+          content:
+            name: exportarr
+          any: true
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: Exportarr enabled
+  # ---------------------------------------------------------------------------
+  - it: injects exportarr sidecar when enabled
+    set:
+      exportarr:
+        enabled: true
+        image:
+          repository: ghcr.io/onedr0p/exportarr
+          tag: v2.0.1
+          pullPolicy: IfNotPresent
+        port: 9707
+        env:
+          URL: "http://localhost:8989"
+          APIKEY: "abc123"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers
+          content:
+            name: exportarr
+          any: true
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: exportarr
+      - contains:
+          path: spec.template.spec.containers[1].ports
+          content:
+            name: exportarr
+            containerPort: 9707
+            protocol: TCP
+
+  - it: exportarr container does not receive additionalVolumes mounts
+    set:
+      exportarr:
+        enabled: true
+        image:
+          repository: ghcr.io/onedr0p/exportarr
+          tag: v2.0.1
+          pullPolicy: IfNotPresent
+        port: 9707
+        env:
+          URL: "http://localhost:8989"
+          APIKEY: "abc123"
+      additionalVolumes:
+        - name: tv
+          mountPath: /tv
+          existingClaim: existing-tv
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[1].volumeMounts
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: scheduling fields
+  # ---------------------------------------------------------------------------
+  - it: applies nodeSelector when set
+    set:
+      nodeSelector:
+        kubernetes.io/os: linux
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector["kubernetes.io/os"]
+          value: linux
+
+  - it: applies tolerations when set
+    set:
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: sonarr
+          effect: NoSchedule
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            key: dedicated
+            operator: Equal
+            value: sonarr
+            effect: NoSchedule
+
+  - it: applies affinity when set
+    set:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: storage
+                    operator: In
+                    values:
+                      - fast
+    asserts:
+      - isNotEmpty:
+          path: spec.template.spec.affinity
+
+  # ---------------------------------------------------------------------------
+  # arr-common smoke: fullnameOverride
+  # ---------------------------------------------------------------------------
+  - it: respects fullnameOverride
+    set:
+      fullnameOverride: my-sonarr
+    asserts:
+      - equal:
+          path: metadata.name
+          value: my-sonarr
+
+  - it: respects nameOverride
+    set:
+      nameOverride: custom-sonarr
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-custom-sonarr

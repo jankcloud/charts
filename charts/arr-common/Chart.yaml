@@ -1,0 +1,26 @@
+apiVersion: v2
+name: arr-common
+description: >
+  A Helm library chart for arr-stack applications
+type: library
+version: 0.1.0
+home: https://github.com/jankcloud/charts
+sources:
+  - https://github.com/jankcloud/charts/tree/main/libraries/arr-common
+keywords:
+  - arr
+  - servarr
+  - sonarr
+  - radarr
+  - lidarr
+  - readarr
+  - prowlarr
+  - bazarr
+  - gluetun
+  - exportarr
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+exports:
+  defaults:
+    mapping: exports.defaults

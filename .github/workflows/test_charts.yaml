@@ -20,6 +20,9 @@ jobs:
           - chart: qbittorrent-exporter
             chart_path: charts/qbittorrent-exporter
             unit_tests_enabled: true
+          - chart: sonarr
+            chart_path: charts/sonarr
+            unit_tests_enabled: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
