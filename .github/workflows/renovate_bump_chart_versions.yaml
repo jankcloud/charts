@@ -1,0 +1,65 @@
+name: Renovate Chart Version Bump
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'charts/**/values.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  bump-chart-versions:
+    if: github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "jankbot"
+          git config user.email "jankbot@users.noreply.github.com"
+
+      - name: Bump chart versions for changed values files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t charts < <(
+            git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" -- \
+              'charts/*/values.yaml' \
+            | sed -nE 's#^charts/([^/]+)/values\.ya?ml$#\1#p' \
+            | sort -u
+          )
+
+          if [[ "${#charts[@]}" -eq 0 ]]; then
+            echo "No changed chart values files found."
+            exit 0
+          fi
+
+          for chart in "${charts[@]}"; do
+            echo "Bumping chart: ${chart}"
+            bash .renovate/post-upgrade-tasks/bump-chart-version.sh "${chart}" "false" "false" "true"
+          done
+
+      - name: Commit and push changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- charts/*/Chart.yaml; then
+            echo "No Chart.yaml changes to commit."
+            exit 0
+          fi
+
+          git add charts/*/Chart.yaml
+          git commit -m "chore(charts): bump chart version(s)"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
