@@ -56,9 +56,9 @@ jobs:
           sudo mv kubeconform /usr/local/bin/kubeconform
 
       - name: Set up Helm repositories
-        if: matrix.dependencies.repositories
+        if: ${{ matrix.dependencies && matrix.dependencies.repositories }}
         run: |
-          for repo in "${{ toJson(matrix.dependencies.repositories) }}"; do
+          echo '${{ toJson(matrix.dependencies.repositories) }}' | jq -c '.[]' | while read -r repo; do
             name=$(echo "$repo" | jq -r '.name')
             url=$(echo "$repo" | jq -r '.url')
             helm repo add "$name" "$url"
