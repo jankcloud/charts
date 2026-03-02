@@ -23,6 +23,7 @@ jobs:
           - chart: sonarr
             chart_path: charts/sonarr
             unit_tests_enabled: true
+            fetch_dependencies_enabled: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -49,6 +50,10 @@ jobs:
           curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.7.0/kubeconform-linux-amd64.tar.gz -o kubeconform.tar.gz
           tar -xzf kubeconform.tar.gz kubeconform
           sudo mv kubeconform /usr/local/bin/kubeconform
+
+      - name: Fetch Helm dependencies
+        if: matrix.fetch_dependencies_enabled
+        run: helm dependency build ${{ matrix.chart_path }}
 
       - name: Helm lint (strict)
         run: helm lint ${{ matrix.chart_path }} --strict
