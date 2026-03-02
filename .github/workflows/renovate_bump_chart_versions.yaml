@@ -47,7 +47,7 @@ jobs:
 
           for chart in "${charts[@]}"; do
             echo "Bumping chart: ${chart}"
-            bash .renovate/post-upgrade-tasks/bump-chart-version.sh "${chart}" "false" "false" "true"
+            bash .github/workflows/scripts/bump-chart-version.sh "${chart}" "false" "false" "true"
           done
 
       - name: Commit and push changes
