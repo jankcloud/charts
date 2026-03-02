@@ -91,7 +91,7 @@ exports:
       enabled: false
       image:
         repository: ghcr.io/onedr0p/exportarr
-        tag: v2.0.1
+        tag: latest
         pullPolicy: IfNotPresent
       port: 9707
       env:
@@ -102,7 +102,7 @@ exports:
       enabled: false
       image:
         repository: ghcr.io/qdm12/gluetun
-        tag: v3.40.0
+        tag: latest
         pullPolicy: IfNotPresent
       env: {}
       # Name of a pre-existing Kubernetes Secret whose keys will be loaded as
