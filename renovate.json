@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
   "helm-values": {
     "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
