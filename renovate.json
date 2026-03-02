@@ -6,9 +6,9 @@
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
   "helm-values": {
-    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+    "managerFilePatterns": ["/^charts\\/[^\\/]+\\/values\\.ya?ml$/"]
   },
   "kubernetes": {
-    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+    "managerFilePatterns": ["/^charts\\/[^\\/]+\\/values\\.ya?ml$/"]
   }
 }
