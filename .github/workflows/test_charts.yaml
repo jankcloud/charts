@@ -22,6 +22,11 @@ jobs:
             unit_tests_enabled: true
           - chart: sonarr
             chart_path: charts/sonarr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
             unit_tests_enabled: true
     steps:
       - name: Checkout
@@ -49,6 +54,19 @@ jobs:
           curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.7.0/kubeconform-linux-amd64.tar.gz -o kubeconform.tar.gz
           tar -xzf kubeconform.tar.gz kubeconform
           sudo mv kubeconform /usr/local/bin/kubeconform
+
+      - name: Set up Helm repositories
+        if: ${{ matrix.dependencies && matrix.dependencies.repositories }}
+        run: |
+          echo '${{ toJson(matrix.dependencies.repositories) }}' | jq -c '.[]' | while read -r repo; do
+            name=$(echo "$repo" | jq -r '.name')
+            url=$(echo "$repo" | jq -r '.url')
+            helm repo add "$name" "$url"
+          done
+
+      - name: Fetch Helm dependencies
+        if: matrix.dependencies.fetch
+        run: helm dependency build ${{ matrix.chart_path }}
 
       - name: Helm lint (strict)
         run: helm lint ${{ matrix.chart_path }} --strict
