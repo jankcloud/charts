@@ -15,7 +15,7 @@ env:
 
 service:
   type: ClusterIP
-  port: 8989
+  port: 7878
   annotations: {}
 
 persistence:
@@ -83,7 +83,7 @@ exportarr:
     pullPolicy: IfNotPresent
   port: 9707
   env:
-    URL: "http://localhost:8989"
+    URL: "http://localhost:7878"
     APIKEY: ""
 
 nodeSelector: {}
