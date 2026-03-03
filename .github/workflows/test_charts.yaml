@@ -33,6 +33,11 @@ jobs:
             unit_tests_enabled: true
           - chart: radarr
             chart_path: charts/radarr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
           - chart: arr-common
             chart_path: tests/arr-common
             unit_tests_enabled: true
