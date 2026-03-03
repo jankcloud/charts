@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'charts/**'
+      - 'tests/**'
   workflow_dispatch:
 
 permissions:
@@ -32,6 +33,9 @@ jobs:
             unit_tests_enabled: true
           - chart: radarr
             chart_path: charts/radarr
+          - chart: arr-common
+            chart_path: tests/arr-common
+            unit_tests_enabled: true
             dependencies:
               fetch: true
               repositories:
