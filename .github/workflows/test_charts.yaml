@@ -41,7 +41,6 @@ jobs:
               repositories:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
-            unit_tests_enabled: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
