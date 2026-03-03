@@ -1,0 +1,21 @@
+apiVersion: v2
+name: arr-common-test
+description: A Helm chart for testing arr-common library chart
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+home: https://github.com/jankcloud/charts
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/arr-common
+keywords:
+  - arr-common
+  - library
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.0"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults

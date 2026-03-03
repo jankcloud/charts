@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'charts/**'
+      - 'tests/**'
   workflow_dispatch:
 
 permissions:
@@ -30,6 +31,15 @@ jobs:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
             unit_tests_enabled: true
+          - chart: arr-common
+            chart_path: tests/arr-common
+            unit_tests_enabled: true
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
