@@ -1,0 +1,83 @@
+suite: Service
+templates:
+  - templates/service.yaml
+tests:
+
+  - it: renders a ClusterIP Service by default
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.type
+          value: ClusterIP
+
+  - it: uses the release name and chart name for the service name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-arr-common-test
+
+  - it: exposes app service port as http
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 8989
+            targetPort: http
+            protocol: TCP
+
+  - it: does not expose an exportarr port by default
+    asserts:
+      - notContains:
+          path: spec.ports
+          content:
+            name: exportarr
+          any: true
+
+  - it: adds exportarr port when exportarr is enabled
+    set:
+      exportarr:
+        enabled: true
+        port: 9707
+        image:
+          repository: ghcr.io/onedr0p/exportarr
+          tag: v2.0.1
+          pullPolicy: IfNotPresent
+        env:
+          URL: "http://localhost:8989"
+          APIKEY: ""
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: exportarr
+            port: 9707
+            targetPort: exportarr
+            protocol: TCP
+
+  - it: applies service annotations when set
+    set:
+      service:
+        port: 8989
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: arr.example.com
+    asserts:
+      - equal:
+          path: 'metadata.annotations["external-dns.alpha.kubernetes.io/hostname"]'
+          value: arr.example.com
+
+  - it: has no annotations when none are configured
+    asserts:
+      - notExists:
+          path: metadata.annotations
+
+  - it: allows service type to be changed to LoadBalancer
+    set:
+      service:
+        type: LoadBalancer
+        port: 8989
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer

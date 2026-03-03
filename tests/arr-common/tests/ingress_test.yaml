@@ -1,0 +1,190 @@
+suite: Ingress
+templates:
+  - templates/ingress.yaml
+tests:
+
+  - it: does not render an Ingress by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a networking.k8s.io/v1 Ingress when enabled
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+
+  - it: sets the release name and chart name as the Ingress name
+    set:
+      ingress:
+        enabled: true
+        hosts: []
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-arr-common-test
+
+  - it: sets ingressClassName when provided
+    set:
+      ingress:
+        enabled: true
+        className: nginx
+        hosts: []
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: does not set ingressClassName when className is empty
+    set:
+      ingress:
+        enabled: true
+        className: ""
+        hosts: []
+    asserts:
+      - notExists:
+          path: spec.ingressClassName
+
+  - it: renders host rules correctly
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: arr.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+
+  - it: defaults pathType to Prefix when omitted
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+
+  - it: points the backend at the release service http port
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: RELEASE-NAME-arr-common-test
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.name
+          value: http
+
+  - it: renders multiple paths for a single host
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+              - path: /api
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[1].path
+          value: /api
+
+  - it: renders multiple host rules
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.internal
+            paths:
+              - path: /
+                pathType: Prefix
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: arr.internal
+      - equal:
+          path: spec.rules[1].host
+          value: arr.example.com
+
+  - it: renders TLS section when tls is set
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: arr.example.com
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: arr-tls
+            hosts:
+              - arr.example.com
+    asserts:
+      - equal:
+          path: spec.tls[0].secretName
+          value: arr-tls
+      - contains:
+          path: spec.tls[0].hosts
+          content: arr.example.com
+
+  - it: does not render a TLS section when tls is empty
+    set:
+      ingress:
+        enabled: true
+        hosts: []
+        tls: []
+    asserts:
+      - notExists:
+          path: spec.tls
+
+  - it: applies ingress annotations when set
+    set:
+      ingress:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        hosts: []
+    asserts:
+      - equal:
+          path: 'metadata.annotations["nginx.ingress.kubernetes.io/proxy-body-size"]'
+          value: "0"
