@@ -1,0 +1,25 @@
+apiVersion: v2
+name: radarr
+description: A Helm chart for deploying Radarr
+type: application
+version: 1.0.2
+appVersion: 4.0.16
+home: https://radarr.video
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/radarr
+  - https://github.com/Radarr/Radarr
+keywords:
+  - radarr
+  - servarr
+  - pvr
+  - usenet
+  - bittorrent
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.0"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults

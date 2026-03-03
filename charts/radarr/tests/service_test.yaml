@@ -1,0 +1,22 @@
+suite: Service
+templates:
+  - templates/service.yaml
+tests:
+
+  - it: renders a Service for Radarr
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-radarr
+
+  - it: exposes Radarr on port 8989 named http
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 8989
+            targetPort: http
+            protocol: TCP

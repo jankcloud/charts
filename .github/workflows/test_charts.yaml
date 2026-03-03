@@ -30,6 +30,14 @@ jobs:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
             unit_tests_enabled: true
+          - chart: radarr
+            chart_path: charts/radarr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
