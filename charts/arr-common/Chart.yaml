@@ -6,7 +6,7 @@ type: library
 version: 0.1.1
 home: https://github.com/jankcloud/charts
 sources:
-  - https://github.com/jankcloud/charts/tree/main/libraries/arr-common
+  - https://github.com/jankcloud/charts/tree/main/charts/arr-common
 keywords:
   - arr
   - servarr
