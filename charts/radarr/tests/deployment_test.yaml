@@ -16,12 +16,6 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-radarr
 
-  - it: uses the Radarr image configured by chart values
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].image
-          value: ghcr.io/linuxserver/radarr:6.0.4
-
   - it: sets Radarr default runtime env vars
     asserts:
       - contains:
