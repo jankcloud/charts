@@ -1,9 +1,9 @@
 dependencies:
 - name: radarr
   repository: https://jankcloud.github.io/charts
-  version: 1.0.3
+  version: 1.0.5
 - name: sonarr
   repository: https://jankcloud.github.io/charts
   version: 1.0.2
-digest: sha256:33a57deef710eb0ae84f6ca99e13fb9705e798a9dd21618a0f90cd38eba1a27b
-generated: "2026-03-04T10:45:05.670949052Z"
+digest: sha256:cdd404212265820477cbee2e24800a4aae3716a4d18de7aee75147baf2a9016f
+generated: "2026-03-04T23:07:17.060577977Z"
