@@ -21,7 +21,7 @@ A Helm chart for deploying Sonarr
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://jankcloud.github.io/charts | arr-common | 0.1.0 |
+| https://jankcloud.github.io/charts | arr-common | 0.1.1 |
 
 ## Values
 
