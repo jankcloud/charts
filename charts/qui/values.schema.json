@@ -64,7 +64,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "v1.14.1",
+          "default": "v1.14.1@sha256:10b7945d4f0978f56a7cb939a011e1aeef3b8d500e825f409599ae754f95601b",
           "required": [],
           "title": "tag",
           "type": "string"
