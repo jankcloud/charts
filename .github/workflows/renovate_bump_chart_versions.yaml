@@ -79,6 +79,7 @@ jobs:
             fi
 
             normalized_app_version="${current_tag#v}"
+            normalized_app_version="${normalized_app_version%%@*}"
 
             base_version="$(git show "${{ github.event.pull_request.base.sha }}:${chart_file}" 2>/dev/null | yq -r '.version // ""' - 2>/dev/null || true)"
             target_version="$(bump_patch "$base_version")"
