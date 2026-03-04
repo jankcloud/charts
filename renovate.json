@@ -7,6 +7,12 @@
   ],
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
+  
+  "allowedPostUpgradeCommands": [
+    "pip install pre-commit",
+    "pre-commit run .*"
+  ],
+  
   "bumpVersions": [
     {
       "filePatterns": ["{{packageFileDir}}/Chart.{yaml,yml}"],
@@ -16,7 +22,19 @@
   ],
   "helmv3" : {
     "managerFilePatterns": ["/(^|/)Chart\\.ya?ml$/"],
-    "postUpdateOptions": ["helmUpdateSubChartArchives"]
+    "postUpdateOptions": ["helmUpdateSubChartArchives"],
+    "postUpgradeTasks": {
+      "commands": [
+        "pip install pre-commit",
+        "pre-commit run --all-files || true"
+      ],
+      "fileFilters": [
+        "charts/**",
+        "**/Chart.lock",
+        "**/values.schema.json",
+        "**/README.md"
+      ]
+    }
   },
   "helm-values" : {
     "managerFilePatterns": [
