@@ -19,7 +19,7 @@ maintainers:
     url: https://github.com/jankcloud
 dependencies:
   - name: arr-common
-    version: "0.1.0"
+    version: "0.1.1"
     repository: "https://jankcloud.github.io/charts"
     import-values:
       - defaults
