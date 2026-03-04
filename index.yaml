@@ -2,6 +2,32 @@ apiVersion: v1
 entries:
   arr-common:
   - apiVersion: v2
+    created: "2026-03-04T20:41:03.838117712Z"
+    description: 'A Helm library chart for arr-stack applications '
+    digest: d21d63303f7f20bbb43109a6b6b159316f102f87a62149d7ab7f662cb48df469
+    home: https://github.com/jankcloud/charts
+    keywords:
+    - arr
+    - servarr
+    - sonarr
+    - radarr
+    - lidarr
+    - readarr
+    - prowlarr
+    - bazarr
+    - gluetun
+    - exportarr
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: arr-common
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/libraries/arr-common
+    type: library
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/arr-common-0.1.1/arr-common-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     created: "2026-03-02T17:56:04.739884274Z"
     description: 'A Helm library chart for arr-stack applications '
     digest: 59748d4ff24e553d147503ae23e350dd989926276943b281383fd9cc5fd718b6
@@ -29,6 +55,17 @@ entries:
     version: 0.1.0
   qbittorrent-exporter:
   - apiVersion: v2
+    appVersion: 1.13.3
+    created: "2026-03-04T20:41:04.009607469Z"
+    description: A Helm chart for qBittorrent Prometheus Exporter - exports metrics
+      from qBittorrent to Prometheus
+    digest: 0b440b7a22b5811f667838ff4fc3666bcbf67e917729e8e1bd6b22efbdf6386e
+    name: qbittorrent-exporter
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/qbittorrent-exporter-1.0.2/qbittorrent-exporter-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     appVersion: v1.13.3
     created: "2026-03-01T21:28:06.270028725Z"
     description: A Helm chart for qBittorrent Prometheus Exporter - exports metrics
@@ -40,6 +77,16 @@ entries:
     - https://github.com/jankcloud/charts/releases/download/qbittorrent-exporter-1.0.1/qbittorrent-exporter-1.0.1.tgz
     version: 1.0.1
   qui:
+  - apiVersion: v2
+    appVersion: 1.14.1
+    created: "2026-03-04T20:41:04.202573815Z"
+    description: A Helm chart for Qui
+    digest: c7b87426d4d4b9d164e7d8503bc195aa7d7ca586034e0e4f8cfe65868c5dfd0b
+    name: qui
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/qui-1.2.1/qui-1.2.1.tgz
+    version: 1.2.1
   - apiVersion: v2
     appVersion: 1.14.1
     created: "2026-03-01T21:28:06.420920694Z"
@@ -173,6 +220,35 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: 4.0.16
+    created: "2026-03-04T20:41:04.609454179Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.0
+    description: A Helm chart for deploying Sonarr
+    digest: d6bb38f2f3a018f1ac8298ca3ce9843cd1d1cb8a93d9138f1af67d434e2661b4
+    home: https://sonarr.tv
+    keywords:
+    - sonarr
+    - servarr
+    - pvr
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: sonarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+    - https://github.com/Sonarr/Sonarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.3/sonarr-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: 4.0.16
     created: "2026-03-02T23:16:01.699002277Z"
     dependencies:
     - import-values:
@@ -229,4 +305,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-04T20:34:57.134173564Z"
+generated: "2026-03-04T20:41:04.609502699Z"
