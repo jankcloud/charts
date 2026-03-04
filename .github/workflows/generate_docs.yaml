@@ -35,8 +35,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          pre-commit run helm-schema -a
-          pre-commit run helm-docs-built -a
+          pre-commit run helm-schema -a || true
+          pre-commit run helm-docs-built -a || true
 
       - name: Commit generated README/schema changes
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
