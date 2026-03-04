@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/linuxserver/sonarr
-  tag: 4.0.16
+  tag: 4.0.16@sha256:37be832b78548e3f55f69c45b50e3b14d18df1b6def2a4994258217e67efb1a1
   pullPolicy: IfNotPresent
 
 replicaCount: 1
@@ -83,7 +83,7 @@ exportarr:
   enabled: false
   image:
     repository: ghcr.io/onedr0p/exportarr
-    tag: v2.3.0
+    tag: v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520
     pullPolicy: IfNotPresent
   port: 9707
   env:
@@ -94,7 +94,7 @@ gluetun:
   enabled: false
   image:
     repository: ghcr.io/qdm12/gluetun
-    tag: latest
+    tag: latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5
     pullPolicy: IfNotPresent
   env: {}
   existingSecret: ""

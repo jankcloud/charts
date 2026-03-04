@@ -2,8 +2,8 @@ apiVersion: v2
 name: radarr
 description: A Helm chart for deploying Radarr
 type: application
-version: 1.0.4
-appVersion: 4.0.16
+version: 1.0.5
+appVersion: 6.0.4
 home: https://radarr.video
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/radarr

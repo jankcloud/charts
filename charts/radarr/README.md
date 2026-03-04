@@ -1,6 +1,6 @@
 # radarr
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.16](https://img.shields.io/badge/AppVersion-4.0.16-informational?style=flat-square)
+![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.0.4](https://img.shields.io/badge/AppVersion-6.0.4-informational?style=flat-square)
 
 A Helm chart for deploying Radarr
 
@@ -37,7 +37,7 @@ A Helm chart for deploying Radarr
 | exportarr.env.URL | string | `"http://localhost:7878"` |  |
 | exportarr.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exportarr.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
-| exportarr.image.tag | string | `"v2.3.0"` |  |
+| exportarr.image.tag | string | `"v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520"` |  |
 | exportarr.port | int | `9707` |  |
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
@@ -47,10 +47,10 @@ A Helm chart for deploying Radarr
 | gluetun.existingSecret | string | `""` |  |
 | gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| gluetun.image.tag | string | `"latest"` |  |
+| gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/radarr"` |  |
-| image.tag | string | `"6.0.4"` |  |
+| image.tag | string | `"6.0.4@sha256:a360633a3682d41e96f71a07ff36ecbdf2394a9628465b84b0a8437087715b41"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
