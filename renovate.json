@@ -21,6 +21,7 @@
   "helm-values" : {
     "managerFilePatterns": [
       "/(^|/)values\\.ya?ml$/"
-    ]
+    ],
+    "pinDigests": true
   }
 }
