@@ -2,8 +2,9 @@ apiVersion: v2
 name: sonarr
 description: A Helm chart for deploying Sonarr
 type: application
-version: 1.0.4
-appVersion: 4.0.16
+version: 1.1.0
+# renovate: image=ghcr.io/linuxserver/sonarr
+appVersion: 4.0.14
 home: https://sonarr.tv
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/sonarr

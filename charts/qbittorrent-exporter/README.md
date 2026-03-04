@@ -4,6 +4,18 @@
 
 A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
 
+**Homepage:** <https://github.com/jankcloud/charts>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| jankcloud |  | <https://github.com/jankcloud> |
+
+## Source Code
+
+* <https://github.com/jankcloud/charts/tree/main/charts/qbittorrent-exporter>
+
 ## Values
 
 | Key | Type | Default | Description |

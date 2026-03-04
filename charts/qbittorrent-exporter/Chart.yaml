@@ -1,6 +1,19 @@
 apiVersion: v2
 name: qbittorrent-exporter
-description: A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
+description: >
+  A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
 type: application
 version: 1.0.3
+# renovate: image=ghcr.io/martabal/qbittorrent-exporter
 appVersion: 1.13.3
+home: https://github.com/jankcloud/charts
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/qbittorrent-exporter
+keywords:
+  - qbittorrent-exporter
+  - qbittorrent
+  - prometheus
+  - exporter
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
