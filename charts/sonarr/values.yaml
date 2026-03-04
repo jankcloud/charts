@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/linuxserver/sonarr
-  tag: 4.0.14
+  tag: 4.0.16
   pullPolicy: IfNotPresent
 
 replicaCount: 1
