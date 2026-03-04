@@ -1,6 +1,6 @@
 # qui
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.14.1](https://img.shields.io/badge/AppVersion-1.14.1-informational?style=flat-square)
+![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.14.1](https://img.shields.io/badge/AppVersion-1.14.1-informational?style=flat-square)
 
 A Helm chart for Qui
 
@@ -15,7 +15,7 @@ A Helm chart for Qui
 | env.TZ | string | `"America/New_York"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/autobrr/qui"` |  |
-| image.tag | string | `"v1.14.1"` |  |
+| image.tag | string | `"v1.14.1@sha256:10b7945d4f0978f56a7cb939a011e1aeef3b8d500e825f409599ae754f95601b"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `"nginx"` |  |
 | ingress.enabled | bool | `false` |  |
