@@ -2,5 +2,5 @@ apiVersion: v2
 name: qbittorrent-exporter
 description: A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
 type: application
-version: 1.0.2
-appVersion: 1.13.3
+version: 1.0.3
+appVersion: 1.13.3@sha256:cbb96f078ef255bc735a4a828f21af99b21d393d3685ee398b1ea0d0c55d3f9e
