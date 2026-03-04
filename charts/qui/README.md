@@ -1,8 +1,20 @@
 # qui
 
-![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.14.1](https://img.shields.io/badge/AppVersion-1.14.1-informational?style=flat-square)
+![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.14.1](https://img.shields.io/badge/AppVersion-1.14.1-informational?style=flat-square)
 
 A Helm chart for Qui
+
+**Homepage:** <https://github.com/autobrr/qui>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| jankcloud |  | <https://github.com/jankcloud> |
+
+## Source Code
+
+* <https://github.com/jankcloud/charts/tree/main/charts/qui>
 
 ## Values
 
