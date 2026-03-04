@@ -14,6 +14,8 @@ repos:
         args:
           - --chart-search-root=charts
           - --add-schema-reference
+          - "--skip-auto-generation=additionalProperties"
+
 
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.30
@@ -26,5 +28,4 @@ repos:
     hooks:
       - id: helm-docs-built
         args:
-          # Make the tool search for charts only under the `charts` directory
           - --chart-search-root=charts

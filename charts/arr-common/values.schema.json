@@ -1,13 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "properties": {
     "exports": {
-      "additionalProperties": false,
       "description": "yaml-language-server: $schema=values.schema.json",
       "properties": {
         "defaults": {
-          "additionalProperties": false,
           "properties": {
             "additionalVolumes": {
               "items": {
@@ -18,19 +15,16 @@
               "type": "array"
             },
             "affinity": {
-              "additionalProperties": false,
               "required": [],
               "title": "affinity",
               "type": "object"
             },
             "env": {
-              "additionalProperties": false,
               "required": [],
               "title": "env",
               "type": "object"
             },
             "exportarr": {
-              "additionalProperties": false,
               "properties": {
                 "enabled": {
                   "default": false,
@@ -39,7 +33,6 @@
                   "type": "boolean"
                 },
                 "env": {
-                  "additionalProperties": false,
                   "properties": {
                     "APIKEY": {
                       "default": "",
@@ -62,7 +55,6 @@
                   "type": "object"
                 },
                 "image": {
-                  "additionalProperties": false,
                   "properties": {
                     "pullPolicy": {
                       "default": "IfNotPresent",
@@ -130,7 +122,6 @@
               "type": "string"
             },
             "gluetun": {
-              "additionalProperties": false,
               "properties": {
                 "enabled": {
                   "default": false,
@@ -139,7 +130,6 @@
                   "type": "boolean"
                 },
                 "env": {
-                  "additionalProperties": false,
                   "required": [],
                   "title": "env",
                   "type": "object"
@@ -152,7 +142,6 @@
                   "type": "string"
                 },
                 "image": {
-                  "additionalProperties": false,
                   "properties": {
                     "pullPolicy": {
                       "default": "IfNotPresent",
@@ -192,7 +181,6 @@
               "type": "object"
             },
             "image": {
-              "additionalProperties": false,
               "properties": {
                 "pullPolicy": {
                   "default": "IfNotPresent",
@@ -222,10 +210,8 @@
               "type": "object"
             },
             "ingress": {
-              "additionalProperties": false,
               "properties": {
                 "annotations": {
-                  "additionalProperties": false,
                   "required": [],
                   "title": "annotations",
                   "type": "object"
@@ -285,16 +271,13 @@
               "type": "string"
             },
             "nodeSelector": {
-              "additionalProperties": false,
               "required": [],
               "title": "nodeSelector",
               "type": "object"
             },
             "persistence": {
-              "additionalProperties": false,
               "properties": {
                 "config": {
-                  "additionalProperties": false,
                   "properties": {
                     "accessMode": {
                       "default": "ReadWriteOnce",
@@ -345,10 +328,8 @@
               "type": "object"
             },
             "probes": {
-              "additionalProperties": false,
               "properties": {
                 "liveness": {
-                  "additionalProperties": false,
                   "properties": {
                     "failureThreshold": {
                       "default": 5,
@@ -357,7 +338,6 @@
                       "type": "integer"
                     },
                     "httpGet": {
-                      "additionalProperties": false,
                       "properties": {
                         "path": {
                           "default": "/",
@@ -409,7 +389,6 @@
                   "type": "object"
                 },
                 "readiness": {
-                  "additionalProperties": false,
                   "properties": {
                     "failureThreshold": {
                       "default": 5,
@@ -418,7 +397,6 @@
                       "type": "integer"
                     },
                     "httpGet": {
-                      "additionalProperties": false,
                       "properties": {
                         "path": {
                           "default": "/",
@@ -484,10 +462,8 @@
               "type": "integer"
             },
             "resources": {
-              "additionalProperties": false,
               "properties": {
                 "limits": {
-                  "additionalProperties": false,
                   "properties": {
                     "memory": {
                       "default": "1Gi",
@@ -503,7 +479,6 @@
                   "type": "object"
                 },
                 "requests": {
-                  "additionalProperties": false,
                   "properties": {
                     "cpu": {
                       "default": "100m",
@@ -534,10 +509,8 @@
               "type": "object"
             },
             "service": {
-              "additionalProperties": false,
               "properties": {
                 "annotations": {
-                  "additionalProperties": false,
                   "required": [],
                   "title": "annotations",
                   "type": "object"
@@ -564,10 +537,8 @@
               "type": "object"
             },
             "serviceMonitor": {
-              "additionalProperties": false,
               "properties": {
                 "annotations": {
-                  "additionalProperties": false,
                   "required": [],
                   "title": "annotations",
                   "type": "object"
@@ -585,7 +556,6 @@
                   "type": "string"
                 },
                 "labels": {
-                  "additionalProperties": false,
                   "required": [],
                   "title": "labels",
                   "type": "object"
@@ -616,7 +586,6 @@
               "type": "array"
             },
             "strategy": {
-              "additionalProperties": false,
               "properties": {
                 "type": {
                   "default": "Recreate",

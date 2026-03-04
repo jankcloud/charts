@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "properties": {
     "additionalVolumes": {
       "items": {
@@ -11,13 +10,11 @@
       "type": "array"
     },
     "affinity": {
-      "additionalProperties": false,
       "required": [],
       "title": "affinity",
       "type": "object"
     },
     "env": {
-      "additionalProperties": false,
       "properties": {
         "QUI__BASE_URL": {
           "default": "",
@@ -53,7 +50,6 @@
       "type": "object"
     },
     "image": {
-      "additionalProperties": false,
       "properties": {
         "pullPolicy": {
           "default": "IfNotPresent",
@@ -83,10 +79,8 @@
       "type": "object"
     },
     "ingress": {
-      "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
           "required": [],
           "title": "annotations",
           "type": "object"
@@ -131,10 +125,8 @@
       "type": "object"
     },
     "livenessProbe": {
-      "additionalProperties": false,
       "properties": {
         "httpGet": {
-          "additionalProperties": false,
           "properties": {
             "path": {
               "default": "/",
@@ -178,7 +170,6 @@
       "type": "object"
     },
     "metrics": {
-      "additionalProperties": false,
       "properties": {
         "basicAuthUsers": {
           "default": "",
@@ -222,16 +213,13 @@
       "type": "object"
     },
     "nodeSelector": {
-      "additionalProperties": false,
       "required": [],
       "title": "nodeSelector",
       "type": "object"
     },
     "persistence": {
-      "additionalProperties": false,
       "properties": {
         "config": {
-          "additionalProperties": false,
           "properties": {
             "accessMode": {
               "default": "ReadWriteOnce",
@@ -282,10 +270,8 @@
       "type": "object"
     },
     "prometheus": {
-      "additionalProperties": false,
       "properties": {
         "scrapeAnnotations": {
-          "additionalProperties": false,
           "properties": {
             "enabled": {
               "default": false,
@@ -315,10 +301,8 @@
       "type": "object"
     },
     "readinessProbe": {
-      "additionalProperties": false,
       "properties": {
         "httpGet": {
-          "additionalProperties": false,
           "properties": {
             "path": {
               "default": "/",
@@ -369,10 +353,8 @@
       "type": "integer"
     },
     "resources": {
-      "additionalProperties": false,
       "properties": {
         "limits": {
-          "additionalProperties": false,
           "properties": {
             "memory": {
               "default": "1Gi",
@@ -388,7 +370,6 @@
           "type": "object"
         },
         "requests": {
-          "additionalProperties": false,
           "properties": {
             "cpu": {
               "default": "100m",
@@ -419,10 +400,8 @@
       "type": "object"
     },
     "service": {
-      "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
           "required": [],
           "title": "annotations",
           "type": "object"
@@ -449,10 +428,8 @@
       "type": "object"
     },
     "serviceMonitor": {
-      "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
           "required": [],
           "title": "annotations",
           "type": "object"
@@ -470,7 +447,6 @@
           "type": "string"
         },
         "labels": {
-          "additionalProperties": false,
           "required": [],
           "title": "labels",
           "type": "object"
