@@ -777,7 +777,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "4.0.14@sha256:de67e5b682fedcc4ac34f28a5697931c680c959ea65f8111b0cce17bc698c0b2",
+          "default": "4.0.16@sha256:37be832b78548e3f55f69c45b50e3b14d18df1b6def2a4994258217e67efb1a1",
           "required": [],
           "title": "tag",
           "type": "string"
