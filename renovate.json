@@ -5,10 +5,14 @@
   ],
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
-  "helm-values": {
-    "managerFilePatterns": ["/^charts\\/[^\\/]+\\/values\\.ya?ml$/"]
+  "helmv3" : {
+    "managerFilePatterns": ["/(^|/)Chart\\.ya?ml$/"],
+    "postUpdateOptions": ["helmUpdateSubChartArchives"]
   },
-  "kubernetes": {
-    "managerFilePatterns": ["/^charts\\/[^\\/]+\\/values\\.ya?ml$/"]
+  "helm-values" : {
+    "managerFilePatterns": [
+      "/(^|/)values\\.ya?ml$/"
+    ],
+    "pinDigests": true
   }
 }
