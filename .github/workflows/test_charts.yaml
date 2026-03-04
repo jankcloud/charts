@@ -38,6 +38,14 @@ jobs:
               repositories:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
+          - chart: servarr-stack
+            chart_path: charts/servarr-stack
+            unit_tests_enabled: true
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
           - chart: arr-common
             chart_path: tests/arr-common
             unit_tests_enabled: true

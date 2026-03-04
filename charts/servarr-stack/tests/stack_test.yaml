@@ -1,0 +1,27 @@
+suite: Servarr stack dependency toggles
+templates:
+  - charts/radarr/templates/deployment.yaml
+  - charts/sonarr/templates/deployment.yaml
+tests:
+
+  - it: renders both Deployments by default
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+
+---
+
+suite: Servarr stack services
+templates:
+  - charts/radarr/templates/service.yaml
+  - charts/sonarr/templates/service.yaml
+tests:
+
+  - it: renders both Services by default
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Service
