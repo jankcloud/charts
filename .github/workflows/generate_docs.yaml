@@ -1,0 +1,47 @@
+name: Generate JSON Schema and Documentation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'charts/**'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-docs:
+    if: github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Install pre-commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pre-commit
+
+      - name: Regenerate values.schema.json and README.md via pre-commit hooks
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pre-commit run helm-schema -a
+          pre-commit run helm-docs-built -a
+
+      - name: Commit generated README/schema changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore(charts): regenerate chart docs and schemas"
+          file_pattern: charts/*/README.md charts/*/values.schema.json
+          commit_user_name: jankbot
+          commit_user_email: jankbot@users.noreply.github.com
