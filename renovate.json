@@ -1,10 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "customManagers:helmChartYamlAppVersions",
+    "helpers:pinGitHubActionDigests",
   ],
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
+  "bumpVersions": [
+    {
+      "filePatterns": ["{{packageFileDir}}/Chart.{yaml,yml}"],
+      "matchStrings": ["version:\\s(?<version>[^\\s]+)"],
+      "bumpType": "{{#if isPatch}}patch{{else}}minor{{/if}}"
+    }
+  ],
   "helmv3" : {
     "managerFilePatterns": ["/(^|/)Chart\\.ya?ml$/"],
     "postUpdateOptions": ["helmUpdateSubChartArchives"]
@@ -12,7 +21,6 @@
   "helm-values" : {
     "managerFilePatterns": [
       "/(^|/)values\\.ya?ml$/"
-    ],
-    "pinDigests": true
+    ]
   }
 }
