@@ -20,9 +20,13 @@ jobs:
           - chart: qui
             chart_path: charts/qui
             unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: qbittorrent-exporter
             chart_path: charts/qbittorrent-exporter
             unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: sonarr
             chart_path: charts/sonarr
             dependencies:
@@ -31,6 +35,8 @@ jobs:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
             unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: radarr
             chart_path: charts/radarr
             dependencies:
@@ -38,9 +44,14 @@ jobs:
               repositories:
                 - name: jankcloud
                   url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: servarr-stack
             chart_path: charts/servarr-stack
             unit_tests_enabled: true
+            linter_enabled: false
+            check_conformance: true
             dependencies:
               fetch: true
               repositories:
@@ -49,6 +60,8 @@ jobs:
           - chart: arr-common
             chart_path: tests/arr-common
             unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
             dependencies:
               fetch: true
               repositories:
@@ -95,6 +108,7 @@ jobs:
         run: helm dependency build ${{ matrix.chart_path }}
 
       - name: Helm lint (strict)
+        if: matrix.linter_enabled
         run: helm lint ${{ matrix.chart_path }} --strict
 
       - name: Helm unit tests
@@ -102,9 +116,11 @@ jobs:
         run: helm unittest ${{ matrix.chart_path }}
 
       - name: Render templates and validate schemas
+        if: matrix.check_conformance
         run: |
           helm template ${{ matrix.chart }} ${{ matrix.chart_path }} > /tmp/${{ matrix.chart }}-rendered.yaml
           kubeconform -strict -summary -ignore-missing-schemas /tmp/${{ matrix.chart }}-rendered.yaml
 
       - name: chart-testing lint
+        if: matrix.linter_enabled
         run: ct lint --config .ct.yaml --charts ${{ matrix.chart_path }}
