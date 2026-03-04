@@ -14,7 +14,7 @@ A Helm library chart for arr-stack applications
 
 ## Source Code
 
-* <https://github.com/jankcloud/charts/tree/main/libraries/arr-common>
+* <https://github.com/jankcloud/charts/tree/main/charts/arr-common>
 
 ## Values
 
