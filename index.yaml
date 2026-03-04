@@ -248,6 +248,37 @@ entries:
   servarr-stack:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-03-04T23:09:46.018909218Z"
+    dependencies:
+    - condition: radarr.enabled
+      name: radarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.0.5
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.0.2
+    description: 'A Helm chart for deploying the Servarr stack '
+    digest: 3d51a0224d5e4f6a0ad3ffb97554d4ce8fa54f31e71f5b8904d6097be8985c9c
+    home: https://github.com/jankcloud/charts
+    keywords:
+    - servarr
+    - radarr
+    - sonarr
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: servarr-stack
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/servarr-stack
+    - https://github.com/jankcloud/charts/tree/main/charts/radarr
+    - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/servarr-stack-0.1.1/servarr-stack-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-03-04T20:34:56.97761125Z"
     dependencies:
     - condition: radarr.enabled
@@ -539,4 +570,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-04T23:04:24.950700516Z"
+generated: "2026-03-04T23:09:46.192200899Z"
