@@ -11,12 +11,12 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-radarr
 
-  - it: exposes Radarr on port 8989 named http
+  - it: exposes Radarr on port 7878 named http
     asserts:
       - contains:
           path: spec.ports
           content:
             name: http
-            port: 8989
+            port: 7878
             targetPort: http
             protocol: TCP
