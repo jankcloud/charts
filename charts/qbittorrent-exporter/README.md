@@ -1,6 +1,6 @@
 # qbittorrent-exporter
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.13.3](https://img.shields.io/badge/AppVersion-1.13.3-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.13.3](https://img.shields.io/badge/AppVersion-1.13.3-informational?style=flat-square)
 
 A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
 
@@ -17,7 +17,7 @@ A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorr
 | env.QBITTORRENT_USERNAME | string | `"admin"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/martabal/qbittorrent-exporter"` |  |
-| image.tag | string | `"v1.13.3"` |  |
+| image.tag | string | `"v1.13.3@sha256:cbb96f078ef255bc735a4a828f21af99b21d393d3685ee398b1ea0d0c55d3f9e"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `"nginx"` |  |
 | ingress.enabled | bool | `false` |  |

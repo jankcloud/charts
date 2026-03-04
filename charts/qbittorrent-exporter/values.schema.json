@@ -79,7 +79,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "v1.13.3",
+          "default": "v1.13.3@sha256:cbb96f078ef255bc735a4a828f21af99b21d393d3685ee398b1ea0d0c55d3f9e",
           "required": [],
           "title": "tag",
           "type": "string"

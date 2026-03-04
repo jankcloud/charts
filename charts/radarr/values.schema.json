@@ -82,7 +82,7 @@
                           "type": "string"
                         },
                         "tag": {
-                          "default": "latest",
+                          "default": "latest@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
                           "required": [],
                           "title": "tag",
                           "type": "string"
@@ -160,7 +160,7 @@
                           "type": "string"
                         },
                         "tag": {
-                          "default": "latest",
+                          "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
                           "required": [],
                           "title": "tag",
                           "type": "string"
@@ -565,6 +565,12 @@
       "title": "arr-common",
       "type": "object"
     },
+    "enabled": {
+      "description": "Conditional property used in parent chart",
+      "required": [],
+      "title": "enabled",
+      "type": "boolean"
+    },
     "env": {
       "properties": {
         "PGID": {
@@ -639,7 +645,7 @@
               "type": "string"
             },
             "tag": {
-              "default": "v2.3.0",
+              "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
               "required": [],
               "title": "tag",
               "type": "string"
@@ -731,7 +737,7 @@
               "type": "string"
             },
             "tag": {
-              "default": "latest",
+              "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
               "required": [],
               "title": "tag",
               "type": "string"
@@ -771,7 +777,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "6.0.4",
+          "default": "6.0.4@sha256:a360633a3682d41e96f71a07ff36ecbdf2394a9628465b84b0a8437087715b41",
           "required": [],
           "title": "tag",
           "type": "string"

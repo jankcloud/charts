@@ -28,7 +28,7 @@ A Helm library chart for arr-stack applications
 | exports.defaults.exportarr.env.URL | string | `"http://localhost"` |  |
 | exports.defaults.exportarr.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exports.defaults.exportarr.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
-| exports.defaults.exportarr.image.tag | string | `"latest"` |  |
+| exports.defaults.exportarr.image.tag | string | `"latest@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520"` |  |
 | exports.defaults.exportarr.port | int | `9707` |  |
 | exports.defaults.extraVolumeMounts | list | `[]` |  |
 | exports.defaults.extraVolumes | list | `[]` |  |
@@ -38,7 +38,7 @@ A Helm library chart for arr-stack applications
 | exports.defaults.gluetun.existingSecret | string | `""` |  |
 | exports.defaults.gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exports.defaults.gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| exports.defaults.gluetun.image.tag | string | `"latest"` |  |
+| exports.defaults.gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
 | exports.defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exports.defaults.image.repository | string | `""` |  |
 | exports.defaults.image.tag | string | `""` |  |

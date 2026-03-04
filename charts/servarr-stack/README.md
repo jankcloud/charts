@@ -1,40 +1,34 @@
-# servarr-stack Helm Chart
+# servarr-stack
 
-This chart installs a Servarr umbrella stack using the published JankCloud charts for:
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
-- Radarr
-- Sonarr
+A Helm chart for deploying the Servarr stack
 
-## Usage
+**Homepage:** <https://github.com/jankcloud/charts>
 
-Install with defaults (both subcharts enabled):
+## Maintainers
 
-```bash
-helm install servarr-stack jankcloud/servarr-stack
-```
+| Name | Email | Url |
+| ---- | ------ | --- |
+| jankcloud |  | <https://github.com/jankcloud> |
 
-Disable a subchart:
+## Source Code
 
-```bash
-helm install servarr-stack jankcloud/servarr-stack \
-  --set radarr.enabled=false
-```
+* <https://github.com/jankcloud/charts/tree/main/charts/servarr-stack>
+* <https://github.com/jankcloud/charts/tree/main/charts/radarr>
+* <https://github.com/jankcloud/charts/tree/main/charts/sonarr>
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://jankcloud.github.io/charts | radarr | 1.0.3 |
+| https://jankcloud.github.io/charts | sonarr | 1.0.2 |
 
 ## Values
 
-Top-level values are passed through to each dependency chart under:
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| radarr.enabled | bool | `true` |  |
+| sonarr.enabled | bool | `true` |  |
 
-- `radarr.*`
-- `sonarr.*`
-
-Example:
-
-```yaml
-radarr:
-  ingress:
-    enabled: true
-
-sonarr:
-  ingress:
-    enabled: true
-```
