@@ -1,0 +1,422 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "env": {
+      "additionalProperties": false,
+      "properties": {
+        "ENABLE_HIGH_CARDINALITY": {
+          "default": "false",
+          "required": [],
+          "title": "ENABLE_HIGH_CARDINALITY",
+          "type": "string"
+        },
+        "ENABLE_TRACKER": {
+          "default": "true",
+          "required": [],
+          "title": "ENABLE_TRACKER",
+          "type": "string"
+        },
+        "EXPORTER_PORT": {
+          "default": "8090",
+          "required": [],
+          "title": "EXPORTER_PORT",
+          "type": "string"
+        },
+        "LOG_LEVEL": {
+          "default": "INFO",
+          "required": [],
+          "title": "LOG_LEVEL",
+          "type": "string"
+        },
+        "QBITTORRENT_BASE_URL": {
+          "default": "http://qbittorrent:8080",
+          "required": [],
+          "title": "QBITTORRENT_BASE_URL",
+          "type": "string"
+        },
+        "QBITTORRENT_PASSWORD": {
+          "default": "adminadmin",
+          "required": [],
+          "title": "QBITTORRENT_PASSWORD",
+          "type": "string"
+        },
+        "QBITTORRENT_USERNAME": {
+          "default": "admin",
+          "required": [],
+          "title": "QBITTORRENT_USERNAME",
+          "type": "string"
+        }
+      },
+      "required": [
+        "QBITTORRENT_BASE_URL",
+        "QBITTORRENT_USERNAME",
+        "QBITTORRENT_PASSWORD",
+        "EXPORTER_PORT",
+        "LOG_LEVEL",
+        "ENABLE_TRACKER",
+        "ENABLE_HIGH_CARDINALITY"
+      ],
+      "title": "env",
+      "type": "object"
+    },
+    "global": {
+      "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+      "required": [],
+      "title": "global",
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "properties": {
+        "pullPolicy": {
+          "default": "IfNotPresent",
+          "required": [],
+          "title": "pullPolicy",
+          "type": "string"
+        },
+        "repository": {
+          "default": "ghcr.io/martabal/qbittorrent-exporter",
+          "required": [],
+          "title": "repository",
+          "type": "string"
+        },
+        "tag": {
+          "default": "v1.13.3",
+          "required": [],
+          "title": "tag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "tag",
+        "pullPolicy"
+      ],
+      "title": "image",
+      "type": "object"
+    },
+    "ingress": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "className": {
+          "default": "nginx",
+          "required": [],
+          "title": "className",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "hosts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "hosts",
+          "type": "array"
+        },
+        "tls": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tls",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "className",
+        "annotations",
+        "hosts",
+        "tls"
+      ],
+      "title": "ingress",
+      "type": "object"
+    },
+    "livenessProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "initialDelaySeconds": {
+          "default": 15,
+          "required": [],
+          "title": "initialDelaySeconds",
+          "type": "integer"
+        },
+        "periodSeconds": {
+          "default": 10,
+          "required": [],
+          "title": "periodSeconds",
+          "type": "integer"
+        },
+        "tcpSocket": {
+          "additionalProperties": false,
+          "properties": {
+            "port": {
+              "default": "http",
+              "required": [],
+              "title": "port",
+              "type": "string"
+            }
+          },
+          "required": [
+            "port"
+          ],
+          "title": "tcpSocket",
+          "type": "object"
+        }
+      },
+      "required": [
+        "tcpSocket",
+        "initialDelaySeconds",
+        "periodSeconds"
+      ],
+      "title": "livenessProbe",
+      "type": "object"
+    },
+    "metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "default": "/metrics",
+          "required": [],
+          "title": "path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "metrics",
+      "type": "object"
+    },
+    "prometheus": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "properties": {
+            "prometheus.io/path": {
+              "default": "/metrics",
+              "required": [],
+              "title": "prometheus.io/path",
+              "type": "string"
+            },
+            "prometheus.io/port": {
+              "default": "8090",
+              "required": [],
+              "title": "prometheus.io/port",
+              "type": "string"
+            },
+            "prometheus.io/scrape": {
+              "default": "true",
+              "required": [],
+              "title": "prometheus.io/scrape",
+              "type": "string"
+            }
+          },
+          "required": [
+            "prometheus.io/scrape",
+            "prometheus.io/port",
+            "prometheus.io/path"
+          ],
+          "title": "annotations",
+          "type": "object"
+        }
+      },
+      "required": [
+        "annotations"
+      ],
+      "title": "prometheus",
+      "type": "object"
+    },
+    "readinessProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "initialDelaySeconds": {
+          "default": 15,
+          "required": [],
+          "title": "initialDelaySeconds",
+          "type": "integer"
+        },
+        "periodSeconds": {
+          "default": 10,
+          "required": [],
+          "title": "periodSeconds",
+          "type": "integer"
+        },
+        "tcpSocket": {
+          "additionalProperties": false,
+          "properties": {
+            "port": {
+              "default": "http",
+              "required": [],
+              "title": "port",
+              "type": "string"
+            }
+          },
+          "required": [
+            "port"
+          ],
+          "title": "tcpSocket",
+          "type": "object"
+        }
+      },
+      "required": [
+        "tcpSocket",
+        "initialDelaySeconds",
+        "periodSeconds"
+      ],
+      "title": "readinessProbe",
+      "type": "object"
+    },
+    "replicaCount": {
+      "default": 1,
+      "description": "yaml-language-server: $schema=values.schema.json",
+      "required": [],
+      "title": "replicaCount",
+      "type": "integer"
+    },
+    "resources": {
+      "additionalProperties": false,
+      "properties": {
+        "limits": {
+          "additionalProperties": false,
+          "properties": {
+            "memory": {
+              "default": "1000Mi",
+              "required": [],
+              "title": "memory",
+              "type": "string"
+            }
+          },
+          "required": [
+            "memory"
+          ],
+          "title": "limits",
+          "type": "object"
+        },
+        "requests": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu": {
+              "default": "50m",
+              "required": [],
+              "title": "cpu",
+              "type": "string"
+            },
+            "memory": {
+              "default": "250Mi",
+              "required": [],
+              "title": "memory",
+              "type": "string"
+            }
+          },
+          "required": [
+            "memory",
+            "cpu"
+          ],
+          "title": "requests",
+          "type": "object"
+        }
+      },
+      "required": [
+        "requests",
+        "limits"
+      ],
+      "title": "resources",
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "properties": {
+        "port": {
+          "default": 8090,
+          "required": [],
+          "title": "port",
+          "type": "integer"
+        },
+        "type": {
+          "default": "ClusterIP",
+          "required": [],
+          "title": "type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "port"
+      ],
+      "title": "service",
+      "type": "object"
+    },
+    "serviceMonitor": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "interval": {
+          "default": "30s",
+          "required": [],
+          "title": "interval",
+          "type": "string"
+        },
+        "labels": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "labels",
+          "type": "object"
+        },
+        "scrapeTimeout": {
+          "default": "10s",
+          "required": [],
+          "title": "scrapeTimeout",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "interval",
+        "scrapeTimeout",
+        "labels",
+        "annotations"
+      ],
+      "title": "serviceMonitor",
+      "type": "object"
+    }
+  },
+  "required": [
+    "replicaCount",
+    "image",
+    "service",
+    "prometheus",
+    "env",
+    "resources",
+    "readinessProbe",
+    "livenessProbe",
+    "metrics",
+    "serviceMonitor",
+    "ingress"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,1271 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "additionalVolumes": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "additionalVolumes",
+      "type": "array"
+    },
+    "affinity": {
+      "additionalProperties": false,
+      "required": [],
+      "title": "affinity",
+      "type": "object"
+    },
+    "arr-common": {
+      "description": "A Helm library chart for arr-stack applications\n",
+      "properties": {
+        "exports": {
+          "additionalProperties": false,
+          "description": "yaml-language-server: $schema=values.schema.json",
+          "properties": {
+            "defaults": {
+              "additionalProperties": false,
+              "properties": {
+                "additionalVolumes": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "additionalVolumes",
+                  "type": "array"
+                },
+                "affinity": {
+                  "additionalProperties": false,
+                  "required": [],
+                  "title": "affinity",
+                  "type": "object"
+                },
+                "env": {
+                  "additionalProperties": false,
+                  "required": [],
+                  "title": "env",
+                  "type": "object"
+                },
+                "exportarr": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "enabled": {
+                      "default": false,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "env": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "APIKEY": {
+                          "default": "",
+                          "required": [],
+                          "title": "APIKEY",
+                          "type": "string"
+                        },
+                        "URL": {
+                          "default": "http://localhost",
+                          "required": [],
+                          "title": "URL",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "env",
+                      "type": "object"
+                    },
+                    "image": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "pullPolicy": {
+                          "default": "IfNotPresent",
+                          "required": [],
+                          "title": "pullPolicy",
+                          "type": "string"
+                        },
+                        "repository": {
+                          "default": "ghcr.io/onedr0p/exportarr",
+                          "required": [],
+                          "title": "repository",
+                          "type": "string"
+                        },
+                        "tag": {
+                          "default": "latest",
+                          "required": [],
+                          "title": "tag",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "image",
+                      "type": "object"
+                    },
+                    "port": {
+                      "default": 9707,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [],
+                  "title": "exportarr",
+                  "type": "object"
+                },
+                "extraVolumeMounts": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "extraVolumeMounts",
+                  "type": "array"
+                },
+                "extraVolumes": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "extraVolumes",
+                  "type": "array"
+                },
+                "fullnameOverride": {
+                  "default": "",
+                  "required": [],
+                  "title": "fullnameOverride",
+                  "type": "string"
+                },
+                "gluetun": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "enabled": {
+                      "default": false,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "env": {
+                      "additionalProperties": false,
+                      "required": [],
+                      "title": "env",
+                      "type": "object"
+                    },
+                    "existingSecret": {
+                      "default": "",
+                      "description": "Name of a pre-existing Kubernetes Secret whose keys will be loaded as\nenvironment variables in the Gluetun container via envFrom.secretRef.\nSet this OR gluetun.env — never both.",
+                      "required": [],
+                      "title": "existingSecret",
+                      "type": "string"
+                    },
+                    "image": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "pullPolicy": {
+                          "default": "IfNotPresent",
+                          "required": [],
+                          "title": "pullPolicy",
+                          "type": "string"
+                        },
+                        "repository": {
+                          "default": "ghcr.io/qdm12/gluetun",
+                          "required": [],
+                          "title": "repository",
+                          "type": "string"
+                        },
+                        "tag": {
+                          "default": "latest",
+                          "required": [],
+                          "title": "tag",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "image",
+                      "type": "object"
+                    }
+                  },
+                  "required": [],
+                  "title": "gluetun",
+                  "type": "object"
+                },
+                "image": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "pullPolicy": {
+                      "default": "IfNotPresent",
+                      "required": [],
+                      "title": "pullPolicy",
+                      "type": "string"
+                    },
+                    "repository": {
+                      "default": "",
+                      "required": [],
+                      "title": "repository",
+                      "type": "string"
+                    },
+                    "tag": {
+                      "default": "",
+                      "required": [],
+                      "title": "tag",
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "title": "image",
+                  "type": "object"
+                },
+                "ingress": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "annotations": {
+                      "additionalProperties": false,
+                      "required": [],
+                      "title": "annotations",
+                      "type": "object"
+                    },
+                    "className": {
+                      "default": "",
+                      "required": [],
+                      "title": "className",
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "default": false,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "hosts": {
+                      "description": "hosts:\n  - host: chart-example.local\n    paths:\n      - path: /\n        pathType: Prefix",
+                      "items": {
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "hosts",
+                      "type": "array"
+                    },
+                    "tls": {
+                      "items": {
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "tls",
+                      "type": "array"
+                    }
+                  },
+                  "required": [],
+                  "title": "ingress",
+                  "type": "object"
+                },
+                "initContainers": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "initContainers",
+                  "type": "array"
+                },
+                "nameOverride": {
+                  "default": "",
+                  "required": [],
+                  "title": "nameOverride",
+                  "type": "string"
+                },
+                "nodeSelector": {
+                  "additionalProperties": false,
+                  "required": [],
+                  "title": "nodeSelector",
+                  "type": "object"
+                },
+                "persistence": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "config": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "accessMode": {
+                          "default": "ReadWriteOnce",
+                          "required": [],
+                          "title": "accessMode",
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "default": false,
+                          "required": [],
+                          "title": "enabled",
+                          "type": "boolean"
+                        },
+                        "size": {
+                          "default": "2Gi",
+                          "required": [],
+                          "title": "size",
+                          "type": "string"
+                        },
+                        "storageClass": {
+                          "default": "",
+                          "required": [],
+                          "title": "storageClass",
+                          "type": "string"
+                        },
+                        "volumeName": {
+                          "default": "",
+                          "required": [],
+                          "title": "volumeName",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "config",
+                      "type": "object"
+                    }
+                  },
+                  "required": [],
+                  "title": "persistence",
+                  "type": "object"
+                },
+                "probes": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "liveness": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "failureThreshold": {
+                          "default": 5,
+                          "required": [],
+                          "title": "failureThreshold",
+                          "type": "integer"
+                        },
+                        "httpGet": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "path": {
+                              "default": "/",
+                              "required": [],
+                              "title": "path",
+                              "type": "string"
+                            },
+                            "port": {
+                              "default": "http",
+                              "required": [],
+                              "title": "port",
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "title": "httpGet",
+                          "type": "object"
+                        },
+                        "initialDelaySeconds": {
+                          "default": 30,
+                          "required": [],
+                          "title": "initialDelaySeconds",
+                          "type": "integer"
+                        },
+                        "periodSeconds": {
+                          "default": 30,
+                          "required": [],
+                          "title": "periodSeconds",
+                          "type": "integer"
+                        },
+                        "timeoutSeconds": {
+                          "default": 5,
+                          "required": [],
+                          "title": "timeoutSeconds",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [],
+                      "title": "liveness",
+                      "type": "object"
+                    },
+                    "readiness": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "failureThreshold": {
+                          "default": 5,
+                          "required": [],
+                          "title": "failureThreshold",
+                          "type": "integer"
+                        },
+                        "httpGet": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "path": {
+                              "default": "/",
+                              "required": [],
+                              "title": "path",
+                              "type": "string"
+                            },
+                            "port": {
+                              "default": "http",
+                              "required": [],
+                              "title": "port",
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "title": "httpGet",
+                          "type": "object"
+                        },
+                        "initialDelaySeconds": {
+                          "default": 20,
+                          "required": [],
+                          "title": "initialDelaySeconds",
+                          "type": "integer"
+                        },
+                        "periodSeconds": {
+                          "default": 10,
+                          "required": [],
+                          "title": "periodSeconds",
+                          "type": "integer"
+                        },
+                        "timeoutSeconds": {
+                          "default": 5,
+                          "required": [],
+                          "title": "timeoutSeconds",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [],
+                      "title": "readiness",
+                      "type": "object"
+                    }
+                  },
+                  "required": [],
+                  "title": "probes",
+                  "type": "object"
+                },
+                "replicaCount": {
+                  "default": 1,
+                  "required": [],
+                  "title": "replicaCount",
+                  "type": "integer"
+                },
+                "resources": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "limits": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "memory": {
+                          "default": "1Gi",
+                          "required": [],
+                          "title": "memory",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "limits",
+                      "type": "object"
+                    },
+                    "requests": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "cpu": {
+                          "default": "100m",
+                          "required": [],
+                          "title": "cpu",
+                          "type": "string"
+                        },
+                        "memory": {
+                          "default": "256Mi",
+                          "required": [],
+                          "title": "memory",
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "title": "requests",
+                      "type": "object"
+                    }
+                  },
+                  "required": [],
+                  "title": "resources",
+                  "type": "object"
+                },
+                "service": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "annotations": {
+                      "additionalProperties": false,
+                      "required": [],
+                      "title": "annotations",
+                      "type": "object"
+                    },
+                    "port": {
+                      "default": 80,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "type": {
+                      "default": "ClusterIP",
+                      "required": [],
+                      "title": "type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "title": "service",
+                  "type": "object"
+                },
+                "serviceMonitor": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "annotations": {
+                      "additionalProperties": false,
+                      "required": [],
+                      "title": "annotations",
+                      "type": "object"
+                    },
+                    "enabled": {
+                      "default": false,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "interval": {
+                      "default": "30s",
+                      "required": [],
+                      "title": "interval",
+                      "type": "string"
+                    },
+                    "labels": {
+                      "additionalProperties": false,
+                      "required": [],
+                      "title": "labels",
+                      "type": "object"
+                    },
+                    "scrapeTimeout": {
+                      "default": "10s",
+                      "required": [],
+                      "title": "scrapeTimeout",
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "title": "serviceMonitor",
+                  "type": "object"
+                },
+                "sidecars": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "sidecars",
+                  "type": "array"
+                },
+                "strategy": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "default": "Recreate",
+                      "required": [],
+                      "title": "type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "title": "strategy",
+                  "type": "object"
+                },
+                "tolerations": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "tolerations",
+                  "type": "array"
+                }
+              },
+              "required": [],
+              "title": "defaults",
+              "type": "object"
+            }
+          },
+          "required": [],
+          "title": "exports",
+          "type": "object"
+        },
+        "global": {
+          "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+          "required": [],
+          "title": "global",
+          "type": "object"
+        }
+      },
+      "required": [],
+      "title": "arr-common",
+      "type": "object"
+    },
+    "env": {
+      "additionalProperties": false,
+      "properties": {
+        "PGID": {
+          "default": "1000",
+          "required": [],
+          "title": "PGID",
+          "type": "string"
+        },
+        "PUID": {
+          "default": "1000",
+          "required": [],
+          "title": "PUID",
+          "type": "string"
+        },
+        "TZ": {
+          "default": "America/New_York",
+          "required": [],
+          "title": "TZ",
+          "type": "string"
+        }
+      },
+      "required": [
+        "PUID",
+        "PGID",
+        "TZ"
+      ],
+      "title": "env",
+      "type": "object"
+    },
+    "exportarr": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "env": {
+          "additionalProperties": false,
+          "properties": {
+            "APIKEY": {
+              "default": "",
+              "required": [],
+              "title": "APIKEY",
+              "type": "string"
+            },
+            "URL": {
+              "default": "http://localhost:7878",
+              "required": [],
+              "title": "URL",
+              "type": "string"
+            }
+          },
+          "required": [
+            "URL",
+            "APIKEY"
+          ],
+          "title": "env",
+          "type": "object"
+        },
+        "image": {
+          "additionalProperties": false,
+          "properties": {
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "repository": {
+              "default": "ghcr.io/onedr0p/exportarr",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "v2.3.0",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "tag",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "port": {
+          "default": 9707,
+          "required": [],
+          "title": "port",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "port",
+        "env"
+      ],
+      "title": "exportarr",
+      "type": "object"
+    },
+    "extraVolumeMounts": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraVolumeMounts",
+      "type": "array"
+    },
+    "extraVolumes": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraVolumes",
+      "type": "array"
+    },
+    "fullnameOverride": {
+      "default": "",
+      "required": [],
+      "title": "fullnameOverride",
+      "type": "string"
+    },
+    "global": {
+      "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+      "required": [],
+      "title": "global",
+      "type": "object"
+    },
+    "gluetun": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "env": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "env",
+          "type": "object"
+        },
+        "existingSecret": {
+          "default": "",
+          "required": [],
+          "title": "existingSecret",
+          "type": "string"
+        },
+        "image": {
+          "additionalProperties": false,
+          "properties": {
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "repository": {
+              "default": "ghcr.io/qdm12/gluetun",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "latest",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "tag",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "env",
+        "existingSecret"
+      ],
+      "title": "gluetun",
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "description": "yaml-language-server: $schema=values.schema.json",
+      "properties": {
+        "pullPolicy": {
+          "default": "IfNotPresent",
+          "required": [],
+          "title": "pullPolicy",
+          "type": "string"
+        },
+        "repository": {
+          "default": "ghcr.io/linuxserver/radarr",
+          "required": [],
+          "title": "repository",
+          "type": "string"
+        },
+        "tag": {
+          "default": "6.0.4",
+          "required": [],
+          "title": "tag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository",
+        "tag",
+        "pullPolicy"
+      ],
+      "title": "image",
+      "type": "object"
+    },
+    "ingress": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "className": {
+          "default": "",
+          "required": [],
+          "title": "className",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "hosts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "hosts",
+          "type": "array"
+        },
+        "tls": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tls",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "className",
+        "annotations",
+        "hosts",
+        "tls"
+      ],
+      "title": "ingress",
+      "type": "object"
+    },
+    "initContainers": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "initContainers",
+      "type": "array"
+    },
+    "nameOverride": {
+      "default": "",
+      "required": [],
+      "title": "nameOverride",
+      "type": "string"
+    },
+    "nodeSelector": {
+      "additionalProperties": false,
+      "required": [],
+      "title": "nodeSelector",
+      "type": "object"
+    },
+    "persistence": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "additionalProperties": false,
+          "properties": {
+            "accessMode": {
+              "default": "ReadWriteOnce",
+              "required": [],
+              "title": "accessMode",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "size": {
+              "default": "2Gi",
+              "required": [],
+              "title": "size",
+              "type": "string"
+            },
+            "storageClass": {
+              "default": "",
+              "required": [],
+              "title": "storageClass",
+              "type": "string"
+            },
+            "volumeName": {
+              "default": "",
+              "required": [],
+              "title": "volumeName",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "storageClass",
+            "accessMode",
+            "size",
+            "volumeName"
+          ],
+          "title": "config",
+          "type": "object"
+        }
+      },
+      "required": [
+        "config"
+      ],
+      "title": "persistence",
+      "type": "object"
+    },
+    "probes": {
+      "additionalProperties": false,
+      "properties": {
+        "liveness": {
+          "additionalProperties": false,
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/ping",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "liveness",
+          "type": "object"
+        },
+        "readiness": {
+          "additionalProperties": false,
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/ping",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 20,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readiness",
+          "type": "object"
+        }
+      },
+      "required": [
+        "liveness",
+        "readiness"
+      ],
+      "title": "probes",
+      "type": "object"
+    },
+    "replicaCount": {
+      "default": 1,
+      "required": [],
+      "title": "replicaCount",
+      "type": "integer"
+    },
+    "resources": {
+      "additionalProperties": false,
+      "properties": {
+        "limits": {
+          "additionalProperties": false,
+          "properties": {
+            "memory": {
+              "default": "1Gi",
+              "required": [],
+              "title": "memory",
+              "type": "string"
+            }
+          },
+          "required": [
+            "memory"
+          ],
+          "title": "limits",
+          "type": "object"
+        },
+        "requests": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu": {
+              "default": "100m",
+              "required": [],
+              "title": "cpu",
+              "type": "string"
+            },
+            "memory": {
+              "default": "256Mi",
+              "required": [],
+              "title": "memory",
+              "type": "string"
+            }
+          },
+          "required": [
+            "cpu",
+            "memory"
+          ],
+          "title": "requests",
+          "type": "object"
+        }
+      },
+      "required": [
+        "requests",
+        "limits"
+      ],
+      "title": "resources",
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "port": {
+          "default": 7878,
+          "required": [],
+          "title": "port",
+          "type": "integer"
+        },
+        "type": {
+          "default": "ClusterIP",
+          "required": [],
+          "title": "type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "port",
+        "annotations"
+      ],
+      "title": "service",
+      "type": "object"
+    },
+    "serviceMonitor": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "interval": {
+          "default": "30s",
+          "required": [],
+          "title": "interval",
+          "type": "string"
+        },
+        "labels": {
+          "additionalProperties": false,
+          "required": [],
+          "title": "labels",
+          "type": "object"
+        },
+        "scrapeTimeout": {
+          "default": "10s",
+          "required": [],
+          "title": "scrapeTimeout",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "interval",
+        "scrapeTimeout",
+        "labels",
+        "annotations"
+      ],
+      "title": "serviceMonitor",
+      "type": "object"
+    },
+    "sidecars": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "sidecars",
+      "type": "array"
+    },
+    "strategy": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "default": "Recreate",
+          "required": [],
+          "title": "type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "strategy",
+      "type": "object"
+    },
+    "tolerations": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "tolerations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "image",
+    "replicaCount",
+    "nameOverride",
+    "fullnameOverride",
+    "strategy",
+    "env",
+    "service",
+    "persistence",
+    "additionalVolumes",
+    "ingress",
+    "probes",
+    "resources",
+    "serviceMonitor",
+    "exportarr",
+    "gluetun",
+    "nodeSelector",
+    "tolerations",
+    "affinity",
+    "initContainers",
+    "sidecars",
+    "extraVolumes",
+    "extraVolumeMounts"
+  ],
+  "type": "object"
+}

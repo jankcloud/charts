@@ -3,7 +3,7 @@ name: arr-common
 description: >
   A Helm library chart for arr-stack applications
 type: library
-version: 0.1.0
+version: 0.1.1
 home: https://github.com/jankcloud/charts
 sources:
   - https://github.com/jankcloud/charts/tree/main/libraries/arr-common

@@ -1,0 +1,6 @@
+dependencies:
+- name: arr-common
+  repository: https://jankcloud.github.io/charts
+  version: 0.1.0
+digest: sha256:7b2f3bcf07c5bfeed80259f75975c099ca07c82360e0629990e79df9feacc4af
+generated: "2026-03-04T10:52:17.923784067Z"
