@@ -7,7 +7,25 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
 
+  - repo: https://github.com/dadav/helm-schema
+    rev: 0.18.1
+    hooks:
+      - id: helm-schema
+        args:
+          - --chart-search-root=charts
+          - --add-schema-reference
+          - "--skip-auto-generation=additionalProperties"
+
+
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.30
     hooks:
       - id: helmlint
+        files: ^charts/
+
+  - repo: https://github.com/norwoodj/helm-docs
+    rev:  ""
+    hooks:
+      - id: helm-docs-built
+        args:
+          - --chart-search-root=charts

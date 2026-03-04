@@ -1,9 +1,13 @@
+# yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/linuxserver/radarr
   tag: 6.0.4
   pullPolicy: IfNotPresent
 
 replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
 
 strategy:
   type: Recreate
@@ -85,6 +89,15 @@ exportarr:
   env:
     URL: "http://localhost:7878"
     APIKEY: ""
+
+gluetun:
+  enabled: false
+  image:
+    repository: ghcr.io/qdm12/gluetun
+    tag: latest
+    pullPolicy: IfNotPresent
+  env: {}
+  existingSecret: ""
 
 nodeSelector: {}
 tolerations: []
