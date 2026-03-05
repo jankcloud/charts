@@ -4,6 +4,11 @@
     "config:recommended",
     "customManagers:helmChartYamlAppVersions",
     "helpers:pinGitHubActionDigests",
+    "docker:pinDigests",
+    ":configMigration",
+    ":pinDevDependencies",
+    "abandonments:recommended",
+    ":maintainLockFilesWeekly"
   ],
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
@@ -23,5 +28,14 @@
       "/(^|/)values\\.ya?ml$/"
     ],
     "pinDigests": true
-  }
+  },
+  "packageRules": [
+    {
+      "description": "Disable digest pinning for latest docker images in helm-values",
+      "matchDatasources": ["docker"],
+      "matchVersions": ["/^latest$/"],
+      "matchFileNames": ["**/values.yaml", "**/values.yml"],
+      "pinDigests": false
+    }
+  ]
 }
