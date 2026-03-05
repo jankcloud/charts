@@ -30,7 +30,7 @@
     {
       "description": "Disable digest pinning for latest docker images in helm-values",
       "matchDatasources": ["docker"],
-      "matchCurrentValue": "/^latest$/"
+      "matchCurrentValue": "/^latest$/",
       "matchFileNames": ["**/values.yaml", "**/values.yml"],
       "pinDigests": false
     },
