@@ -4,11 +4,6 @@
     "config:recommended",
     "customManagers:helmChartYamlAppVersions",
     "helpers:pinGitHubActionDigests",
-    "docker:pinDigests",
-    ":configMigration",
-    ":pinDevDependencies",
-    "abandonments:recommended",
-    ":maintainLockFilesWeekly"
   ],
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
