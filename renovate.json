@@ -5,6 +5,8 @@
     "customManagers:helmChartYamlAppVersions",
     "helpers:pinGitHubActionDigests",
   ],
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "{{currentVersion}} → {{newVersion}}",
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
   "bumpVersions": [
@@ -31,6 +33,14 @@
       "matchCurrentVersion": "/^latest$/",
       "matchFileNames": ["**/values.yaml", "**/values.yml"],
       "pinDigests": false
-    }
+    },
+    {
+      "matchManagers": ["helmv3"],
+      "semanticCommitScope": "{{parentDir}}"
+    },
+    {
+      "matchManagers": ["helm-values"],
+      "semanticCommitScope": "{{parentDir}}"
+    },
   ]
 }
