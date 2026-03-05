@@ -38,7 +38,7 @@ A Helm library chart for arr-stack applications
 | exports.defaults.gluetun.existingSecret | string | `""` |  |
 | exports.defaults.gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exports.defaults.gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| exports.defaults.gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
+| exports.defaults.gluetun.image.tag | string | `"latest@sha256:883328b243bd1a3d49cd097b43c08b86837ccfdcfd3b299402e0418dea7f8ff6"` |  |
 | exports.defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | exports.defaults.image.repository | string | `""` |  |
 | exports.defaults.image.tag | string | `""` |  |

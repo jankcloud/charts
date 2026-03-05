@@ -47,7 +47,7 @@ A Helm chart for deploying Radarr
 | gluetun.existingSecret | string | `""` |  |
 | gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
+| gluetun.image.tag | string | `"latest@sha256:883328b243bd1a3d49cd097b43c08b86837ccfdcfd3b299402e0418dea7f8ff6"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/radarr"` |  |
 | image.tag | string | `"6.0.4@sha256:a360633a3682d41e96f71a07ff36ecbdf2394a9628465b84b0a8437087715b41"` |  |

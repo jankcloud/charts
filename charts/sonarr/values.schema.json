@@ -160,7 +160,7 @@
                           "type": "string"
                         },
                         "tag": {
-                          "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+                          "default": "latest@sha256:883328b243bd1a3d49cd097b43c08b86837ccfdcfd3b299402e0418dea7f8ff6",
                           "required": [],
                           "title": "tag",
                           "type": "string"
@@ -737,7 +737,7 @@
               "type": "string"
             },
             "tag": {
-              "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+              "default": "latest@sha256:883328b243bd1a3d49cd097b43c08b86837ccfdcfd3b299402e0418dea7f8ff6",
               "required": [],
               "title": "tag",
               "type": "string"
