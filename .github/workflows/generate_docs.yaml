@@ -1,6 +1,7 @@
 name: Generate JSON Schema and Documentation
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
