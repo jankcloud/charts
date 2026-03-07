@@ -4,6 +4,6 @@ dependencies:
   version: 1.0.5
 - name: sonarr
   repository: https://jankcloud.github.io/charts
-  version: 1.1.1
-digest: sha256:577a3956c0664f3d906caf92417440faf619ab345006b517816c61815799e639
-generated: "2026-03-04T23:10:09.636945787Z"
+  version: 1.2.0
+digest: sha256:6306bb368bd1b7ce13faf40ae5b79ee70f09d25995bb8c8f5532c3fde994a99b
+generated: "2026-03-07T04:59:22.981106021Z"
