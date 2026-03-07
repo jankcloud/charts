@@ -1,6 +1,6 @@
 # sonarr
 
-![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.16](https://img.shields.io/badge/AppVersion-4.0.16-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.16](https://img.shields.io/badge/AppVersion-4.0.16-informational?style=flat-square)
 
 A Helm chart for deploying Sonarr
 
@@ -47,10 +47,10 @@ A Helm chart for deploying Sonarr
 | gluetun.existingSecret | string | `""` |  |
 | gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
+| gluetun.image.tag | string | `"latest"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/sonarr"` |  |
-| image.tag | string | `"4.0.16@sha256:37be832b78548e3f55f69c45b50e3b14d18df1b6def2a4994258217e67efb1a1"` |  |
+| image.tag | string | `"4.0.16@sha256:21c1c3d52248589bb064f5adafec18cad45812d7a01d317472955eef051e619b"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
