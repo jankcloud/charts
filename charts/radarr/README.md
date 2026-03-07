@@ -1,6 +1,6 @@
 # radarr
 
-![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.0.4](https://img.shields.io/badge/AppVersion-6.0.4-informational?style=flat-square)
+![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.0.4](https://img.shields.io/badge/AppVersion-6.0.4-informational?style=flat-square)
 
 A Helm chart for deploying Radarr
 
@@ -21,7 +21,7 @@ A Helm chart for deploying Radarr
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://jankcloud.github.io/charts | arr-common | 0.1.1 |
+| https://jankcloud.github.io/charts | arr-common | 0.1.2 |
 
 ## Values
 
@@ -47,7 +47,7 @@ A Helm chart for deploying Radarr
 | gluetun.existingSecret | string | `""` |  |
 | gluetun.image.pullPolicy | string | `"IfNotPresent"` |  |
 | gluetun.image.repository | string | `"ghcr.io/qdm12/gluetun"` |  |
-| gluetun.image.tag | string | `"latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5"` |  |
+| gluetun.image.tag | string | `"latest"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/radarr"` |  |
 | image.tag | string | `"6.0.4@sha256:a360633a3682d41e96f71a07ff36ecbdf2394a9628465b84b0a8437087715b41"` |  |

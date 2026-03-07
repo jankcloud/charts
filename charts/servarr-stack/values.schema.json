@@ -91,7 +91,7 @@
                               "type": "string"
                             },
                             "tag": {
-                              "default": "latest@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                              "default": "latest",
                               "required": [],
                               "title": "tag",
                               "type": "string"
@@ -169,7 +169,7 @@
                               "type": "string"
                             },
                             "tag": {
-                              "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+                              "default": "latest",
                               "required": [],
                               "title": "tag",
                               "type": "string"
@@ -730,7 +730,7 @@
                   "type": "string"
                 },
                 "tag": {
-                  "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+                  "default": "latest",
                   "required": [],
                   "title": "tag",
                   "type": "string"
@@ -1203,7 +1203,7 @@
                               "type": "string"
                             },
                             "tag": {
-                              "default": "latest@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                              "default": "latest",
                               "required": [],
                               "title": "tag",
                               "type": "string"
@@ -1281,7 +1281,7 @@
                               "type": "string"
                             },
                             "tag": {
-                              "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+                              "default": "latest",
                               "required": [],
                               "title": "tag",
                               "type": "string"
@@ -1842,7 +1842,7 @@
                   "type": "string"
                 },
                 "tag": {
-                  "default": "latest@sha256:2393617bfc57629e28ca55db3174e6907c7aa0796af3da98fa034778ad1d99e5",
+                  "default": "latest",
                   "required": [],
                   "title": "tag",
                   "type": "string"
@@ -1873,7 +1873,7 @@
               "type": "string"
             },
             "tag": {
-              "default": "4.0.16@sha256:37be832b78548e3f55f69c45b50e3b14d18df1b6def2a4994258217e67efb1a1",
+              "default": "4.0.16@sha256:21c1c3d52248589bb064f5adafec18cad45812d7a01d317472955eef051e619b",
               "required": [],
               "title": "tag",
               "type": "string"

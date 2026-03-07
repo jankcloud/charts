@@ -2,7 +2,7 @@ apiVersion: v2
 name: sonarr
 description: A Helm chart for deploying Sonarr
 type: application
-version: 1.2.0
+version: 1.2.1
 # renovate: image=ghcr.io/linuxserver/sonarr
 appVersion: 4.0.16
 home: https://sonarr.tv
@@ -20,7 +20,7 @@ maintainers:
     url: https://github.com/jankcloud
 dependencies:
   - name: arr-common
-    version: "0.1.1"
+    version: "0.1.2"
     repository: "https://jankcloud.github.io/charts"
     import-values:
       - defaults
