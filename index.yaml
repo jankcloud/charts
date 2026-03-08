@@ -157,6 +157,35 @@ entries:
   radarr:
   - apiVersion: v2
     appVersion: 6.0.4
+    created: "2026-03-08T18:05:08.732162003Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.1
+    description: 'A Helm chart for deploying Radarr '
+    digest: 2e036b82761e8fc49e5295c9fde1ab1e04f23ac3bc088cb8c91e7db358de7104
+    home: https://radarr.video
+    keywords:
+    - radarr
+    - servarr
+    - pvr
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: radarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/radarr
+    - https://github.com/Radarr/Radarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/radarr-1.1.0/radarr-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 6.0.4
     created: "2026-03-05T22:12:35.202033545Z"
     dependencies:
     - import-values:
@@ -714,4 +743,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-07T02:12:28.098552736Z"
+generated: "2026-03-08T18:05:08.732225251Z"
