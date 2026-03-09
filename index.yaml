@@ -79,6 +79,36 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/arr-common-0.1.0/arr-common-0.1.0.tgz
     version: 0.1.0
+  prowlarr:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-03-09T22:09:31.029818102Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Prowlarr '
+    digest: 71f88ffdee454b5b16d2c97d1dd375c04d86cbe3313a73723568bbf7724ce4f6
+    home: https://prowlarr.com
+    keywords:
+    - prowlarr
+    - servarr
+    - indexer
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: prowlarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/prowlarr
+    - https://github.com/Prowlarr/Prowlarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/prowlarr-1.0.0/prowlarr-1.0.0.tgz
+    version: 1.0.0
   qbittorrent-exporter:
   - apiVersion: v2
     appVersion: 1.13.3
@@ -834,4 +864,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-08T21:54:28.839356739Z"
+generated: "2026-03-09T22:09:31.029876382Z"
