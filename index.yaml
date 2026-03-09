@@ -79,6 +79,34 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/arr-common-0.1.0/arr-common-0.1.0.tgz
     version: 0.1.0
+  bazarr:
+  - apiVersion: v2
+    appVersion: 1.5.6
+    created: "2026-03-09T22:23:34.909212969Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Bazarr '
+    digest: a50d8f91cd13d7ac12288a79f2aaba9dc42680c517f6a78fc5ea875ff4e0ce6f
+    home: https://www.bazarr.media
+    keywords:
+    - bazarr
+    - servarr
+    - subtitles
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: bazarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/bazarr
+    - https://github.com/morpheus65535/bazarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/bazarr-1.0.0/bazarr-1.0.0.tgz
+    version: 1.0.0
   prowlarr:
   - apiVersion: v2
     appVersion: 2.3.0
@@ -922,4 +950,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-09T22:14:10.928632321Z"
+generated: "2026-03-09T22:23:34.909320189Z"
