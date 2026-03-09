@@ -1,0 +1,22 @@
+suite: Service
+templates:
+  - templates/service.yaml
+tests:
+
+  - it: renders a Service for Lidarr
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-lidarr
+
+  - it: exposes Lidarr on port 8686 named http
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 8686
+            targetPort: http
+            protocol: TCP
