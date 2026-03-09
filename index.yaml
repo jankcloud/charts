@@ -137,6 +137,36 @@ entries:
   lidarr:
   - apiVersion: v2
     appVersion: 3.1.0
+    created: "2026-03-09T22:30:44.163109526Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Lidarr '
+    digest: 2e4cd9a987dad53814654087cb03d0d872b621d0528f5fb92653c750418f17fd
+    home: https://lidarr.audio
+    keywords:
+    - lidarr
+    - servarr
+    - pvr
+    - music
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: lidarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/lidarr
+    - https://github.com/Lidarr/Lidarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/lidarr-1.1.0/lidarr-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 3.1.0
     created: "2026-03-09T22:28:15.315304303Z"
     dependencies:
     - import-values:
@@ -1008,4 +1038,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-09T22:28:15.315367311Z"
+generated: "2026-03-09T22:30:44.163187683Z"
