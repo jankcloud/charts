@@ -1,0 +1,22 @@
+suite: Service
+templates:
+  - templates/service.yaml
+tests:
+
+  - it: renders a Service for Cleanuparr
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cleanuparr
+
+  - it: exposes Cleanuparr on port 11011 named http
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 11011
+            targetPort: http
+            protocol: TCP

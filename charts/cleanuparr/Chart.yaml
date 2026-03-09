@@ -1,0 +1,25 @@
+apiVersion: v2
+name: cleanuparr
+description: >
+  A Helm chart for deploying Cleanuparr
+type: application
+version: 2.7.7
+# renovate: image=cleanuparr/cleanuparr
+appVersion: latest
+home: https://github.com/Cleanuparr/Cleanuparr
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/cleanuparr
+  - https://github.com/Cleanuparr/Cleanuparr
+keywords:
+  - cleanuparr
+  - servarr
+  - cleanup
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.2"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults
