@@ -5,7 +5,7 @@ description: >
 type: application
 version: 1.0.0
 # renovate: image=ghcr.io/linuxserver/lidarr
-appVersion: 2.0.0
+appVersion: 3.1.0
 home: https://lidarr.audio
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/lidarr
