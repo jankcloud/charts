@@ -565,12 +565,6 @@
       "title": "arr-common",
       "type": "object"
     },
-    "enabled": {
-      "description": "Conditional property used in parent chart",
-      "required": [],
-      "title": "enabled",
-      "type": "boolean"
-    },
     "env": {
       "properties": {
         "PGID": {
@@ -777,7 +771,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "1.0.0",
+          "default": "1.5.6@sha256:94eee5e3e14430b7b144d4556be73963a7daf6f1bddc25586627f426465482ce",
           "required": [],
           "title": "tag",
           "type": "string"
