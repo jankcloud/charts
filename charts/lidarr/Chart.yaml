@@ -1,0 +1,28 @@
+apiVersion: v2
+name: lidarr
+description: >
+  A Helm chart for deploying Lidarr
+type: application
+version: 1.1.0
+# renovate: image=ghcr.io/linuxserver/lidarr
+appVersion: 3.1.0
+home: https://lidarr.audio
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/lidarr
+  - https://github.com/Lidarr/Lidarr
+keywords:
+  - lidarr
+  - servarr
+  - pvr
+  - music
+  - usenet
+  - bittorrent
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.2"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults

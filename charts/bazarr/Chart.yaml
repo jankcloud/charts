@@ -1,0 +1,25 @@
+apiVersion: v2
+name: bazarr
+description: >
+  A Helm chart for deploying Bazarr
+type: application
+version: 1.1.0
+# renovate: image=ghcr.io/linuxserver/bazarr
+appVersion: 1.5.6
+home: https://www.bazarr.media
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/bazarr
+  - https://github.com/morpheus65535/bazarr
+keywords:
+  - bazarr
+  - servarr
+  - subtitles
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.1.2"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults

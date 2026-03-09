@@ -47,6 +47,16 @@ jobs:
             unit_tests_enabled: true
             linter_enabled: true
             check_conformance: true
+          - chart: bazarr
+            chart_path: charts/bazarr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: prowlarr
             chart_path: charts/prowlarr
             dependencies:
@@ -59,6 +69,16 @@ jobs:
             check_conformance: true
           - chart: cleanuparr
             chart_path: charts/cleanuparr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
+          - chart: lidarr
+            chart_path: charts/lidarr
             dependencies:
               fetch: true
               repositories:
