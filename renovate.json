@@ -9,6 +9,7 @@
   "commitMessageExtra": "{{currentVersion}} → {{newVersion}}",
   "gitIgnoredAuthors": ["jankbot@users.noreply.github.com"],
   "prHourlyLimit": 0,
+  "additionalBranchPrefix": "{{parentDir}}-",
   "bumpVersions": [
     {
       "filePatterns": ["{{packageFileDir}}/Chart.{yaml,yml}"],
