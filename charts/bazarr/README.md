@@ -1,6 +1,6 @@
 # bazarr
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.6](https://img.shields.io/badge/AppVersion-1.5.6-informational?style=flat-square)
 
 A Helm chart for deploying Bazarr
 
@@ -50,7 +50,7 @@ A Helm chart for deploying Bazarr
 | gluetun.image.tag | string | `"latest"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/bazarr"` |  |
-| image.tag | string | `"1.0.0"` |  |
+| image.tag | string | `"1.5.6@sha256:94eee5e3e14430b7b144d4556be73963a7daf6f1bddc25586627f426465482ce"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
