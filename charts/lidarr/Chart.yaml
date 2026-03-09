@@ -3,7 +3,7 @@ name: lidarr
 description: >
   A Helm chart for deploying Lidarr
 type: application
-version: 1.0.0
+version: 1.1.0
 # renovate: image=ghcr.io/linuxserver/lidarr
 appVersion: 3.1.0
 home: https://lidarr.audio
