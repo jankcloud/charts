@@ -1,0 +1,37 @@
+suite: PVC
+templates:
+  - templates/pvc.yaml
+tests:
+
+  - it: renders no PVCs when persistence is disabled
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a config PVC when persistence.config is enabled
+    set:
+      persistence:
+        config:
+          enabled: true
+          size: 1Gi
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cleanuparr-config
+
+  - it: does not render a PVC for additionalVolumes with existingClaim
+    set:
+      persistence:
+        config:
+          enabled: true
+      additionalVolumes:
+        - name: torrents
+          mountPath: /data/torrents
+          existingClaim: my-torrents-pvc
+    asserts:
+      - hasDocuments:
+          count: 1

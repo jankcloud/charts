@@ -1,0 +1,62 @@
+suite: Deployment
+templates:
+  - templates/deployment.yaml
+tests:
+
+  - it: renders a Deployment by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+
+  - it: uses the release name as the resource name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cleanuparr
+
+  - it: sets the PORT env var matching service.port
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: PORT
+            value: "11011"
+
+  - it: sets the TZ env var
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TZ
+            value: "America/New_York"
+
+  - it: uses / for liveness and readiness probes
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /
+
+  - it: does not render an exportarr sidecar by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers
+          content:
+            name: exportarr
+
+  - it: mounts torrents volume when set via additionalVolumes
+    set:
+      additionalVolumes:
+        - name: torrents
+          mountPath: /data/torrents
+          existingClaim: my-torrents-pvc
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: torrents
+            mountPath: /data/torrents
