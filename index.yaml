@@ -134,6 +134,37 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/bazarr-1.0.0/bazarr-1.0.0.tgz
     version: 1.0.0
+  lidarr:
+  - apiVersion: v2
+    appVersion: 3.1.0
+    created: "2026-03-09T22:28:15.315304303Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Lidarr '
+    digest: 3c767409169de0930163c66566c5d03b763b5a4420f6db931e5b8f4a5c8bbfcb
+    home: https://lidarr.audio
+    keywords:
+    - lidarr
+    - servarr
+    - pvr
+    - music
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: lidarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/lidarr
+    - https://github.com/Lidarr/Lidarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/lidarr-1.0.0/lidarr-1.0.0.tgz
+    version: 1.0.0
   prowlarr:
   - apiVersion: v2
     appVersion: 2.3.0
@@ -977,4 +1008,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-09T22:24:49.064485077Z"
+generated: "2026-03-09T22:28:15.315367311Z"
