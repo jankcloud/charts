@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=values.schema.json
 image:
-  repository: cleanuparr/cleanuparr
-  tag: latest
+  repository:  ghcr.io/cleanuparr/cleanuparr
+  tag: 2.7.7
   pullPolicy: IfNotPresent
 
 replicaCount: 1
