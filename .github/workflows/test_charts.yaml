@@ -47,6 +47,16 @@ jobs:
             unit_tests_enabled: true
             linter_enabled: true
             check_conformance: true
+          - chart: bazarr
+            chart_path: charts/bazarr
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: servarr-stack
             chart_path: charts/servarr-stack
             unit_tests_enabled: true
