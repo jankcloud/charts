@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=values.schema.json
+image:
+  repository: ghcr.io/linuxserver/prowlarr
+  tag: 2.3.0@sha256:a8fe7b9c502f979146b6d0f22438b825c38e068241bb8a708c473062dffdbb03
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+strategy:
+  type: Recreate
+
+env:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "America/New_York"
+
+service:
+  type: ClusterIP
+  port: 9696
+  annotations: {}
+
+persistence:
+  config:
+    enabled: false
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    volumeName: ""
+
+additionalVolumes: []
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+probes:
+  liveness:
+    httpGet:
+      path: /ping
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readiness:
+    httpGet:
+      path: /ping
+      port: http
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
+
+exportarr:
+  enabled: false
+  image:
+    repository: ghcr.io/onedr0p/exportarr
+    tag: v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520
+    pullPolicy: IfNotPresent
+  port: 9707
+  env:
+    URL: "http://localhost:9696"
+    APIKEY: ""
+    APP: prowlarr
+
+gluetun:
+  enabled: false
+  image:
+    repository: ghcr.io/qdm12/gluetun
+    tag: latest
+    pullPolicy: IfNotPresent
+  env: {}
+  existingSecret: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+initContainers: []
+sidecars: []
+extraVolumes: []
+extraVolumeMounts: []
