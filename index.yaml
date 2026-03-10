@@ -675,6 +675,57 @@ entries:
   servarr-stack:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-03-10T23:16:41.815389187Z"
+    dependencies:
+    - condition: radarr.enabled
+      name: radarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.1.0
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.1
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.0
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.0
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: https://jankcloud.github.io/charts
+      version: 1.0.1
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.0
+    description: 'A Helm chart for deploying the Servarr stack '
+    digest: ce52ce88d0ccdd673706ad5daba917a84c49d65ea09a545f9dce233ca00f4bf2
+    home: https://github.com/jankcloud/charts
+    keywords:
+    - servarr
+    - radarr
+    - sonarr
+    - bazarr
+    - lidarr
+    - cleanuparr
+    - prowlarr
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: servarr-stack
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/servarr-stack
+    - https://github.com/jankcloud/charts/tree/main/charts/radarr
+    - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/servarr-stack-0.5.0/servarr-stack-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-03-08T21:54:28.839289213Z"
     dependencies:
     - condition: radarr.enabled
@@ -1177,4 +1228,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-10T22:38:30.326594147Z"
+generated: "2026-03-10T23:16:41.815472653Z"
