@@ -565,6 +565,12 @@
       "title": "arr-common",
       "type": "object"
     },
+    "enabled": {
+      "description": "Conditional property used in parent chart",
+      "required": [],
+      "title": "enabled",
+      "type": "boolean"
+    },
     "env": {
       "properties": {
         "PORT": {
