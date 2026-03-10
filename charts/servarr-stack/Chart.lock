@@ -5,5 +5,17 @@ dependencies:
 - name: sonarr
   repository: https://jankcloud.github.io/charts
   version: 1.2.1
-digest: sha256:9ab16590df1e766edcf69d0985aadeaf54416a1398b811cd82ef2963845c7470
-generated: "2026-03-08T21:53:10.63533247Z"
+- name: bazarr
+  repository: https://jankcloud.github.io/charts
+  version: 1.1.0
+- name: lidarr
+  repository: https://jankcloud.github.io/charts
+  version: 1.2.0
+- name: cleanuparr
+  repository: https://jankcloud.github.io/charts
+  version: 1.0.1
+- name: prowlarr
+  repository: https://jankcloud.github.io/charts
+  version: 1.2.0
+digest: sha256:509ce79e40d9ebaf4d3ca0b1e4cb0cbd89411f83376a96fd07006880f1ce691b
+generated: "2026-03-10T19:30:29.093059426Z"
