@@ -164,6 +164,33 @@ entries:
     version: 2.7.7
   - apiVersion: v2
     appVersion: 2.7.7
+    created: "2026-03-10T18:19:09.968583788Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Cleanuparr '
+    digest: cd137afd0a15c86f878ab4d3a52048b2a2b74da5f18742b71f706761c227b979
+    home: https://github.com/Cleanuparr/Cleanuparr
+    keywords:
+    - cleanuparr
+    - servarr
+    - cleanup
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: cleanuparr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/cleanuparr
+    - https://github.com/Cleanuparr/Cleanuparr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/cleanuparr-1.0.1/cleanuparr-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 2.7.7
     created: "2026-03-09T22:46:01.813937481Z"
     dependencies:
     - import-values:
@@ -1123,4 +1150,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-09T22:46:01.814026507Z"
+generated: "2026-03-10T18:19:09.968673155Z"
