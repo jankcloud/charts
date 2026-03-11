@@ -1,6 +1,6 @@
 # prowlarr
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 A Helm chart for deploying Prowlarr
 
@@ -51,7 +51,7 @@ A Helm chart for deploying Prowlarr
 | gluetun.image.tag | string | `"latest"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/linuxserver/prowlarr"` |  |
-| image.tag | string | `"2.3.0@sha256:a8fe7b9c502f979146b6d0f22438b825c38e068241bb8a708c473062dffdbb03"` |  |
+| image.tag | string | `"2.3.0@sha256:9ef5d8bf832edcacb6082f9262cb36087854e78eb7b1c3e1d4375056055b2d82"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
