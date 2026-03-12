@@ -39,7 +39,7 @@ dependencies:
     repository: "https://jankcloud.github.io/charts"
     condition: lidarr.enabled
   - name: cleanuparr
-    version: "2.7.7"
+    version: "1.0.1"
     repository: "https://jankcloud.github.io/charts"
     condition: cleanuparr.enabled
   - name: prowlarr
