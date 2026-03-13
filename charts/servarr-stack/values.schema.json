@@ -1861,7 +1861,7 @@
               "type": "string"
             },
             "tag": {
-              "default": "2.7.8@sha256:18978713a216ec507511523deb112e6115b84d5284c21aaffe455d132dbfb4be",
+              "default": "2.8.1@sha256:086470c766e2e2f6f010fc192ba728daa0a1ba77a7b17ff5e451f7c98c379a16",
               "required": [],
               "title": "tag",
               "type": "string"
