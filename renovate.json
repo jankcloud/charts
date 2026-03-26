@@ -27,6 +27,9 @@
     ],
     "pinDigests": true
   },
+  "pre-commit": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "description": "Disable digest pinning for latest docker images in helm-values",
