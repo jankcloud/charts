@@ -23,7 +23,7 @@ A Helm chart for deploying the Servarr stack
 | Repository | Name | Version |
 |------------|------|---------|
 | https://jankcloud.github.io/charts | bazarr | 1.2.0 |
-| https://jankcloud.github.io/charts | cleanuparr | 2.7.7 |
+| https://jankcloud.github.io/charts | cleanuparr | 1.0.1 |
 | https://jankcloud.github.io/charts | lidarr | 1.2.0 |
 | https://jankcloud.github.io/charts | prowlarr | 1.2.0 |
 | https://jankcloud.github.io/charts | radarr | 1.1.0 |
