@@ -1,6 +1,6 @@
 # cleanuparr
 
-![Version: 1.1.2](https://img.shields.io/badge/Version-1.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.8.3](https://img.shields.io/badge/AppVersion-2.8.3-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
 
 A Helm chart for deploying Cleanuparr
 
@@ -49,7 +49,7 @@ A Helm chart for deploying Cleanuparr
 | gluetun.image.tag | string | `"latest"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/cleanuparr/cleanuparr"` |  |
-| image.tag | string | `"2.8.3@sha256:b9e001fc34010f5856e6918c4f9dbdde095cce9a229a2a9c7d9608ee91aaf495"` |  |
+| image.tag | string | `"2.9.0@sha256:b645365fcbe64faabc04dd365c8cd2e2cbfc5ccd52960c275aafcf5365c3a538"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
