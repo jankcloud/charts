@@ -3,9 +3,9 @@ name: qbittorrent-exporter
 description: >
   A Helm chart for qBittorrent Prometheus Exporter - exports metrics from qBittorrent to Prometheus
 type: application
-version: 1.0.3
+version: 1.0.4
 # renovate: image=ghcr.io/martabal/qbittorrent-exporter
-appVersion: 1.13.3
+appVersion: 1.13.4
 home: https://github.com/jankcloud/charts
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/qbittorrent-exporter
