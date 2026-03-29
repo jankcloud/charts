@@ -3,7 +3,7 @@ name: radarr
 description: >
   A Helm chart for deploying Radarr
 type: application
-version: 1.1.0
+version: 1.2.0
 # renovate: image=ghcr.io/linuxserver/radarr
 appVersion: 6.0.4
 home: https://radarr.video
