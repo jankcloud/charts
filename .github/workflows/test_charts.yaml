@@ -27,6 +27,16 @@ jobs:
             unit_tests_enabled: true
             linter_enabled: true
             check_conformance: true
+          - chart: qbittorrent
+            chart_path: charts/qbittorrent
+            dependencies:
+              fetch: true
+              repositories:
+                - name: jankcloud
+                  url: https://jankcloud.github.io/charts
+            unit_tests_enabled: true
+            linter_enabled: true
+            check_conformance: true
           - chart: sonarr
             chart_path: charts/sonarr
             dependencies:
