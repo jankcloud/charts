@@ -88,7 +88,7 @@ exports:
       labels: {}
       annotations: {}
 
-    metricsExporter:
+    metrics:
       enabled: false
       name: metrics-exporter
       portName: metrics-exporter

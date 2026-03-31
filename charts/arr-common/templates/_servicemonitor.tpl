@@ -14,9 +14,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- $metricsExporter := .Values.metricsExporter | default dict }}
-  {{- $metricsExporterEnabled := $metricsExporter.enabled | default false }}
-  {{- $metricsPortName := $metricsExporter.portName | default "metrics-exporter" }}
+  {{- $metrics := .Values.metrics | default dict }}
+  {{- $metricsExporterEnabled := $metrics.enabled | default false }}
+  {{- $metricsPortName := $metrics.portName | default "metrics-exporter" }}
   selector:
     matchLabels:
       {{- include "arr-common.selectorLabels" . | nindent 6 }}
@@ -28,7 +28,7 @@ spec:
     - port: {{ $metricsPortName }}
       interval: {{ .Values.serviceMonitor.interval | default "30s" }}
       scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout | default "10s" }}
-      {{- with $metricsExporter.path }}
+      {{- with $metrics.path }}
       path: {{ . }}
       {{- end }}
     {{- end }}

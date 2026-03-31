@@ -189,7 +189,7 @@
               "title": "initContainers",
               "type": "array"
             },
-            "metricsExporter": {
+            "metrics": {
               "properties": {
                 "args": {
                   "items": {
@@ -330,7 +330,7 @@
                 "resources",
                 "volumeMounts"
               ],
-              "title": "metricsExporter",
+              "title": "metrics",
               "type": "object"
             },
             "nameOverride": {
@@ -692,7 +692,7 @@
             "probes",
             "resources",
             "serviceMonitor",
-            "metricsExporter",
+            "metrics",
             "gluetun",
             "nodeSelector",
             "tolerations",

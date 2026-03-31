@@ -16,7 +16,7 @@ spec:
       port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
-    {{- include "arr-common.metricsExporter.port" . | nindent 4 }}
+    {{- include "arr-common.metrics.port" . | nindent 4 }}
   selector:
     {{- include "arr-common.selectorLabels" . | nindent 4 }}
 {{- end }}
