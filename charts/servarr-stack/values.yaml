@@ -165,65 +165,6 @@ bazarr:
   # tolerations: []
   # affinity: {}
 
-lidarr:
-  enabled: true
-  # image:
-  #   repository: ghcr.io/linuxserver/lidarr
-  #   tag: 8.1.2135
-  # env:
-  #   PUID: "1000"
-  #   PGID: "1000"
-  #   TZ: "America/New_York"
-  # service:
-  #   type: ClusterIP
-  #   port: 8686
-  # persistence:
-  #   config:
-  #     enabled: true
-  #     storageClass: ""
-  #     accessMode: ReadWriteOnce
-  #     size: 5Gi
-  # additionalVolumes:
-  #   - name: music
-  #     mountPath: /music
-  #     existingClaim: music-pvc
-  #   - name: downloads
-  #     mountPath: /downloads
-  #     pvc:
-  #       accessMode: ReadWriteMany
-  #       size: 1Ti
-  #       storageClass: nfs-client
-  # ingress:
-  #   enabled: true
-  #   className: nginx
-  #   hosts:
-  #     - host: lidarr.example.com
-  #       paths:
-  #         - path: /
-  #           pathType: Prefix
-  #   tls:
-  #     - secretName: lidarr-tls
-  #       hosts:
-  #         - lidarr.example.com
-  # serviceMonitor:
-  #   enabled: true
-  #   interval: 30s
-  #   scrapeTimeout: 10s
-  # exportarr:
-  #   enabled: true
-  #   env:
-  #     URL: "http://localhost:8686"
-  #     APIKEY: ""
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 256Mi
-  #   limits:
-  #     memory: 1Gi
-  # nodeSelector: {}
-  # tolerations: []
-  # affinity: {}
-
 cleanuparr:
   enabled: true
   # image:

@@ -1,9 +1,9 @@
+---
 suite: Servarr stack dependency toggles
 templates:
   - charts/radarr/templates/deployment.yaml
   - charts/sonarr/templates/deployment.yaml
   - charts/bazarr/templates/deployment.yaml
-  - charts/lidarr/templates/deployment.yaml
   - charts/cleanuparr/templates/deployment.yaml
   - charts/prowlarr/templates/deployment.yaml
 tests:
@@ -14,15 +14,12 @@ tests:
           count: 1
       - isKind:
           of: Deployment
-
 ---
-
 suite: Servarr stack services
 templates:
   - charts/radarr/templates/service.yaml
   - charts/sonarr/templates/service.yaml
   - charts/bazarr/templates/service.yaml
-  - charts/lidarr/templates/service.yaml
   - charts/cleanuparr/templates/service.yaml
   - charts/prowlarr/templates/service.yaml
 tests:
