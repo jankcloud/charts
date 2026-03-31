@@ -43,7 +43,7 @@ radarr:
   #   enabled: true
   #   interval: 30s
   #   scrapeTimeout: 10s
-  # exportarr:
+  # metrics:
   #   enabled: true
   #   env:
   #     URL: "http://localhost:7878"
@@ -102,7 +102,7 @@ sonarr:
   #   enabled: true
   #   interval: 30s
   #   scrapeTimeout: 10s
-  # exportarr:
+  # metrics:
   #   enabled: true
   #   env:
   #     URL: "http://localhost:8989"
@@ -209,7 +209,7 @@ lidarr:
   #   enabled: true
   #   interval: 30s
   #   scrapeTimeout: 10s
-  # exportarr:
+  # metrics:
   #   enabled: true
   #   env:
   #     URL: "http://localhost:8686"
@@ -301,7 +301,7 @@ prowlarr:
   #   enabled: true
   #   interval: 30s
   #   scrapeTimeout: 10s
-  # exportarr:
+  # metrics:
   #   enabled: true
   #   env:
   #     URL: "http://localhost:9696"
