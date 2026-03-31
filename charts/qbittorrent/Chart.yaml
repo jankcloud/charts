@@ -1,0 +1,25 @@
+apiVersion: v2
+name: qbittorrent
+description: >
+  A Helm chart for deploying qBittorrent
+type: application
+version: 1.4.0
+# renovate: image=ghcr.io/linuxserver/qbittorrent
+appVersion: 5.1.4
+home: https://www.qbittorrent.org
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/qbittorrent
+  - https://github.com/qbittorrent/qBittorrent
+keywords:
+  - qbittorrent
+  - torrent
+  - bittorrent
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: arr-common
+    version: "0.2.0"
+    repository: "https://jankcloud.github.io/charts"
+    import-values:
+      - defaults
