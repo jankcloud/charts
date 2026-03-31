@@ -1,6 +1,6 @@
 # sonarr
 
-![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.17](https://img.shields.io/badge/AppVersion-4.0.17-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.17](https://img.shields.io/badge/AppVersion-4.0.17-informational?style=flat-square)
 
 A Helm chart for deploying Sonarr
 
@@ -21,7 +21,7 @@ A Helm chart for deploying Sonarr
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://jankcloud.github.io/charts | arr-common | 0.1.2 |
+| https://jankcloud.github.io/charts | arr-common | 0.2.0 |
 
 ## Values
 
@@ -32,13 +32,6 @@ A Helm chart for deploying Sonarr
 | env.PGID | string | `"1000"` |  |
 | env.PUID | string | `"1000"` |  |
 | env.TZ | string | `"America/New_York"` |  |
-| exportarr.enabled | bool | `false` |  |
-| exportarr.env.APIKEY | string | `""` |  |
-| exportarr.env.URL | string | `"http://localhost:8989"` |  |
-| exportarr.image.pullPolicy | string | `"IfNotPresent"` |  |
-| exportarr.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
-| exportarr.image.tag | string | `"v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520"` |  |
-| exportarr.port | int | `9707` |  |
 | extraVolumeMounts | list | `[]` |  |
 | extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
@@ -57,6 +50,13 @@ A Helm chart for deploying Sonarr
 | ingress.hosts | list | `[]` |  |
 | ingress.tls | list | `[]` |  |
 | initContainers | list | `[]` |  |
+| metrics.enabled | bool | `false` |  |
+| metrics.env.APIKEY | string | `""` |  |
+| metrics.env.URL | string | `"http://localhost:8989"` |  |
+| metrics.image.pullPolicy | string | `"IfNotPresent"` |  |
+| metrics.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
+| metrics.image.tag | string | `"v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520"` |  |
+| metrics.port | int | `9707` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` |  |

@@ -17,3 +17,17 @@ tests:
           count: 1
       - isKind:
           of: ServiceMonitor
+
+  - it: renders a metrics exporter endpoint when both ServiceMonitor and metrics exporter are enabled
+    set:
+      serviceMonitor:
+        enabled: true
+      metrics:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.endpoints
+          content:
+            port: metrics-exporter
+            interval: 30s
+            scrapeTimeout: 10s

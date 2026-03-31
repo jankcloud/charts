@@ -43,16 +43,16 @@ tests:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.path
           value: /ping
 
-  - it: does not render an exportarr sidecar by default
+  - it: does not render a metrics exporter sidecar by default
     asserts:
       - notContains:
           path: spec.template.spec.containers
           content:
-            name: exportarr
+            name: metrics-exporter
 
-  - it: renders an exportarr sidecar with APP=prowlarr when enabled
+  - it: renders a metrics exporter sidecar with APP=prowlarr when enabled
     set:
-      exportarr:
+      metrics:
         enabled: true
         env:
           URL: "http://localhost:9696"
@@ -62,7 +62,7 @@ tests:
       - contains:
           path: spec.template.spec.containers
           content:
-            name: exportarr
+            name: metrics-exporter
           any: true
       - contains:
           path: spec.template.spec.containers[1].env
