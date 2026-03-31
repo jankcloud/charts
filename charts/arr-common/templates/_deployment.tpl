@@ -77,7 +77,7 @@ spec:
             {{- end }}
           {{- end }}
         {{- include "arr-common.gluetun.container" . | nindent 8 }}
-        {{- include "arr-common.exportarr.container" . | nindent 8 }}
+        {{- include "arr-common.metricsExporter.container" . | nindent 8 }}
         {{- if $sidecars }}
         {{- toYaml $sidecars | nindent 8 }}
         {{- end }}

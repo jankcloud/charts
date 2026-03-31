@@ -14,6 +14,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- $metricsExporter := .Values.metricsExporter | default dict }}
+  {{- $metricsExporterEnabled := $metricsExporter.enabled | default false }}
+  {{- $metricsPortName := $metricsExporter.portName | default "metrics-exporter" }}
   selector:
     matchLabels:
       {{- include "arr-common.selectorLabels" . | nindent 6 }}
@@ -21,11 +24,13 @@ spec:
     - port: http
       interval: {{ .Values.serviceMonitor.interval | default "30s" }}
       scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout | default "10s" }}
-    {{- if .Values.exportarr.enabled }}
-    # Exportarr metrics endpoint — only rendered when exportarr.enabled: true.
-    - port: exportarr
+    {{- if $metricsExporterEnabled }}
+    - port: {{ $metricsPortName }}
       interval: {{ .Values.serviceMonitor.interval | default "30s" }}
       scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout | default "10s" }}
+      {{- with $metricsExporter.path }}
+      path: {{ . }}
+      {{- end }}
     {{- end }}
 {{- end }}
 {{- end }}

@@ -1,6 +1,6 @@
 # arr-common
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 A Helm library chart for arr-stack applications
 
@@ -23,13 +23,6 @@ A Helm library chart for arr-stack applications
 | exports.defaults.additionalVolumes | list | `[]` |  |
 | exports.defaults.affinity | object | `{}` |  |
 | exports.defaults.env | object | `{}` |  |
-| exports.defaults.exportarr.enabled | bool | `false` |  |
-| exports.defaults.exportarr.env.APIKEY | string | `""` |  |
-| exports.defaults.exportarr.env.URL | string | `"http://localhost"` |  |
-| exports.defaults.exportarr.image.pullPolicy | string | `"IfNotPresent"` |  |
-| exports.defaults.exportarr.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
-| exports.defaults.exportarr.image.tag | string | `"latest"` |  |
-| exports.defaults.exportarr.port | int | `9707` |  |
 | exports.defaults.extraVolumeMounts | list | `[]` |  |
 | exports.defaults.extraVolumes | list | `[]` |  |
 | exports.defaults.fullnameOverride | string | `""` |  |
@@ -48,6 +41,22 @@ A Helm library chart for arr-stack applications
 | exports.defaults.ingress.hosts | list | `[]` |  |
 | exports.defaults.ingress.tls | list | `[]` |  |
 | exports.defaults.initContainers | list | `[]` |  |
+| exports.defaults.metricsExporter.args | list | `[]` |  |
+| exports.defaults.metricsExporter.command | list | `[]` |  |
+| exports.defaults.metricsExporter.enabled | bool | `false` |  |
+| exports.defaults.metricsExporter.env.APIKEY | string | `""` |  |
+| exports.defaults.metricsExporter.env.URL | string | `"http://localhost"` |  |
+| exports.defaults.metricsExporter.envFrom | list | `[]` |  |
+| exports.defaults.metricsExporter.image.pullPolicy | string | `"IfNotPresent"` |  |
+| exports.defaults.metricsExporter.image.repository | string | `"ghcr.io/onedr0p/exportarr"` |  |
+| exports.defaults.metricsExporter.image.tag | string | `"latest"` |  |
+| exports.defaults.metricsExporter.name | string | `"metrics-exporter"` |  |
+| exports.defaults.metricsExporter.path | string | `"/metrics"` |  |
+| exports.defaults.metricsExporter.port | int | `9707` |  |
+| exports.defaults.metricsExporter.portName | string | `"metrics-exporter"` |  |
+| exports.defaults.metricsExporter.resources | object | `{}` |  |
+| exports.defaults.metricsExporter.securityContext | object | `{}` |  |
+| exports.defaults.metricsExporter.volumeMounts | list | `[]` |  |
 | exports.defaults.nameOverride | string | `""` |  |
 | exports.defaults.nodeSelector | object | `{}` |  |
 | exports.defaults.persistence.config.accessMode | string | `"ReadWriteOnce"` |  |

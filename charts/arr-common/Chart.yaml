@@ -3,7 +3,7 @@ name: arr-common
 description: >
   A Helm library chart for arr-stack applications
 type: library
-version: 0.1.2
+version: 0.2.0
 home: https://github.com/jankcloud/charts
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/arr-common
@@ -17,7 +17,8 @@ keywords:
   - prowlarr
   - bazarr
   - gluetun
-  - exportarr
+  - exporter
+  - metrics
 maintainers:
   - name: jankcloud
     url: https://github.com/jankcloud
