@@ -20,3 +20,16 @@ tests:
             port: 7878
             targetPort: http
             protocol: TCP
+
+  - it: exposes the metrics exporter port when enabled
+    set:
+      metrics:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: metrics-exporter
+            port: 9707
+            targetPort: metrics-exporter
+            protocol: TCP

@@ -43,9 +43,9 @@ tests:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.path
           value: /
 
-  - it: does not render an exportarr sidecar by default
+  - it: does not render a metrics exporter sidecar by default
     asserts:
       - notContains:
           path: spec.template.spec.containers
           content:
-            name: exportarr
+            name: metrics-exporter

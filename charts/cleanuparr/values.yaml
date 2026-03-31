@@ -75,7 +75,7 @@ serviceMonitor:
   labels: {}
   annotations: {}
 
-exportarr:
+metrics:
   enabled: false
   image:
     repository: ghcr.io/onedr0p/exportarr
