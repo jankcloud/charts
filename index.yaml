@@ -2,6 +2,33 @@ apiVersion: v1
 entries:
   arr-common:
   - apiVersion: v2
+    created: "2026-04-01T00:11:54.310786889Z"
+    description: 'A Helm library chart for arr-stack applications '
+    digest: 9e244f991a541fbd7a4732a8a42046f45cb7c858ecb14c2000e22b3f9c0e9e16
+    home: https://github.com/jankcloud/charts
+    keywords:
+    - arr
+    - servarr
+    - sonarr
+    - radarr
+    - lidarr
+    - readarr
+    - prowlarr
+    - bazarr
+    - gluetun
+    - exporter
+    - metrics
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: arr-common
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/arr-common
+    type: library
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/arr-common-0.2.0/arr-common-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2026-03-05T22:12:34.986643851Z"
     description: 'A Helm library chart for arr-stack applications '
     digest: 7aaad015e48405b0713aa1f833e2198730e9bcd9593105d49c76dd98664bb92b
@@ -1798,4 +1825,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-03-29T20:30:46.282949159Z"
+generated: "2026-04-01T00:11:54.310927801Z"
