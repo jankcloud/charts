@@ -88,8 +88,11 @@ exports:
       labels: {}
       annotations: {}
 
-    exportarr:
+    metrics:
       enabled: false
+      name: metrics-exporter
+      portName: metrics-exporter
+      path: /metrics
       image:
         repository: ghcr.io/onedr0p/exportarr
         tag: latest
@@ -98,6 +101,12 @@ exports:
       env:
         URL: "http://localhost"
         APIKEY: ""
+      envFrom: []
+      command: []
+      args: []
+      securityContext: {}
+      resources: {}
+      volumeMounts: []
 
     gluetun:
       enabled: false

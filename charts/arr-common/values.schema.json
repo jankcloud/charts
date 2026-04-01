@@ -24,81 +24,6 @@
               "title": "env",
               "type": "object"
             },
-            "exportarr": {
-              "properties": {
-                "enabled": {
-                  "default": false,
-                  "required": [],
-                  "title": "enabled",
-                  "type": "boolean"
-                },
-                "env": {
-                  "properties": {
-                    "APIKEY": {
-                      "default": "",
-                      "required": [],
-                      "title": "APIKEY",
-                      "type": "string"
-                    },
-                    "URL": {
-                      "default": "http://localhost",
-                      "required": [],
-                      "title": "URL",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "URL",
-                    "APIKEY"
-                  ],
-                  "title": "env",
-                  "type": "object"
-                },
-                "image": {
-                  "properties": {
-                    "pullPolicy": {
-                      "default": "IfNotPresent",
-                      "required": [],
-                      "title": "pullPolicy",
-                      "type": "string"
-                    },
-                    "repository": {
-                      "default": "ghcr.io/onedr0p/exportarr",
-                      "required": [],
-                      "title": "repository",
-                      "type": "string"
-                    },
-                    "tag": {
-                      "default": "latest",
-                      "required": [],
-                      "title": "tag",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "repository",
-                    "tag",
-                    "pullPolicy"
-                  ],
-                  "title": "image",
-                  "type": "object"
-                },
-                "port": {
-                  "default": 9707,
-                  "required": [],
-                  "title": "port",
-                  "type": "integer"
-                }
-              },
-              "required": [
-                "enabled",
-                "image",
-                "port",
-                "env"
-              ],
-              "title": "exportarr",
-              "type": "object"
-            },
             "extraVolumeMounts": {
               "items": {
                 "required": []
@@ -263,6 +188,150 @@
               "required": [],
               "title": "initContainers",
               "type": "array"
+            },
+            "metrics": {
+              "properties": {
+                "args": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "args",
+                  "type": "array"
+                },
+                "command": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                },
+                "enabled": {
+                  "default": false,
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "env": {
+                  "properties": {
+                    "APIKEY": {
+                      "default": "",
+                      "required": [],
+                      "title": "APIKEY",
+                      "type": "string"
+                    },
+                    "URL": {
+                      "default": "http://localhost",
+                      "required": [],
+                      "title": "URL",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "URL",
+                    "APIKEY"
+                  ],
+                  "title": "env",
+                  "type": "object"
+                },
+                "envFrom": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "envFrom",
+                  "type": "array"
+                },
+                "image": {
+                  "properties": {
+                    "pullPolicy": {
+                      "default": "IfNotPresent",
+                      "required": [],
+                      "title": "pullPolicy",
+                      "type": "string"
+                    },
+                    "repository": {
+                      "default": "ghcr.io/onedr0p/exportarr",
+                      "required": [],
+                      "title": "repository",
+                      "type": "string"
+                    },
+                    "tag": {
+                      "default": "latest",
+                      "required": [],
+                      "title": "tag",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "repository",
+                    "tag",
+                    "pullPolicy"
+                  ],
+                  "title": "image",
+                  "type": "object"
+                },
+                "name": {
+                  "default": "metrics-exporter",
+                  "required": [],
+                  "title": "name",
+                  "type": "string"
+                },
+                "path": {
+                  "default": "/metrics",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": 9707,
+                  "required": [],
+                  "title": "port",
+                  "type": "integer"
+                },
+                "portName": {
+                  "default": "metrics-exporter",
+                  "required": [],
+                  "title": "portName",
+                  "type": "string"
+                },
+                "resources": {
+                  "required": [],
+                  "title": "resources",
+                  "type": "object"
+                },
+                "securityContext": {
+                  "required": [],
+                  "title": "securityContext",
+                  "type": "object"
+                },
+                "volumeMounts": {
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "volumeMounts",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "enabled",
+                "name",
+                "portName",
+                "path",
+                "image",
+                "port",
+                "env",
+                "envFrom",
+                "command",
+                "args",
+                "securityContext",
+                "resources",
+                "volumeMounts"
+              ],
+              "title": "metrics",
+              "type": "object"
             },
             "nameOverride": {
               "default": "",
@@ -623,7 +692,7 @@
             "probes",
             "resources",
             "serviceMonitor",
-            "exportarr",
+            "metrics",
             "gluetun",
             "nodeSelector",
             "tolerations",
