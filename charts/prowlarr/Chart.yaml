@@ -3,7 +3,7 @@ name: prowlarr
 description: >
   A Helm chart for deploying Prowlarr
 type: application
-version: 1.3.0
+version: 1.4.0
 # renovate: image=ghcr.io/linuxserver/prowlarr
 appVersion: 2.3.0
 home: https://prowlarr.com
@@ -21,7 +21,7 @@ maintainers:
     url: https://github.com/jankcloud
 dependencies:
   - name: arr-common
-    version: "0.1.2"
+    version: "0.2.0"
     repository: "https://jankcloud.github.io/charts"
     import-values:
       - defaults
