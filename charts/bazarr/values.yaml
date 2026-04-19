@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/linuxserver/bazarr
-  tag: 1.5.6@sha256:9a631194c0dee21c85b5bff59e23610e1ae2f54594e922973949d271102e585e
+  tag: 1.5.6@sha256:d736df5df0286373a26d34f47aa413cb8aeada74f6338dac372a6d37ba1b3b0d
   pullPolicy: IfNotPresent
 
 replicaCount: 1
