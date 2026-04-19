@@ -1,6 +1,6 @@
 # cleanuparr
 
-![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.8](https://img.shields.io/badge/AppVersion-2.9.8-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.8](https://img.shields.io/badge/AppVersion-2.9.8-informational?style=flat-square)
 
 A Helm chart for deploying Cleanuparr
 
@@ -21,7 +21,7 @@ A Helm chart for deploying Cleanuparr
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://jankcloud.github.io/charts | arr-common | 0.1.2 |
+| https://jankcloud.github.io/charts | arr-common | 0.2.0 |
 
 ## Values
 
