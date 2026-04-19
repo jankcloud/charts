@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/cleanuparr/cleanuparr
-  tag: 2.9.2@sha256:db36f03f3455e5b50ab5722c3f8ef05193374e92467adf98a49c86be420b8779
+  tag: 2.9.8@sha256:563b01707cb4509731793ce03bfc26f08640f4194908cc1fa6782e75f59dc405
   pullPolicy: IfNotPresent
 
 replicaCount: 1
