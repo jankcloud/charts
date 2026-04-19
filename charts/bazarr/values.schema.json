@@ -837,7 +837,7 @@
           "type": "string"
         },
         "tag": {
-          "default": "1.5.6@sha256:9a631194c0dee21c85b5bff59e23610e1ae2f54594e922973949d271102e585e",
+          "default": "1.5.6@sha256:d736df5df0286373a26d34f47aa413cb8aeada74f6338dac372a6d37ba1b3b0d",
           "required": [],
           "title": "tag",
           "type": "string"
