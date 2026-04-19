@@ -659,69 +659,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:6767",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -872,6 +809,69 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:6767",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
@@ -1825,69 +1825,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:11011",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -2038,6 +1975,69 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:11011",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
@@ -3003,75 +3003,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "APP": {
-                  "default": "lidarr",
-                  "required": [],
-                  "title": "APP",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:8686",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -3222,6 +3153,75 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "APP": {
+                  "default": "lidarr",
+                  "required": [],
+                  "title": "APP",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:8686",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
@@ -4181,75 +4181,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "APP": {
-                  "default": "prowlarr",
-                  "required": [],
-                  "title": "APP",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:9696",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -4400,6 +4331,75 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "APP": {
+                  "default": "prowlarr",
+                  "required": [],
+                  "title": "APP",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:9696",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
@@ -5359,69 +5359,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:7878",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -5572,6 +5509,69 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:7878",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
@@ -6531,69 +6531,6 @@
           "title": "env",
           "type": "object"
         },
-        "exportarr": {
-          "properties": {
-            "enabled": {
-              "default": false,
-              "required": [],
-              "title": "enabled",
-              "type": "boolean"
-            },
-            "env": {
-              "properties": {
-                "APIKEY": {
-                  "default": "",
-                  "required": [],
-                  "title": "APIKEY",
-                  "type": "string"
-                },
-                "URL": {
-                  "default": "http://localhost:8989",
-                  "required": [],
-                  "title": "URL",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "env",
-              "type": "object"
-            },
-            "image": {
-              "properties": {
-                "pullPolicy": {
-                  "default": "IfNotPresent",
-                  "required": [],
-                  "title": "pullPolicy",
-                  "type": "string"
-                },
-                "repository": {
-                  "default": "ghcr.io/onedr0p/exportarr",
-                  "required": [],
-                  "title": "repository",
-                  "type": "string"
-                },
-                "tag": {
-                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
-                  "required": [],
-                  "title": "tag",
-                  "type": "string"
-                }
-              },
-              "required": [],
-              "title": "image",
-              "type": "object"
-            },
-            "port": {
-              "default": 9707,
-              "required": [],
-              "title": "port",
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "title": "exportarr",
-          "type": "object"
-        },
         "extraVolumeMounts": {
           "items": {
             "required": []
@@ -6744,6 +6681,69 @@
           "required": [],
           "title": "initContainers",
           "type": "array"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "properties": {
+                "APIKEY": {
+                  "default": "",
+                  "required": [],
+                  "title": "APIKEY",
+                  "type": "string"
+                },
+                "URL": {
+                  "default": "http://localhost:8989",
+                  "required": [],
+                  "title": "URL",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "env",
+              "type": "object"
+            },
+            "image": {
+              "properties": {
+                "pullPolicy": {
+                  "default": "IfNotPresent",
+                  "required": [],
+                  "title": "pullPolicy",
+                  "type": "string"
+                },
+                "repository": {
+                  "default": "ghcr.io/onedr0p/exportarr",
+                  "required": [],
+                  "title": "repository",
+                  "type": "string"
+                },
+                "tag": {
+                  "default": "v2.3.0@sha256:af535d94061cf97a52e1661945ffba78c03f9443eae7c0da1a80a5a4be56b520",
+                  "required": [],
+                  "title": "tag",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "image",
+              "type": "object"
+            },
+            "port": {
+              "default": 9707,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "metrics",
+          "type": "object"
         },
         "nameOverride": {
           "default": "",
