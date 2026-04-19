@@ -498,6 +498,35 @@ entries:
     version: 1.0.0
   prowlarr:
   - apiVersion: v2
+    appVersion: 2.3.5
+    created: "2026-04-19T18:30:30.330888493Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.1.2
+    description: 'A Helm chart for deploying Prowlarr '
+    digest: f72617759f2aa84021b2e764f462bc584e770025df5b356d2f3a339bff2ab847
+    home: https://prowlarr.com
+    keywords:
+    - prowlarr
+    - servarr
+    - indexer
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: prowlarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/prowlarr
+    - https://github.com/Prowlarr/Prowlarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/prowlarr-1.3.1/prowlarr-1.3.1.tgz
+    version: 1.3.1
+  - apiVersion: v2
     appVersion: 2.3.0
     created: "2026-03-26T20:44:36.590940822Z"
     dependencies:
@@ -1874,4 +1903,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-04-19T18:30:05.656377493Z"
+generated: "2026-04-19T18:30:30.543182597Z"
