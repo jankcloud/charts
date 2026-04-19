@@ -3,7 +3,7 @@ name: bazarr
 description: >
   A Helm chart for deploying Bazarr
 type: application
-version: 1.4.0
+version: 1.5.0
 # renovate: image=ghcr.io/linuxserver/bazarr
 appVersion: 1.5.6
 home: https://www.bazarr.media
@@ -19,7 +19,7 @@ maintainers:
     url: https://github.com/jankcloud
 dependencies:
   - name: arr-common
-    version: "0.1.2"
+    version: "0.2.0"
     repository: "https://jankcloud.github.io/charts"
     import-values:
       - defaults
