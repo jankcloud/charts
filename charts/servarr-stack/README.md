@@ -1,6 +1,6 @@
 # servarr-stack
 
-![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 A Helm chart for deploying the Servarr stack
 
@@ -25,7 +25,7 @@ A Helm chart for deploying the Servarr stack
 | https://jankcloud.github.io/charts | bazarr | 1.3.0 |
 | https://jankcloud.github.io/charts | cleanuparr | 1.2.2 |
 | https://jankcloud.github.io/charts | lidarr | 1.2.0 |
-| https://jankcloud.github.io/charts | prowlarr | 1.3.0 |
+| https://jankcloud.github.io/charts | prowlarr | 1.4.0 |
 | https://jankcloud.github.io/charts | radarr | 1.1.0 |
 | https://jankcloud.github.io/charts | sonarr | 1.2.2 |
 
