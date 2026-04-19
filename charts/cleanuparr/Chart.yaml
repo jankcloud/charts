@@ -3,9 +3,9 @@ name: cleanuparr
 description: >
   A Helm chart for deploying Cleanuparr
 type: application
-version: 1.2.2
+version: 1.2.3
 # renovate: image=ghcr.io/cleanuparr/cleanuparr
-appVersion: 2.9.2
+appVersion: 2.9.8
 home: https://github.com/Cleanuparr/Cleanuparr
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/cleanuparr
