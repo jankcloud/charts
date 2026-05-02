@@ -1211,6 +1211,57 @@ entries:
   servarr-stack:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-05-02T21:22:22.55789925Z"
+    dependencies:
+    - condition: radarr.enabled
+      name: radarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.4.0
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.4.0
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.3.0
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.0
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: https://jankcloud.github.io/charts
+      version: 1.2.2
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: https://jankcloud.github.io/charts
+      version: 1.3.0
+    description: 'A Helm chart for deploying the Servarr stack '
+    digest: 690b1c749ab2002503857756ffa71406cc0fbe8e9d5816987cbc2b0f27e0f3d7
+    home: https://github.com/jankcloud/charts
+    keywords:
+    - servarr
+    - radarr
+    - sonarr
+    - bazarr
+    - lidarr
+    - cleanuparr
+    - prowlarr
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: servarr-stack
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/servarr-stack
+    - https://github.com/jankcloud/charts/tree/main/charts/radarr
+    - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/servarr-stack-0.11.0/servarr-stack-0.11.0.tgz
+    version: 0.11.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-05-02T21:19:03.190669718Z"
     dependencies:
     - condition: radarr.enabled
@@ -2208,4 +2259,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-05-02T21:19:03.190889299Z"
+generated: "2026-05-02T21:22:22.558114229Z"
