@@ -1882,6 +1882,35 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: 4.0.17
+    created: "2026-05-02T21:25:03.996267186Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.2.0
+    description: A Helm chart for deploying Sonarr
+    digest: 05bb4544e83d96e442a0b4b33d70faf317a042d14f56db6b5874e32d62282fc0
+    home: https://sonarr.tv
+    keywords:
+    - sonarr
+    - servarr
+    - pvr
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: sonarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/sonarr
+    - https://github.com/Sonarr/Sonarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/sonarr-1.5.0/sonarr-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v2
+    appVersion: 4.0.17
     created: "2026-04-19T18:37:17.987746572Z"
     dependencies:
     - import-values:
@@ -2315,4 +2344,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-05-02T21:24:34.394003059Z"
+generated: "2026-05-02T21:25:03.99654569Z"
