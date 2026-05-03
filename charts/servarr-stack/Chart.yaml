@@ -3,7 +3,7 @@ name: servarr-stack
 description: >
   A Helm chart for deploying the Servarr stack
 type: application
-version: 0.11.0
+version: 0.12.0
 appVersion: 1.0.0
 home: https://github.com/jankcloud/charts
 sources:
@@ -27,7 +27,7 @@ dependencies:
     repository: "https://jankcloud.github.io/charts"
     condition: radarr.enabled
   - name: sonarr
-    version: "1.4.0"
+    version: "1.5.0"
     repository: "https://jankcloud.github.io/charts"
     condition: sonarr.enabled
   - name: bazarr
