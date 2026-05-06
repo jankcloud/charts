@@ -325,6 +325,33 @@ entries:
     version: 1.0.0
   cleanuparr:
   - apiVersion: v2
+    appVersion: 2.9.11
+    created: "2026-05-06T13:27:25.948366551Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.2.0
+    description: 'A Helm chart for deploying Cleanuparr '
+    digest: 4300ab5ee4ac9bffe99cdb8f65de65c02a624e3126f5cb1114532bc745fd6e87
+    home: https://github.com/Cleanuparr/Cleanuparr
+    keywords:
+    - cleanuparr
+    - servarr
+    - cleanup
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: cleanuparr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/cleanuparr
+    - https://github.com/Cleanuparr/Cleanuparr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/cleanuparr-1.3.2/cleanuparr-1.3.2.tgz
+    version: 1.3.2
+  - apiVersion: v2
     appVersion: 2.9.10
     created: "2026-05-02T21:26:46.832021299Z"
     dependencies:
@@ -716,6 +743,35 @@ entries:
     - https://github.com/jankcloud/charts/releases/download/lidarr-1.0.0/lidarr-1.0.0.tgz
     version: 1.0.0
   prowlarr:
+  - apiVersion: v2
+    appVersion: 2.3.5
+    created: "2026-05-06T13:27:26.211851568Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: arr-common
+      repository: https://jankcloud.github.io/charts
+      version: 0.2.0
+    description: 'A Helm chart for deploying Prowlarr '
+    digest: fd26c9b787919a7cb9c05cbacd23ae69b790f481a74a6b997dddbb1c9457a983
+    home: https://prowlarr.com
+    keywords:
+    - prowlarr
+    - servarr
+    - indexer
+    - usenet
+    - bittorrent
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: prowlarr
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/prowlarr
+    - https://github.com/Prowlarr/Prowlarr
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/prowlarr-1.6.0/prowlarr-1.6.0.tgz
+    version: 1.6.0
   - apiVersion: v2
     appVersion: 2.3.5
     created: "2026-05-02T21:24:34.232337622Z"
@@ -2447,4 +2503,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-05-06T13:26:59.043148436Z"
+generated: "2026-05-06T13:27:26.494209812Z"
