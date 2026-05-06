@@ -977,6 +977,26 @@ entries:
     version: 1.0.1
   qui:
   - apiVersion: v2
+    appVersion: 1.18.0
+    created: "2026-05-06T13:26:59.043005698Z"
+    description: 'A Helm chart for Qui '
+    digest: 7ceae39d34672a97c69339724c8f58e073abd781e0da381c06f5fe157331d730
+    home: https://github.com/autobrr/qui
+    keywords:
+    - qui
+    - qbittorrent
+    - cross-seed
+    maintainers:
+    - name: jankcloud
+      url: https://github.com/jankcloud
+    name: qui
+    sources:
+    - https://github.com/jankcloud/charts/tree/main/charts/qui
+    type: application
+    urls:
+    - https://github.com/jankcloud/charts/releases/download/qui-1.5.0/qui-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v2
     appVersion: 1.17.0
     created: "2026-04-19T18:30:05.65626314Z"
     description: 'A Helm chart for Qui '
@@ -2427,4 +2447,4 @@ entries:
     urls:
     - https://github.com/jankcloud/charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
     version: 1.0.1
-generated: "2026-05-06T13:23:02.59871811Z"
+generated: "2026-05-06T13:26:59.043148436Z"
