@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=values.schema.json
 image:
   repository: ghcr.io/brian7704/opentakserver
   pullPolicy: IfNotPresent
@@ -112,12 +113,76 @@ web:
     type: ClusterIP
     annotations: {}
     ports:
-      ui:
-        port: 8080
-        targetPort: api
       api:
         port: 8081
         targetPort: api
+
+# UI component: nginx serving the OpenTAKServer-UI single-page app on
+# port 80, proxying /api, /Marti and /socket.io to the web service. This
+# is a separate image (ghcr.io/brian7704/opentakserver-ui), so it does
+# not share the chart-wide image or the OTS non-root security defaults.
+ui:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: ghcr.io/brian7704/opentakserver-ui
+    tag: master
+    pullPolicy: IfNotPresent
+  # Empty/unset serviceAccountName and imagePullSecrets fall back to the
+  # chart-wide defaults. podSecurityContext/securityContext stay empty by
+  # default: stock nginx must run its master process as root.
+  serviceAccountName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  imagePullSecrets: []
+  podAnnotations: {}
+  podLabels: {}
+  extraEnv: []
+  envFrom: []
+  volumes: []
+  volumeMounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: ""
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+  startupProbe:
+    enabled: false
+  service:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    ports:
+      http:
+        port: 8080
+        targetPort: http
   ingress:
     enabled: false
     className: ""

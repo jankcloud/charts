@@ -45,3 +45,7 @@ spec:
 ---
 {{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.cotParserName" .) "component" "cot-parser" "config" .Values.cotParser.autoscaling) }}
 {{- end }}
+{{- if and .Values.ui.enabled .Values.web.enabled .Values.ui.autoscaling.enabled }}
+---
+{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.uiName" .) "component" "ui" "config" .Values.ui.autoscaling) }}
+{{- end }}

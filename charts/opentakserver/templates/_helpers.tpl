@@ -84,6 +84,35 @@ OpenTAKServer web deployment name.
 {{- end }}
 
 {{/*
+OpenTAKServer UI deployment name.
+*/}}
+{{- define "opentakserver.uiName" -}}
+{{- printf "%s-ui" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+OpenTAKServer UI service name.
+*/}}
+{{- define "opentakserver.uiServiceName" -}}
+{{- printf "%s-ui" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+OpenTAKServer UI nginx ConfigMap name.
+*/}}
+{{- define "opentakserver.uiNginxConfigName" -}}
+{{- printf "%s-ui-nginx" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+Selector labels for the ui pods.
+*/}}
+{{- define "opentakserver.uiSelectorLabels" -}}
+{{ include "opentakserver.selectorLabels" . }}
+app.kubernetes.io/component: ui
+{{- end }}
+
+{{/*
 RabbitMQ definitions ConfigMap name.
 */}}
 {{- define "opentakserver.rabbitmqDefinitionsName" -}}

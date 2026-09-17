@@ -1,0 +1,83 @@
+suite: Deployment (ui)
+templates:
+  - templates/deployment-ui.yaml
+tests:
+
+  - it: renders a Deployment and nginx ConfigMap by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/brian7704/opentakserver-ui:master
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 80
+
+  - it: mounts the nginx config for API proxying
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: nginx-config
+            configMap:
+              name: RELEASE-NAME-opentakserver-ui-nginx
+
+  - it: does not inject OTS env vars or the ots-data volume
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-data
+
+  - it: uses the shared chart-managed service account by default
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-opentakserver
+
+  - it: honors a per-component serviceAccountName override
+    set:
+      ui.serviceAccountName: ui-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: ui-sa
+
+  - it: honors a per-component image override
+    set:
+      ui.image.repository: example.com/ots-ui
+      ui.image.tag: v1.2.3
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: example.com/ots-ui:v1.2.3
+
+  - it: honors replicaCount
+    set:
+      ui.replicaCount: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: skips the Deployment when ui is disabled
+    set:
+      ui.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: skips the Deployment when web is disabled
+    set:
+      web.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

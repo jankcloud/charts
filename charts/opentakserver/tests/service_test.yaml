@@ -3,12 +3,12 @@ templates:
   - templates/service.yaml
 tests:
 
-  - it: renders two services by default
+  - it: renders three services by default
     asserts:
       - hasDocuments:
-          count: 2
+          count: 3
 
-  - it: renders the web service (UI + API)
+  - it: renders the web service (API only)
     documentIndex: 0
     asserts:
       - equal:
@@ -25,15 +25,6 @@ tests:
           value: 8081
       - equal:
           path: spec.ports[0].targetPort
-          value: api
-      - equal:
-          path: spec.ports[1].name
-          value: ui
-      - equal:
-          path: spec.ports[1].port
-          value: 8080
-      - equal:
-          path: spec.ports[1].targetPort
           value: api
       - equal:
           path: spec.selector["app.kubernetes.io/component"]
@@ -70,6 +61,28 @@ tests:
           path: spec.selector["app.kubernetes.io/component"]
           value: eud-handler
 
+  - it: renders the ui service
+    documentIndex: 2
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: ui
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: ui
+
   - it: renders the udp port when enabled
     set:
       eudHandler.service.ports.udp.enabled: true
@@ -85,9 +98,9 @@ tests:
           path: spec.ports[2].protocol
           value: UDP
 
-  - it: skips web service when disabled
+  - it: skips web and ui services when web is disabled
     set:
-      web.service.enabled: false
+      web.enabled: false
     asserts:
       - hasDocuments:
           count: 1
@@ -98,9 +111,17 @@ tests:
   - it: skips cots service when eudHandler disabled
     set:
       eudHandler.enabled: false
+    documentIndex: 0
     asserts:
       - hasDocuments:
-          count: 1
+          count: 2
       - equal:
           path: metadata.name
           value: RELEASE-NAME-opentakserver-web
+
+  - it: skips ui service when ui is disabled
+    set:
+      ui.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 2

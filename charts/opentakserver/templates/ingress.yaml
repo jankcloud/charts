@@ -1,22 +1,22 @@
-{{- if and .Values.web.enabled .Values.web.ingress.enabled -}}
+{{- if and .Values.ui.enabled .Values.web.enabled .Values.ui.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "opentakserver.fullname" . }}
   labels:
     {{- include "opentakserver.labels" . | nindent 4 }}
-    app.kubernetes.io/component: web
-  {{- with .Values.web.ingress.annotations }}
+    app.kubernetes.io/component: ui
+  {{- with .Values.ui.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.web.ingress.className }}
+  {{- with .Values.ui.ingress.className }}
   ingressClassName: {{ . }}
   {{- end }}
-  {{- if .Values.web.ingress.tls }}
+  {{- if .Values.ui.ingress.tls }}
   tls:
-    {{- range .Values.web.ingress.tls }}
+    {{- range .Values.ui.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -25,7 +25,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.web.ingress.hosts }}
+    {{- range .Values.ui.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -36,9 +36,9 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "opentakserver.webServiceName" $ }}
+                name: {{ include "opentakserver.uiServiceName" $ }}
                 port:
-                  number: {{ $.Values.web.service.ports.ui.port }}
+                  number: {{ $.Values.ui.service.ports.http.port }}
           {{- end }}
     {{- end }}
 {{- end }}
