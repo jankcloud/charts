@@ -35,6 +35,9 @@ tests:
       - equal:
           path: spec.ports[1].targetPort
           value: api
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: web
 
   - it: renders the CoT service
     documentIndex: 1

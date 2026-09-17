@@ -20,7 +20,7 @@ spec:
       name: {{ $name }}
     {{- end }}
   selector:
-    {{- include "opentakserver.selectorLabels" . | nindent 4 }}
+    {{- include "opentakserver.webSelectorLabels" . | nindent 4 }}
 ---
 {{- end }}
 {{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}

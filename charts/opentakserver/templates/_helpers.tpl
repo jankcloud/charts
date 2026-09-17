@@ -51,6 +51,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Selector labels for the web pods.
+*/}}
+{{- define "opentakserver.webSelectorLabels" -}}
+{{ include "opentakserver.selectorLabels" . }}
+app.kubernetes.io/component: web
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "opentakserver.serviceAccountName" -}}
