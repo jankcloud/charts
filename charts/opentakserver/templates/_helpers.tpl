@@ -347,22 +347,7 @@ Database URI value.
 
 {{/*
 Render a Deployment for one OTS workload component (web, eud-handler,
-cot-parser). All three components share the same pod-level configuration
-surface (image, security contexts, service account, scheduling, probes,
-resources, volumes, env) so this template is the single source of truth
-for that shape; per-component values override the chart-wide defaults
-where set.
-
-Expects a dict with:
-  ctx: root context (the top-level `.`)
-  name: resolved Deployment name
-  component: value for the app.kubernetes.io/component label
-  containerName: name of the container
-  values: the component's values block (.Values.web / .Values.eudHandler / .Values.cotParser)
-  selectorLabelsTemplate: name of the named template rendering this component's selector labels
-  command: optional list of command args for the container
-  ports: optional list of container ports
-  extraContainerEnv: optional list of env vars prepended before the shared OTS env vars
+cot-parser).
 */}}
 {{- define "opentakserver.deployment" -}}
 {{- $ctx := .ctx -}}
@@ -492,28 +477,16 @@ spec:
       {{- end }}
 {{- end }}
 
-{{/*
-Name of the Secret that holds the generated CA material. It is populated at
-runtime by the ca-publisher sidecar running in the web pod, because upstream
-expects all components to share ~/ots/ca on one filesystem.
-*/}}
 {{- define "opentakserver.caSecretName" -}}
 {{ include "opentakserver.fullname" . }}-ots-ca
 {{- end }}
 
-{{/*
-Whether the ca-publisher sidecar is required. True when anything besides the
-web pod needs the OTS CA: the SSL EUD handler and mediamtx.
-*/}}
 {{- define "opentakserver.caPublishEnabled" -}}
 {{- if or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled -}}
 true
 {{- end -}}
 {{- end }}
 
-{{/*
-MediaMTX helpers
-*/}}
 {{- define "opentakserver.mediamtxName" -}}
 {{ include "opentakserver.fullname" . }}-mediamtx
 {{- end }}
@@ -531,9 +504,6 @@ MediaMTX helpers
 app.kubernetes.io/component: mediamtx
 {{- end }}
 
-{{/*
-Address the OTS API uses to reach the mediamtx control API.
-*/}}
 {{- define "opentakserver.mediamtxApiAddress" -}}
 {{- if .Values.mediamtx.enabled -}}
 http://{{ include "opentakserver.mediamtxServiceName" . }}:{{ .Values.mediamtx.service.ports.api.port }}
@@ -542,10 +512,6 @@ http://localhost:{{ .Values.mediamtx.service.ports.api.port }}
 {{- end -}}
 {{- end }}
 
-{{/*
-Shared environment variables used by all OTS workloads
-(opentakserver, eud_handler, cot_parser).
-*/}}
 {{- define "opentakserver.env" -}}
 - name: OTS_DATA_FOLDER
   value: {{ .Values.env.OTS_DATA_FOLDER | default "/app/ots" | quote }}

@@ -460,7 +460,7 @@
           "type": "string"
         },
         "existingSecret": {
-          "description": "Credentials/host from an externally managed Secret (CNPG, MariaDB\noperator, sealed-secrets, etc.). When set, keys inside the secret are\nreferenced instead of the values below.",
+          "description": "Credentials/host from an externally managed Secret.",
           "properties": {
             "keys": {
               "properties": {
@@ -571,7 +571,7 @@
       "type": "object"
     },
     "env": {
-      "description": "OTS connection wiring shared by all three components. These are\ninfrastructure-level settings (ports, data dir, interfaces), not\nper-component tuning.",
+      "description": "OTS connection wiring shared by all components.",
       "properties": {
         "OTS_DATA_FOLDER": {
           "default": "/app/ots",
@@ -763,7 +763,7 @@
         },
         "mode": {
           "default": "tcp",
-          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container. Upstream runs `eud_handler` and `eud_handler --ssl` as\nseparate services on the same host; use `ssl.enabled` below to get that.",
+          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container.",
           "required": [],
           "title": "mode",
           "type": "string"
@@ -1040,7 +1040,7 @@
           "type": "string"
         },
         "ssl": {
-          "description": "Additional `eud_handler --ssl` container in the same pod (mTLS CoT\nstreaming on OTS_SSL_STREAMING_PORT, required for EUD cert auth). The\ncontainer waits for the OTS CA material published by the web pod.",
+          "description": "Additional `eud_handler --ssl` container (mTLS streaming); waits for the\nCA material published by the web pod.",
           "properties": {
             "enabled": {
               "default": true,
@@ -1396,7 +1396,7 @@
       "type": "array"
     },
     "mediamtx": {
-      "description": "MediaMTX component: upstream installs mediamtx unconditionally for video\nstreaming (TAK ICU etc.). Runs as a separate Deployment using the\nbluenviron/mediamtx image. Its TLS listeners use the OTS CA material\npublished by the web pod, and stream auth + lifecycle hooks call back into\nthe OTS API via the web Service.",
+      "description": "MediaMTX component for video streaming.",
       "properties": {
         "affinity": {
           "required": [],
@@ -1433,7 +1433,6 @@
             },
             "tag": {
               "default": "1.13.0-ffmpeg",
-              "description": "-ffmpeg variant includes ffmpeg (upstream installs the ffmpeg package\nalongside mediamtx on the host).",
               "required": [],
               "title": "tag",
               "type": "string"
@@ -1534,7 +1533,7 @@
           "type": "object"
         },
         "publisherResources": {
-          "description": "Resources for the initContainer in the web pod that seeds mediamtx.yml\ninto the OTS data folder.",
+          "description": "Resources for the web initContainer that seeds mediamtx.yml.",
           "properties": {
             "limits": {
               "properties": {
@@ -1719,7 +1718,6 @@
               "type": "boolean"
             },
             "ports": {
-              "description": "Listener ports mirror the upstream mediamtx.yml. The `api` port is the\ncontrol API the OTS backend calls (OTS_MEDIAMTX_API_ADDRESS).",
               "properties": {
                 "api": {
                   "properties": {
@@ -1969,7 +1967,7 @@
       "type": "string"
     },
     "persistence": {
-      "description": "Optional PVC for the OTS data folder (SQLite DB, config.yml, data\npackages, certs). Disabled by default for a minimal ephemeral install.",
+      "description": "Optional PVC for the OTS data folder; disabled by default (ephemeral).",
       "properties": {
         "accessModes": {
           "items": {
@@ -2028,7 +2026,7 @@
       "type": "object"
     },
     "podSecurityContext": {
-      "description": "Chart-wide defaults. Each of web/eudHandler/cotParser below can override\nserviceAccountName, podSecurityContext, securityContext and\nimagePullSecrets individually; an empty override falls back to these\ndefaults so every deployment has the same level of configurability.\n\nThe OpenTAKServer image runs as the `ots` user (UID 1000, GID 1024) and\nkeeps the venv in /app (mode 0700, owned by ots). These values must match\nthat user or the containers will fail to exec the OTS binaries.",
+      "description": "Chart-wide defaults; each component below can override these individually.\nThe OTS image runs as UID 1000 / GID 1024; security contexts must match.",
       "properties": {
         "fsGroup": {
           "default": 1024,
@@ -2065,7 +2063,7 @@
       "type": "object"
     },
     "postgresql": {
-      "description": "Bundled PostgreSQL. Enabled by default so a basic install gets a shared\ndatabase for all three components without any extra values. Set\npostgresql.enabled=false and configure the `database` block above for\nexternal databases (CNPG, MariaDB operator, cloud RDS, etc.).",
+      "description": "Bundled PostgreSQL; set enabled=false and use the `database` block for\nexternal databases.",
       "properties": {
         "auth": {
           "properties": {
@@ -2137,7 +2135,7 @@
             "initdb": {
               "properties": {
                 "scripts": {
-                  "description": "Upstream installer enables the postgis extension in the ots database.\n.sql scripts authenticate via initdb.user/initdb.password which are\nempty by default (silent skip), so use a .sh script that reads the\npostgres password file the subchart mounts into the container. The\nDB name is literal — keep it in sync with postgresql.auth.database.",
+                  "description": "Enable the postgis extension in the ots database. Keep the DB name\nin sync with postgresql.auth.database.",
                   "properties": {
                     "00-postgis.sh": {
                       "default": "#!/bin/sh\nexport PGPASSWORD=\"$(cat /opt/bitnami/postgresql/secrets/postgres-password)\"\npsql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
@@ -2426,7 +2424,7 @@
           "type": "array"
         },
         "extraVolumes": {
-          "description": "NOTE: secretName must match the rendered name of the\nrabbitmq-definitions Secret (\"\u003crelease fullname\u003e-rabbitmq-definitions\").\nIf fullnameOverride or a different release name is used, update this.",
+          "description": "secretName must match \"\u003crelease fullname\u003e-rabbitmq-definitions\".",
           "items": {
             "anyOf": [
               {
@@ -2467,7 +2465,7 @@
           "type": "array"
         },
         "plugins": {
-          "description": "Match the upstream installer's broker setup: MQTT for EUDs on 1883,\nwith device auth delegated to the OTS API (auth_http -\u003e web service).\nThe auth_http URLs must point at \"\u003crelease fullname\u003e-web\" on\nOTS_LISTENER_PORT; update them if fullnameOverride or a different\nrelease name is used.",
+          "description": "MQTT on 1883 with device auth delegated to the OTS API. The auth_http\nURLs must point at \"\u003crelease fullname\u003e-web\" on OTS_LISTENER_PORT.",
           "properties": {
             "extra": {
               "items": {
@@ -2707,7 +2705,7 @@
       "type": "object"
     },
     "ui": {
-      "description": "UI component: nginx serving the OpenTAKServer-UI single-page app on\nport 80, proxying /api, /Marti and /socket.io to the web service. This\nis a separate image (ghcr.io/brian7704/opentakserver-ui), so it does\nnot share the chart-wide image or the OTS non-root security defaults.",
+      "description": "UI component: nginx serving the SPA and proxying /api, /Marti and\n/socket.io to the web service (separate image, no OTS security defaults).",
       "properties": {
         "affinity": {
           "required": [],
@@ -3428,7 +3426,7 @@
           "type": "object"
         },
         "caPublisherResources": {
-          "description": "Resources for the ca-publisher sidecar, which copies the OTS CA material\ngenerated in this pod into a Kubernetes Secret so that eud_handler --ssl\nand mediamtx can share it (upstream shares ~/ots/ca via one filesystem).",
+          "description": "Resources for the ca-publisher sidecar.",
           "properties": {
             "limits": {
               "properties": {

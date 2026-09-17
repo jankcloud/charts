@@ -6,10 +6,6 @@ metadata:
   labels:
     {{- include "opentakserver.labels" . | nindent 4 }}
 data:
-  # Adapted from OpenTAKServer-Installer/mediamtx.yml: log to stdout, hook
-  # and auth URLs pointed at the web Service, cert paths pointed at the
-  # published OTS CA Secret, and curl replaced with busybox wget (the
-  # mediamtx image is Alpine-based and ships no curl).
   mediamtx.yml: |
     ###############################################
     # Global settings -> General

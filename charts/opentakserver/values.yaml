@@ -15,14 +15,8 @@ serviceAccount:
   annotations: {}
   name: ""
 
-# Chart-wide defaults. Each of web/eudHandler/cotParser below can override
-# serviceAccountName, podSecurityContext, securityContext and
-# imagePullSecrets individually; an empty override falls back to these
-# defaults so every deployment has the same level of configurability.
-#
-# The OpenTAKServer image runs as the `ots` user (UID 1000, GID 1024) and
-# keeps the venv in /app (mode 0700, owned by ots). These values must match
-# that user or the containers will fail to exec the OTS binaries.
+# Chart-wide defaults; each component below can override these individually.
+# The OTS image runs as UID 1000 / GID 1024; security contexts must match.
 podSecurityContext:
   fsGroup: 1024
   runAsUser: 1000
@@ -39,9 +33,7 @@ securityContext:
     drop:
       - ALL
 
-# OTS connection wiring shared by all three components. These are
-# infrastructure-level settings (ports, data dir, interfaces), not
-# per-component tuning.
+# OTS connection wiring shared by all components.
 env:
   OTS_DATA_FOLDER: /app/ots
   OTS_LISTENER_ADDRESS: 0.0.0.0
@@ -70,9 +62,7 @@ web:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  # Resources for the ca-publisher sidecar, which copies the OTS CA material
-  # generated in this pod into a Kubernetes Secret so that eud_handler --ssl
-  # and mediamtx can share it (upstream shares ~/ots/ca via one filesystem).
+  # Resources for the ca-publisher sidecar.
   caPublisherResources:
     requests:
       cpu: 10m
@@ -127,10 +117,8 @@ web:
         port: 8081
         targetPort: api
 
-# UI component: nginx serving the OpenTAKServer-UI single-page app on
-# port 80, proxying /api, /Marti and /socket.io to the web service. This
-# is a separate image (ghcr.io/brian7704/opentakserver-ui), so it does
-# not share the chart-wide image or the OTS non-root security defaults.
+# UI component: nginx serving the SPA and proxying /api, /Marti and
+# /socket.io to the web service (separate image, no OTS security defaults).
 ui:
   enabled: true
   replicaCount: 1
@@ -222,12 +210,10 @@ eudHandler:
   enabled: true
   replicaCount: 1
   # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the
-  # primary container. Upstream runs `eud_handler` and `eud_handler --ssl` as
-  # separate services on the same host; use `ssl.enabled` below to get that.
+  # primary container.
   mode: tcp
-  # Additional `eud_handler --ssl` container in the same pod (mTLS CoT
-  # streaming on OTS_SSL_STREAMING_PORT, required for EUD cert auth). The
-  # container waits for the OTS CA material published by the web pod.
+  # Additional `eud_handler --ssl` container (mTLS streaming); waits for the
+  # CA material published by the web pod.
   ssl:
     enabled: true
     resources:
@@ -387,23 +373,16 @@ cotParser:
     timeoutSeconds: 5
     failureThreshold: 30
 
-# MediaMTX component: upstream installs mediamtx unconditionally for video
-# streaming (TAK ICU etc.). Runs as a separate Deployment using the
-# bluenviron/mediamtx image. Its TLS listeners use the OTS CA material
-# published by the web pod, and stream auth + lifecycle hooks call back into
-# the OTS API via the web Service.
+# MediaMTX component for video streaming.
 mediamtx:
   enabled: true
   replicaCount: 1
   image:
     repository: bluenviron/mediamtx
-    # -ffmpeg variant includes ffmpeg (upstream installs the ffmpeg package
-    # alongside mediamtx on the host).
     tag: "1.13.0-ffmpeg"
     pullPolicy: IfNotPresent
   logLevel: info
-  # Resources for the initContainer in the web pod that seeds mediamtx.yml
-  # into the OTS data folder.
+  # Resources for the web initContainer that seeds mediamtx.yml.
   publisherResources:
     requests:
       cpu: 10m
@@ -450,8 +429,6 @@ mediamtx:
     enabled: true
     type: ClusterIP
     annotations: {}
-    # Listener ports mirror the upstream mediamtx.yml. The `api` port is the
-    # control API the OTS backend calls (OTS_MEDIAMTX_API_ADDRESS).
     ports:
       api:
         port: 9997
@@ -475,8 +452,7 @@ mediamtx:
         port: 8890
         protocol: UDP
 
-# Optional PVC for the OTS data folder (SQLite DB, config.yml, data
-# packages, certs). Disabled by default for a minimal ephemeral install.
+# Optional PVC for the OTS data folder; disabled by default (ephemeral).
 persistence:
   enabled: false
   existingClaim: ""
@@ -489,9 +465,7 @@ persistence:
 database:
   # Fully-formed SQLAlchemy URI. Takes precedence over everything else.
   uri: ""
-  # Credentials/host from an externally managed Secret (CNPG, MariaDB
-  # operator, sealed-secrets, etc.). When set, keys inside the secret are
-  # referenced instead of the values below.
+  # Credentials/host from an externally managed Secret.
   existingSecret:
     name: ""
     keys:
@@ -507,10 +481,8 @@ database:
   username: ""
   password: ""
 
-# Bundled PostgreSQL. Enabled by default so a basic install gets a shared
-# database for all three components without any extra values. Set
-# postgresql.enabled=false and configure the `database` block above for
-# external databases (CNPG, MariaDB operator, cloud RDS, etc.).
+# Bundled PostgreSQL; set enabled=false and use the `database` block for
+# external databases.
 postgresql:
   enabled: true
   auth:
@@ -526,11 +498,8 @@ postgresql:
       enabled: false
       size: 8Gi
     initdb:
-      # Upstream installer enables the postgis extension in the ots database.
-      # .sql scripts authenticate via initdb.user/initdb.password which are
-      # empty by default (silent skip), so use a .sh script that reads the
-      # postgres password file the subchart mounts into the container. The
-      # DB name is literal — keep it in sync with postgresql.auth.database.
+      # Enable the postgis extension in the ots database. Keep the DB name
+      # in sync with postgresql.auth.database.
       scripts:
         00-postgis.sh: |
           #!/bin/sh
@@ -550,11 +519,8 @@ rabbitmq:
     existingSecretErlangCookieKey: rabbitmq-erlang-cookie
   queueDefaults:
     type: classic
-  # Match the upstream installer's broker setup: MQTT for EUDs on 1883,
-  # with device auth delegated to the OTS API (auth_http -> web service).
-  # The auth_http URLs must point at "<release fullname>-web" on
-  # OTS_LISTENER_PORT; update them if fullnameOverride or a different
-  # release name is used.
+  # MQTT on 1883 with device auth delegated to the OTS API. The auth_http
+  # URLs must point at "<release fullname>-web" on OTS_LISTENER_PORT.
   plugins:
     extra:
       - rabbitmq_mqtt
@@ -580,9 +546,7 @@ rabbitmq:
   singleNode:
     persistence:
       enabled: false
-  # NOTE: secretName must match the rendered name of the
-  # rabbitmq-definitions Secret ("<release fullname>-rabbitmq-definitions").
-  # If fullnameOverride or a different release name is used, update this.
+  # secretName must match "<release fullname>-rabbitmq-definitions".
   extraVolumes:
     - name: opentakserver-rabbitmq-definitions
       secret:
