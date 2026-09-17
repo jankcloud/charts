@@ -2137,10 +2137,10 @@
             "initdb": {
               "properties": {
                 "scripts": {
-                  "description": "Upstream installer enables the postgis extension in the ots database.",
+                  "description": "Upstream installer enables the postgis extension in the ots database.\n.sh initdb scripts need explicit auth during the temporary initdb\nserver phase; POSTGRESQL_POSTGRES_PASSWORD is set by the subchart.",
                   "properties": {
                     "00-postgis.sh": {
-                      "default": "#!/bin/sh\npsql -v ON_ERROR_STOP=1 -d \"${POSTGRESQL_DATABASE:-ots}\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
+                      "default": "#!/bin/sh\nexport PGPASSWORD=\"$POSTGRESQL_POSTGRES_PASSWORD\"\npsql -v ON_ERROR_STOP=1 -U postgres -d \"${POSTGRESQL_DATABASE:-ots}\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
                       "required": [],
                       "title": "00-postgis.sh",
                       "type": "string"
