@@ -23,3 +23,7 @@ dependencies:
     version: "18.11.3"
     repository: "oci://registry-1.docker.io/bitnamicharts"
     condition: postgresql.enabled
+  - name: rabbitmq
+    version: "1.7.1"
+    repository: "https://repo.helmforge.dev"
+    condition: rabbitmq.enabled

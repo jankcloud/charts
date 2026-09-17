@@ -172,7 +172,7 @@ Resolved RabbitMQ vhost for the OTS container.
 */}}
 {{- define "opentakserver.rabbitmqVhost" -}}
 {{- if .Values.rabbitmq.enabled }}
-{{- "/" -}}
+{{- .Values.rabbitmq.auth.vhost | default "/" -}}
 {{- else }}
 {{- .Values.rabbitmq.external.vhost | default "/" -}}
 {{- end }}
@@ -262,10 +262,10 @@ RabbitMQ secret name.
 */}}
 {{- define "opentakserver.rabbitmqSecretName" -}}
 {{- if .Values.rabbitmq.enabled -}}
-{{- if .Values.rabbitmq.auth.existingPasswordSecret -}}
-{{- .Values.rabbitmq.auth.existingPasswordSecret -}}
+{{- if .Values.rabbitmq.auth.existingSecret -}}
+{{- .Values.rabbitmq.auth.existingSecret -}}
 {{- else -}}
-{{- printf "%s-rabbitmq" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-rabbitmq-auth" .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- else -}}
 {{- if .Values.rabbitmq.external.existingSecret.name -}}

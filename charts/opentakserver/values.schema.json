@@ -117,27 +117,21 @@
       "type": "object",
       "properties": {
         "enabled": {"type": "boolean"},
-        "replicaCount": {"type": "integer", "minimum": 1},
-        "image": {
-          "type": "object",
-          "properties": {
-            "tag": {"type": "string"},
-            "pullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]}
-          },
-          "additionalProperties": true
-        },
+        "architecture": {"type": "string"},
         "auth": {
           "type": "object",
           "properties": {
             "username": {"type": "string"},
             "password": {"type": "string"},
             "vhost": {"type": "string"},
-            "existingPasswordSecret": {"type": "string"},
-            "existingSecretPasswordKey": {"type": "string"}
+            "existingSecret": {"type": "string"},
+            "existingSecretUsernameKey": {"type": "string"},
+            "existingSecretPasswordKey": {"type": "string"},
+            "existingSecretErlangCookieKey": {"type": "string"}
           },
           "additionalProperties": true
         },
-        "persistence": {"type": "object"},
+        "singleNode": {"type": "object"},
         "external": {"type": "object"}
       },
       "additionalProperties": true

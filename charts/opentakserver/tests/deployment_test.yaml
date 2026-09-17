@@ -52,7 +52,7 @@ tests:
             value: RELEASE-NAME-rabbitmq
       - equal:
           path: spec.template.spec.containers[0].env[?(@.name == "OTS_RABBITMQ_PASSWORD")].valueFrom.secretKeyRef.name
-          value: RELEASE-NAME-rabbitmq
+          value: RELEASE-NAME-rabbitmq-auth
 
   - it: uses external RabbitMQ settings when the subchart is disabled
     set:

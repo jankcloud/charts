@@ -337,19 +337,18 @@ postgresql:
 
 rabbitmq:
   enabled: true
-  replicaCount: 1
-  image:
-    tag: 4.3.6-management
-    pullPolicy: IfNotPresent
+  architecture: single-node
   auth:
     username: ots
     password: ots
     vhost: /
-    existingPasswordSecret: ""
+    existingSecret: ""
+    existingSecretUsernameKey: rabbitmq-username
     existingSecretPasswordKey: rabbitmq-password
-  persistence:
-    enabled: false
-    size: 8Gi
+    existingSecretErlangCookieKey: rabbitmq-erlang-cookie
+  singleNode:
+    persistence:
+      enabled: false
   external:
     host: ""
     port: 5672
