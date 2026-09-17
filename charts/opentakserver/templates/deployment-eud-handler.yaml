@@ -1,22 +1,72 @@
 {{- if .Values.eudHandler.enabled }}
+{{- $mountPath := .Values.persistence.mountPath }}
+{{- $caDir := printf "%s/ca" $mountPath }}
+{{- $sslSidecar := and .Values.eudHandler.ssl.enabled (ne .Values.eudHandler.mode "ssl") }}
+{{- $caRequired := or $sslSidecar (eq .Values.eudHandler.mode "ssl") }}
+{{- $waitForCa := printf "until [ -f %[1]s/ca.pem ] && [ -f %[1]s/certs/opentakserver/opentakserver.pem ] && [ -f %[1]s/certs/opentakserver/opentakserver.nopass.key ]; do sleep 2; done; exec" $caDir }}
 {{- $command := list "/app/venv/bin/eud_handler" }}
 {{- if eq .Values.eudHandler.mode "ssl" }}
-{{- $command = append $command "--ssl" }}
+{{- $command = list "/bin/sh" "-ec" (printf "%s /app/venv/bin/eud_handler --ssl" $waitForCa) }}
 {{- else if eq .Values.eudHandler.mode "udp" }}
 {{- $command = append $command "--udp" }}
+{{- end }}
+{{- $values := deepCopy .Values.eudHandler }}
+{{- if eq .Values.eudHandler.mode "ssl" }}
+{{- $_ := set $values "volumeMounts" (append (default (list) $values.volumeMounts) (dict "name" "ots-ca" "mountPath" $caDir "readOnly" true)) }}
+{{- end }}
+{{- $extraContainers := list }}
+{{- if $sslSidecar }}
+{{- $extraContainers = append $extraContainers (dict
+  "name" "eud-handler-ssl"
+  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "imagePullPolicy" .Values.image.pullPolicy
+  "command" (list "/bin/sh" "-ec" (printf "%s /app/venv/bin/eud_handler --ssl" $waitForCa))
+  "env" (include "opentakserver.env" $ | fromYamlArray)
+  "ports" (list
+    (dict "name" "ssl" "containerPort" (.Values.env.OTS_SSL_STREAMING_PORT | default 8089 | int) "protocol" "TCP")
+  )
+  "volumeMounts" (list
+    (dict "name" "ots-data" "mountPath" $mountPath)
+    (dict "name" "ots-ca" "mountPath" $caDir "readOnly" true)
+  )
+  "resources" .Values.eudHandler.ssl.resources
+  "livenessProbe" .Values.eudHandler.ssl.livenessProbe
+  "readinessProbe" .Values.eudHandler.ssl.readinessProbe
+) }}
+{{- end }}
+{{- $extraVolumes := list }}
+{{- if $caRequired }}
+{{- $extraVolumes = append $extraVolumes (dict
+  "name" "ots-ca"
+  "secret" (dict
+    "secretName" (include "opentakserver.caSecretName" .)
+    "optional" true
+    "items" (list
+      (dict "key" "ca.pem" "path" "ca.pem")
+      (dict "key" "ca-trusted.pem" "path" "ca-trusted.pem")
+      (dict "key" "opentakserver.pem" "path" "certs/opentakserver/opentakserver.pem")
+      (dict "key" "opentakserver.nopass.key" "path" "certs/opentakserver/opentakserver.nopass.key")
+    )
+  )
+) }}
+{{- end }}
+{{- $ports := list
+  (dict "name" "tcp" "containerPort" (.Values.env.OTS_TCP_STREAMING_PORT | default 8088 | int) "protocol" "TCP")
+  (dict "name" "udp" "containerPort" (.Values.env.OTS_UDP_PORT | default 8087 | int) "protocol" "UDP")
+}}
+{{- if eq .Values.eudHandler.mode "ssl" }}
+{{- $ports = prepend $ports (dict "name" "ssl" "containerPort" (.Values.env.OTS_SSL_STREAMING_PORT | default 8089 | int) "protocol" "TCP") }}
 {{- end }}
 {{- include "opentakserver.deployment" (dict
       "ctx" $
       "name" (include "opentakserver.eudHandlerName" .)
       "component" "eud-handler"
       "containerName" "eud-handler"
-      "values" .Values.eudHandler
+      "values" $values
       "selectorLabelsTemplate" "opentakserver.eudHandlerSelectorLabels"
       "command" $command
-      "ports" (list
-        (dict "name" "tcp" "containerPort" (.Values.env.OTS_TCP_STREAMING_PORT | default 8088 | int) "protocol" "TCP")
-        (dict "name" "ssl" "containerPort" (.Values.env.OTS_SSL_STREAMING_PORT | default 8089 | int) "protocol" "TCP")
-        (dict "name" "udp" "containerPort" (.Values.env.OTS_UDP_PORT | default 8087 | int) "protocol" "UDP")
-      )
+      "ports" $ports
+      "extraContainers" $extraContainers
+      "extraVolumes" $extraVolumes
     ) }}
 {{- end }}

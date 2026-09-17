@@ -1,0 +1,143 @@
+{{- if .Values.mediamtx.enabled }}
+{{- $ctx := . -}}
+{{- $values := .Values.mediamtx -}}
+{{- $caDir := "/ca" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opentakserver.mediamtxName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mediamtx
+spec:
+  replicas: {{ $values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "opentakserver.mediamtxSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with $values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "opentakserver.labels" . | nindent 8 }}
+        app.kubernetes.io/component: mediamtx
+        {{- with $values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with (default .Values.imagePullSecrets $values.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ default (include "opentakserver.serviceAccountName" .) $values.serviceAccountName }}
+      {{- with $values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-ca
+          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          command:
+            - /bin/sh
+            - -ec
+            - until [ -f {{ $caDir }}/ca.pem ] && [ -f {{ $caDir }}/certs/opentakserver/opentakserver.pem ]; do sleep 2; done
+          volumeMounts:
+            - name: ots-ca
+              mountPath: {{ $caDir }}
+              readOnly: true
+      containers:
+        - name: mediamtx
+          {{- with $values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          args:
+            - /etc/mediamtx/mediamtx.yml
+          {{- with $values.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: api
+              containerPort: {{ $values.service.ports.api.port | int }}
+              protocol: TCP
+            - name: rtsp
+              containerPort: {{ $values.service.ports.rtsp.port | int }}
+              protocol: TCP
+            - name: rtmp
+              containerPort: {{ $values.service.ports.rtmp.port | int }}
+              protocol: TCP
+            - name: hls
+              containerPort: {{ $values.service.ports.hls.port | int }}
+              protocol: TCP
+            - name: webrtc
+              containerPort: {{ $values.service.ports.webrtc.port | int }}
+              protocol: TCP
+            - name: webrtc-udp
+              containerPort: {{ $values.service.ports.webrtcUdp.port | int }}
+              protocol: UDP
+            - name: srt
+              containerPort: {{ $values.service.ports.srt.port | int }}
+              protocol: UDP
+          {{- with $values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: mediamtx-config
+              mountPath: /etc/mediamtx/mediamtx.yml
+              subPath: mediamtx.yml
+            - name: ots-ca
+              mountPath: {{ $caDir }}
+              readOnly: true
+            - name: ots-data
+              mountPath: {{ $.Values.persistence.mountPath }}
+            {{- with $values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: mediamtx-config
+          configMap:
+            name: {{ include "opentakserver.mediamtxConfigName" . }}
+        - name: ots-ca
+          secret:
+            secretName: {{ include "opentakserver.caSecretName" . }}
+            optional: true
+            items:
+              - key: ca.pem
+                path: ca.pem
+              - key: opentakserver.pem
+                path: certs/opentakserver/opentakserver.pem
+              - key: opentakserver.nopass.key
+                path: certs/opentakserver/opentakserver.nopass.key
+        - name: ots-data
+          emptyDir: {}
+        {{- with $values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with $values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

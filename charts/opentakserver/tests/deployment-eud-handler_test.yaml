@@ -16,13 +16,59 @@ tests:
           path: spec.template.spec.containers[0].command
           value: ["/app/venv/bin/eud_handler"]
 
-  - it: adds --ssl when mode is ssl
+  - it: wraps the primary command with a CA wait when mode is ssl
     set:
       eudHandler.mode: ssl
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].command
-          value: ["/app/venv/bin/eud_handler", "--ssl"]
+          path: spec.template.spec.containers[0].command[0]
+          value: "/bin/sh"
+      - matchRegex:
+          path: spec.template.spec.containers[0].command[2]
+          pattern: 'exec /app/venv/bin/eud_handler --ssl$'
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: ots-ca
+            mountPath: /app/ots/ca
+            readOnly: true
+
+  - it: adds an eud_handler --ssl sidecar by default
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: eud-handler-ssl
+      - matchRegex:
+          path: spec.template.spec.containers[1].command[2]
+          pattern: 'exec /app/venv/bin/eud_handler --ssl$'
+      - equal:
+          path: spec.template.spec.containers[1].ports[0].containerPort
+          value: 8089
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-ca
+            secret:
+              secretName: RELEASE-NAME-opentakserver-ots-ca
+              optional: true
+              items:
+                - key: ca.pem
+                  path: ca.pem
+                - key: ca-trusted.pem
+                  path: ca-trusted.pem
+                - key: opentakserver.pem
+                  path: certs/opentakserver/opentakserver.pem
+                - key: opentakserver.nopass.key
+                  path: certs/opentakserver/opentakserver.nopass.key
+
+  - it: skips the ssl sidecar when ssl.enabled is false
+    set:
+      eudHandler.ssl.enabled: false
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[1]
+      - notExists:
+          path: spec.template.spec.volumes[1]
 
   - it: adds --udp when mode is udp
     set:

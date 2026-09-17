@@ -70,6 +70,16 @@ web:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Resources for the ca-publisher sidecar, which copies the OTS CA material
+  # generated in this pod into a Kubernetes Secret so that eud_handler --ssl
+  # and mediamtx can share it (upstream shares ~/ots/ca via one filesystem).
+  caPublisherResources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -211,8 +221,36 @@ ui:
 eudHandler:
   enabled: true
   replicaCount: 1
-  # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags.
+  # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the
+  # primary container. Upstream runs `eud_handler` and `eud_handler --ssl` as
+  # separate services on the same host; use `ssl.enabled` below to get that.
   mode: tcp
+  # Additional `eud_handler --ssl` container in the same pod (mTLS CoT
+  # streaming on OTS_SSL_STREAMING_PORT, required for EUD cert auth). The
+  # container waits for the OTS CA material published by the web pod.
+  ssl:
+    enabled: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+    livenessProbe:
+      exec:
+        command: ["pgrep", "-f", "eud_handler"]
+      initialDelaySeconds: 10
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 5
+    readinessProbe:
+      tcpSocket:
+        port: ssl
+      initialDelaySeconds: 10
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 30
   # Overrides for the chart-wide defaults above. Empty/unset falls back to
   # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
   serviceAccountName: ""
@@ -349,6 +387,94 @@ cotParser:
     timeoutSeconds: 5
     failureThreshold: 30
 
+# MediaMTX component: upstream installs mediamtx unconditionally for video
+# streaming (TAK ICU etc.). Runs as a separate Deployment using the
+# bluenviron/mediamtx image. Its TLS listeners use the OTS CA material
+# published by the web pod, and stream auth + lifecycle hooks call back into
+# the OTS API via the web Service.
+mediamtx:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: bluenviron/mediamtx
+    # -ffmpeg variant includes ffmpeg (upstream installs the ffmpeg package
+    # alongside mediamtx on the host).
+    tag: "1.13.0-ffmpeg"
+    pullPolicy: IfNotPresent
+  logLevel: info
+  # Resources for the initContainer in the web pod that seeds mediamtx.yml
+  # into the OTS data folder.
+  publisherResources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+  # Overrides for the chart-wide defaults above. Empty/unset falls back to
+  # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
+  serviceAccountName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  imagePullSecrets: []
+  podAnnotations: {}
+  podLabels: {}
+  extraEnv: []
+  volumes: []
+  volumeMounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+  livenessProbe:
+    tcpSocket:
+      port: api
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    tcpSocket:
+      port: api
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  service:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    # Listener ports mirror the upstream mediamtx.yml. The `api` port is the
+    # control API the OTS backend calls (OTS_MEDIAMTX_API_ADDRESS).
+    ports:
+      api:
+        port: 9997
+        protocol: TCP
+      rtsp:
+        port: 8554
+        protocol: TCP
+      rtmp:
+        port: 1935
+        protocol: TCP
+      hls:
+        port: 8888
+        protocol: TCP
+      webrtc:
+        port: 8889
+        protocol: TCP
+      webrtcUdp:
+        port: 8189
+        protocol: UDP
+      srt:
+        port: 8890
+        protocol: UDP
+
 # Optional PVC for the OTS data folder (SQLite DB, config.yml, data
 # packages, certs). Disabled by default for a minimal ephemeral install.
 persistence:
@@ -399,6 +525,12 @@ postgresql:
     persistence:
       enabled: false
       size: 8Gi
+    initdb:
+      # Upstream installer enables the postgis extension in the ots database.
+      scripts:
+        00-postgis.sh: |
+          #!/bin/sh
+          psql -v ON_ERROR_STOP=1 -d "$POSTGRES_DB" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
 
 rabbitmq:
   enabled: true

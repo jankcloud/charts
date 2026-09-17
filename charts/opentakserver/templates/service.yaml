@@ -74,3 +74,28 @@ spec:
   selector:
     {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
 {{- end }}
+---
+{{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.mediamtxServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mediamtx
+  {{- with .Values.mediamtx.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.mediamtx.service.type }}
+  ports:
+    {{- range $name, $port := .Values.mediamtx.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $name }}
+      protocol: {{ $port.protocol | default "TCP" }}
+      name: {{ $name }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.mediamtxSelectorLabels" . | nindent 4 }}
+{{- end }}

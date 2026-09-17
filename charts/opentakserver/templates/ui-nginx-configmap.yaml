@@ -37,6 +37,31 @@ data:
             proxy_set_header X-Forwarded-For $remote_addr;
         }
 
+        {{- if .Values.mediamtx.enabled }}
+        # Proxy WebRTC requests to MediaMTX (upstream ots_http parity).
+        location ~ ^/webrtc(/?)(.*)$ {
+            proxy_pass https://{{ include "opentakserver.mediamtxServiceName" . }}:{{ .Values.mediamtx.service.ports.webrtc.port }}/$2$is_args$args;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        # Proxy HLS requests to MediaMTX (upstream ots_http parity).
+        location ~ ^/hls(/?)(.*)$ {
+            proxy_pass https://{{ include "opentakserver.mediamtxServiceName" . }}:{{ .Values.mediamtx.service.ports.hls.port }}/$2$is_args$args;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        {{- end }}
+
         # Single-page app fallback.
         location / {
             try_files $uri /index.html;

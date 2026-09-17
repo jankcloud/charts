@@ -368,6 +368,9 @@ Expects a dict with:
 {{- $ctx := .ctx -}}
 {{- $values := .values -}}
 {{- $component := .component -}}
+{{- $initContainers := .initContainers -}}
+{{- $extraContainers := .extraContainers -}}
+{{- $extraVolumes := .extraVolumes -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -402,6 +405,10 @@ spec:
       serviceAccountName: {{ default (include "opentakserver.serviceAccountName" $ctx) $values.serviceAccountName }}
       {{- with (default $ctx.Values.podSecurityContext $values.podSecurityContext) }}
       securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $initContainers }}
+      initContainers:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
@@ -454,6 +461,9 @@ spec:
             {{- with $values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+        {{- with $extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       volumes:
         - name: ots-data
           {{- if $ctx.Values.persistence.enabled }}
@@ -462,6 +472,9 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- with $extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- with $values.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -477,6 +490,56 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
+
+{{/*
+Name of the Secret that holds the generated CA material. It is populated at
+runtime by the ca-publisher sidecar running in the web pod, because upstream
+expects all components to share ~/ots/ca on one filesystem.
+*/}}
+{{- define "opentakserver.caSecretName" -}}
+{{ include "opentakserver.fullname" . }}-ots-ca
+{{- end }}
+
+{{/*
+Whether the ca-publisher sidecar is required. True when anything besides the
+web pod needs the OTS CA: the SSL EUD handler and mediamtx.
+*/}}
+{{- define "opentakserver.caPublishEnabled" -}}
+{{- if or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled -}}
+true
+{{- end -}}
+{{- end }}
+
+{{/*
+MediaMTX helpers
+*/}}
+{{- define "opentakserver.mediamtxName" -}}
+{{ include "opentakserver.fullname" . }}-mediamtx
+{{- end }}
+
+{{- define "opentakserver.mediamtxServiceName" -}}
+{{ include "opentakserver.mediamtxName" . }}
+{{- end }}
+
+{{- define "opentakserver.mediamtxConfigName" -}}
+{{ include "opentakserver.mediamtxName" . }}-config
+{{- end }}
+
+{{- define "opentakserver.mediamtxSelectorLabels" -}}
+{{- include "opentakserver.selectorLabels" . }}
+app.kubernetes.io/component: mediamtx
+{{- end }}
+
+{{/*
+Address the OTS API uses to reach the mediamtx control API.
+*/}}
+{{- define "opentakserver.mediamtxApiAddress" -}}
+{{- if .Values.mediamtx.enabled -}}
+http://{{ include "opentakserver.mediamtxServiceName" . }}:{{ .Values.mediamtx.service.ports.api.port }}
+{{- else -}}
+http://localhost:{{ .Values.mediamtx.service.ports.api.port }}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -509,6 +572,12 @@ Shared environment variables used by all OTS workloads
       key: {{ include "opentakserver.rabbitmqPasswordKey" . }}
 - name: OTS_RABBITMQ_VHOST
   value: {{ include "opentakserver.rabbitmqVhost" . | quote }}
+- name: OTS_MEDIAMTX_ENABLE
+  value: {{ .Values.env.OTS_MEDIAMTX_ENABLE | default .Values.mediamtx.enabled | quote }}
+- name: OTS_MEDIAMTX_API_ADDRESS
+  value: {{ .Values.env.OTS_MEDIAMTX_API_ADDRESS | default (include "opentakserver.mediamtxApiAddress" .) | quote }}
+- name: OTS_MEDIAMTX_TOKEN
+  value: {{ .Values.env.OTS_MEDIAMTX_TOKEN | default "opentakserver" | quote }}
 {{- if .Values.database.uri }}
 - name: SQLALCHEMY_DATABASE_URI
   value: {{ .Values.database.uri | quote }}

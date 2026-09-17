@@ -8,6 +8,9 @@
    {{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}
    - CoT: {{ include "opentakserver.cotsServiceName" . }} — TCP :{{ .Values.eudHandler.service.ports.tcp.port }}, SSL :{{ .Values.eudHandler.service.ports.ssl.port }}
    {{- end }}
+   {{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
+   - MediaMTX: {{ include "opentakserver.mediamtxServiceName" . }} — API :{{ .Values.mediamtx.service.ports.api.port }}, RTSP :{{ .Values.mediamtx.service.ports.rtsp.port }}, RTMP :{{ .Values.mediamtx.service.ports.rtmp.port }}, HLS :{{ .Values.mediamtx.service.ports.hls.port }}, WebRTC :{{ .Values.mediamtx.service.ports.webrtc.port }}
+   {{- end }}
 
 2. Configuration summary:
    - Database mode: {{ if .Values.database.uri }}external SQLAlchemy URI{{ else if .Values.database.existingSecret.name }}external database via existingSecret{{ else }}SQLite (local, ephemeral unless persistence is enabled){{ end }}
@@ -17,6 +20,7 @@
    - EUD handler: {{ if .Values.eudHandler.enabled }}{{ if .Values.eudHandler.autoscaling.enabled }}HPA {{ .Values.eudHandler.autoscaling.minReplicas }}-{{ .Values.eudHandler.autoscaling.maxReplicas }}{{ else }}{{ .Values.eudHandler.replicaCount }} replica(s){{ end }}, mode {{ .Values.eudHandler.mode }}{{ else }}disabled{{ end }}
    - CoT parser: {{ if .Values.cotParser.enabled }}{{ if .Values.cotParser.autoscaling.enabled }}HPA {{ .Values.cotParser.autoscaling.minReplicas }}-{{ .Values.cotParser.autoscaling.maxReplicas }}{{ else }}{{ .Values.cotParser.replicaCount }} replica(s){{ end }}, {{ .Values.cotParser.processes }} worker process(es)/pod{{ else }}disabled{{ end }}
    - Web UI: {{ if and .Values.ui.enabled .Values.web.enabled }}{{ if .Values.ui.autoscaling.enabled }}HPA {{ .Values.ui.autoscaling.minReplicas }}-{{ .Values.ui.autoscaling.maxReplicas }}{{ else }}{{ .Values.ui.replicaCount }} replica(s){{ end }}{{ else }}disabled{{ end }}
+   - MediaMTX: {{ if .Values.mediamtx.enabled }}{{ .Values.mediamtx.replicaCount }} replica(s){{ else }}disabled{{ end }}
 
 3. Port-forward the web UI:
    kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "opentakserver.uiServiceName" . }} 8080:{{ .Values.ui.service.ports.http.port }}

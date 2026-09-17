@@ -1,4 +1,46 @@
 {{- if .Values.web.enabled }}
+{{- $mountPath := .Values.persistence.mountPath }}
+{{- $initContainers := list }}
+{{- $extraContainers := list }}
+{{- $extraVolumes := list }}
+{{- if .Values.mediamtx.enabled }}
+{{- $initContainers = append $initContainers (dict
+  "name" "mediamtx-config-seed"
+  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "imagePullPolicy" .Values.image.pullPolicy
+  "command" (list "/bin/sh" "-ec" (printf "mkdir -p %s/mediamtx && cp /seed/mediamtx.yml %s/mediamtx/mediamtx.yml" $mountPath $mountPath))
+  "volumeMounts" (list
+    (dict "name" "ots-data" "mountPath" $mountPath)
+    (dict "name" "mediamtx-config" "mountPath" "/seed")
+  )
+  "resources" .Values.mediamtx.publisherResources
+) }}
+{{- $extraVolumes = append $extraVolumes (dict
+  "name" "mediamtx-config"
+  "configMap" (dict "name" (include "opentakserver.mediamtxConfigName" .))
+) }}
+{{- end }}
+{{- if eq (include "opentakserver.caPublishEnabled" .) "true" }}
+{{- $extraContainers = append $extraContainers (dict
+  "name" "ca-publisher"
+  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "imagePullPolicy" .Values.image.pullPolicy
+  "command" (list "/app/venv/bin/python" "/scripts/ca_publisher.py")
+  "env" (list
+    (dict "name" "OTS_DATA_FOLDER" "value" (.Values.env.OTS_DATA_FOLDER | default "/app/ots"))
+    (dict "name" "OTS_CA_SECRET_NAME" "value" (include "opentakserver.caSecretName" .))
+  )
+  "volumeMounts" (list
+    (dict "name" "ots-data" "mountPath" $mountPath)
+    (dict "name" "ca-publisher-script" "mountPath" "/scripts")
+  )
+  "resources" .Values.web.caPublisherResources
+) }}
+{{- $extraVolumes = append $extraVolumes (dict
+  "name" "ca-publisher-script"
+  "configMap" (dict "name" (printf "%s-ca-publisher" (include "opentakserver.fullname" .)) "defaultMode" 0755)
+) }}
+{{- end }}
 {{- include "opentakserver.deployment" (dict
       "ctx" $
       "name" (include "opentakserver.webDeploymentName" .)
@@ -10,5 +52,8 @@
       "ports" (list
         (dict "name" "api" "containerPort" (.Values.env.OTS_LISTENER_PORT | default 8081 | int) "protocol" "TCP")
       )
+      "initContainers" $initContainers
+      "extraContainers" $extraContainers
+      "extraVolumes" $extraVolumes
     ) }}
 {{- end }}

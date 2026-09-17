@@ -763,7 +763,7 @@
         },
         "mode": {
           "default": "tcp",
-          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags.",
+          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container. Upstream runs `eud_handler` and `eud_handler --ssl` as\nseparate services on the same host; use `ssl.enabled` below to get that.",
           "required": [],
           "title": "mode",
           "type": "string"
@@ -1039,6 +1039,199 @@
           "title": "serviceAccountName",
           "type": "string"
         },
+        "ssl": {
+          "description": "Additional `eud_handler --ssl` container in the same pod (mTLS CoT\nstreaming on OTS_SSL_STREAMING_PORT, required for EUD cert auth). The\ncontainer waits for the OTS CA material published by the web pod.",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "livenessProbe": {
+              "properties": {
+                "exec": {
+                  "properties": {
+                    "command": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "command",
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "command"
+                  ],
+                  "title": "exec",
+                  "type": "object"
+                },
+                "failureThreshold": {
+                  "default": 5,
+                  "required": [],
+                  "title": "failureThreshold",
+                  "type": "integer"
+                },
+                "initialDelaySeconds": {
+                  "default": 10,
+                  "required": [],
+                  "title": "initialDelaySeconds",
+                  "type": "integer"
+                },
+                "periodSeconds": {
+                  "default": 15,
+                  "required": [],
+                  "title": "periodSeconds",
+                  "type": "integer"
+                },
+                "timeoutSeconds": {
+                  "default": 5,
+                  "required": [],
+                  "title": "timeoutSeconds",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "exec",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds",
+                "failureThreshold"
+              ],
+              "title": "livenessProbe",
+              "type": "object"
+            },
+            "readinessProbe": {
+              "properties": {
+                "failureThreshold": {
+                  "default": 30,
+                  "required": [],
+                  "title": "failureThreshold",
+                  "type": "integer"
+                },
+                "initialDelaySeconds": {
+                  "default": 10,
+                  "required": [],
+                  "title": "initialDelaySeconds",
+                  "type": "integer"
+                },
+                "periodSeconds": {
+                  "default": 15,
+                  "required": [],
+                  "title": "periodSeconds",
+                  "type": "integer"
+                },
+                "tcpSocket": {
+                  "properties": {
+                    "port": {
+                      "default": "ssl",
+                      "required": [],
+                      "title": "port",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port"
+                  ],
+                  "title": "tcpSocket",
+                  "type": "object"
+                },
+                "timeoutSeconds": {
+                  "default": 5,
+                  "required": [],
+                  "title": "timeoutSeconds",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "tcpSocket",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds",
+                "failureThreshold"
+              ],
+              "title": "readinessProbe",
+              "type": "object"
+            },
+            "resources": {
+              "properties": {
+                "limits": {
+                  "properties": {
+                    "cpu": {
+                      "default": "1",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "properties": {
+                    "cpu": {
+                      "default": "50m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "128Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            }
+          },
+          "required": [
+            "enabled",
+            "resources",
+            "livenessProbe",
+            "readinessProbe"
+          ],
+          "title": "ssl",
+          "type": "object"
+        },
         "startupProbe": {
           "properties": {
             "enabled": {
@@ -1127,6 +1320,7 @@
         "enabled",
         "replicaCount",
         "mode",
+        "ssl",
         "serviceAccountName",
         "podSecurityContext",
         "securityContext",
@@ -1200,6 +1394,573 @@
       "required": [],
       "title": "imagePullSecrets",
       "type": "array"
+    },
+    "mediamtx": {
+      "description": "MediaMTX component: upstream installs mediamtx unconditionally for video\nstreaming (TAK ICU etc.). Runs as a separate Deployment using the\nbluenviron/mediamtx image. Its TLS listeners use the OTS CA material\npublished by the web pod, and stream auth + lifecycle hooks call back into\nthe OTS API via the web Service.",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "image": {
+          "properties": {
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bluenviron/mediamtx",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "1.13.0-ffmpeg",
+              "description": "-ffmpeg variant includes ffmpeg (upstream installs the ffmpeg package\nalongside mediamtx on the host).",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "tag",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "tcpSocket": {
+              "properties": {
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "title": "tcpSocket",
+              "type": "object"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tcpSocket",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "logLevel": {
+          "default": "info",
+          "required": [],
+          "title": "logLevel",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "publisherResources": {
+          "description": "Resources for the initContainer in the web pod that seeds mediamtx.yml\ninto the OTS data folder.",
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "64Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "10m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "16Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "publisherResources",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "tcpSocket": {
+              "properties": {
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "title": "tcpSocket",
+              "type": "object"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tcpSocket",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "1",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "512Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "50m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "ports": {
+              "description": "Listener ports mirror the upstream mediamtx.yml. The `api` port is the\ncontrol API the OTS backend calls (OTS_MEDIAMTX_API_ADDRESS).",
+              "properties": {
+                "api": {
+                  "properties": {
+                    "port": {
+                      "default": 9997,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "api",
+                  "type": "object"
+                },
+                "hls": {
+                  "properties": {
+                    "port": {
+                      "default": 8888,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "hls",
+                  "type": "object"
+                },
+                "rtmp": {
+                  "properties": {
+                    "port": {
+                      "default": 1935,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "rtmp",
+                  "type": "object"
+                },
+                "rtsp": {
+                  "properties": {
+                    "port": {
+                      "default": 8554,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "rtsp",
+                  "type": "object"
+                },
+                "srt": {
+                  "properties": {
+                    "port": {
+                      "default": 8890,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "srt",
+                  "type": "object"
+                },
+                "webrtc": {
+                  "properties": {
+                    "port": {
+                      "default": 8889,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "webrtc",
+                  "type": "object"
+                },
+                "webrtcUdp": {
+                  "properties": {
+                    "port": {
+                      "default": 8189,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "webrtcUdp",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "api",
+                "rtsp",
+                "rtmp",
+                "hls",
+                "webrtc",
+                "webrtcUdp",
+                "srt"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "type",
+            "annotations",
+            "ports"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Overrides for the chart-wide defaults above. Empty/unset falls back to\nthe top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "image",
+        "logLevel",
+        "publisherResources",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "service"
+      ],
+      "title": "mediamtx",
+      "type": "object"
     },
     "nameOverride": {
       "default": "",
@@ -1373,6 +2134,31 @@
         },
         "primary": {
           "properties": {
+            "initdb": {
+              "properties": {
+                "scripts": {
+                  "description": "Upstream installer enables the postgis extension in the ots database.",
+                  "properties": {
+                    "00-postgis.sh": {
+                      "default": "#!/bin/sh\npsql -v ON_ERROR_STOP=1 -d \"$POSTGRES_DB\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
+                      "required": [],
+                      "title": "00-postgis.sh",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "00-postgis.sh"
+                  ],
+                  "title": "scripts",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "scripts"
+              ],
+              "title": "initdb",
+              "type": "object"
+            },
             "persistence": {
               "properties": {
                 "enabled": {
@@ -1397,7 +2183,8 @@
             }
           },
           "required": [
-            "persistence"
+            "persistence",
+            "initdb"
           ],
           "title": "primary",
           "type": "object"
@@ -2640,6 +3427,61 @@
           "title": "autoscaling",
           "type": "object"
         },
+        "caPublisherResources": {
+          "description": "Resources for the ca-publisher sidecar, which copies the OTS CA material\ngenerated in this pod into a Kubernetes Secret so that eud_handler --ssl\nand mediamtx can share it (upstream shares ~/ots/ca via one filesystem).",
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "10m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "32Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "caPublisherResources",
+          "type": "object"
+        },
         "enabled": {
           "default": true,
           "required": [],
@@ -3047,6 +3889,7 @@
         "nodeSelector",
         "tolerations",
         "affinity",
+        "caPublisherResources",
         "autoscaling",
         "resources",
         "livenessProbe",
@@ -3071,6 +3914,7 @@
     "ui",
     "eudHandler",
     "cotParser",
+    "mediamtx",
     "persistence",
     "database",
     "postgresql",
