@@ -217,8 +217,8 @@ A Helm chart for deploying OpenTAKServer
 | mediamtx.service.ports.srt.protocol | string | `"UDP"` |  |
 | mediamtx.service.ports.webrtc.port | int | `8889` |  |
 | mediamtx.service.ports.webrtc.protocol | string | `"TCP"` |  |
-| mediamtx.service.ports.webrtcUdp.port | int | `8189` |  |
-| mediamtx.service.ports.webrtcUdp.protocol | string | `"UDP"` |  |
+| mediamtx.service.ports.webrtc_udp.port | int | `8189` |  |
+| mediamtx.service.ports.webrtc_udp.protocol | string | `"UDP"` |  |
 | mediamtx.service.type | string | `"ClusterIP"` |  |
 | mediamtx.serviceAccountName | string | `""` |  |
 | mediamtx.tolerations | list | `[]` |  |

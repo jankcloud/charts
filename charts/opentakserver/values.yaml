@@ -468,7 +468,7 @@ mediamtx:
       webrtc:
         port: 8889
         protocol: TCP
-      webrtcUdp:
+      webrtc_udp:
         port: 8189
         protocol: UDP
       srt:

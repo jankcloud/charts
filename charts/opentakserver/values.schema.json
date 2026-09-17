@@ -1853,7 +1853,7 @@
                   "title": "webrtc",
                   "type": "object"
                 },
-                "webrtcUdp": {
+                "webrtc_udp": {
                   "properties": {
                     "port": {
                       "default": 8189,
@@ -1872,7 +1872,7 @@
                     "port",
                     "protocol"
                   ],
-                  "title": "webrtcUdp",
+                  "title": "webrtc_udp",
                   "type": "object"
                 }
               },
@@ -1882,7 +1882,7 @@
                 "rtmp",
                 "hls",
                 "webrtc",
-                "webrtcUdp",
+                "webrtc_udp",
                 "srt"
               ],
               "title": "ports",

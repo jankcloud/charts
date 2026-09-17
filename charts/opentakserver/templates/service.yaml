@@ -92,9 +92,9 @@ spec:
   ports:
     {{- range $name, $port := .Values.mediamtx.service.ports }}
     - port: {{ $port.port }}
-      targetPort: {{ $name }}
+      targetPort: {{ $name | replace "_" "-" }}
       protocol: {{ $port.protocol | default "TCP" }}
-      name: {{ $name }}
+      name: {{ $name | replace "_" "-" }}
     {{- end }}
   selector:
     {{- include "opentakserver.mediamtxSelectorLabels" . | nindent 4 }}

@@ -116,7 +116,7 @@ data:
     webrtcServerCert: /ca/certs/opentakserver/opentakserver.pem
     webrtcAllowOrigin: '*'
     webrtcTrustedProxies: []
-    webrtcLocalUDPAddress: :{{ .Values.mediamtx.service.ports.webrtcUdp.port }}
+    webrtcLocalUDPAddress: :{{ .Values.mediamtx.service.ports.webrtc_udp.port }}
     webrtcLocalTCPAddress: ''
     webrtcIPsFromInterfaces: yes
     webrtcIPsFromInterfacesList: []

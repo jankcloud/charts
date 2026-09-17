@@ -79,7 +79,7 @@ spec:
               containerPort: {{ $values.service.ports.webrtc.port | int }}
               protocol: TCP
             - name: webrtc-udp
-              containerPort: {{ $values.service.ports.webrtcUdp.port | int }}
+              containerPort: {{ $values.service.ports.webrtc_udp.port | int }}
               protocol: UDP
             - name: srt
               containerPort: {{ $values.service.ports.srt.port | int }}

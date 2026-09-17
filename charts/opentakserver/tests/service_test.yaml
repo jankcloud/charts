@@ -100,7 +100,7 @@ tests:
           value: 9997
       - equal:
           path: spec.ports[6].name
-          value: webrtcUdp
+          value: webrtc-udp
       - equal:
           path: spec.ports[6].protocol
           value: UDP
