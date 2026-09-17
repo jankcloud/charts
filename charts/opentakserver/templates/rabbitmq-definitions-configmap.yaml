@@ -1,0 +1,22 @@
+{{- if .Values.rabbitmq.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "opentakserver.rabbitmqDefinitionsName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rabbitmq
+data:
+  definitions.json: |
+    {
+      "exchanges": [
+        {"name": "dms", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "direct", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "cot_parser", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "direct", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "chatrooms", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "direct", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "missions", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "groups", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "firehose", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "fanout", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "flask-socketio", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "fanout", "durable": false, "auto_delete": false, "internal": false, "arguments": {}}
+      ]
+    }
+{{- end }}

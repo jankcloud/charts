@@ -35,7 +35,7 @@ spec:
 {{- end -}}
 
 {{- if and .Values.web.enabled .Values.web.autoscaling.enabled }}
-{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.fullname" .) "component" "web" "config" .Values.web.autoscaling) }}
+{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.webDeploymentName" .) "component" "web" "config" .Values.web.autoscaling) }}
 {{- end }}
 {{- if and .Values.eudHandler.enabled .Values.eudHandler.autoscaling.enabled }}
 ---

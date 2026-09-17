@@ -10,11 +10,14 @@ tests:
       - isAPIVersion:
           of: apps/v1
 
-  - it: uses the release name as the resource name
+  - it: uses the component-specific resource name
     asserts:
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-opentakserver
+          value: RELEASE-NAME-opentakserver-web
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/component"]
+          value: web
 
   - it: uses the pinned image tag from values
     set:

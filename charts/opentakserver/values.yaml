@@ -351,9 +351,21 @@ rabbitmq:
   config:
     extra: |
       deprecated_features.permit.transient_nonexcl_queues = true
+      management.load_definitions = /etc/rabbitmq/definitions/definitions.json
   singleNode:
     persistence:
       enabled: false
+  # NOTE: configMap.name must match the rendered name of the
+  # rabbitmq-definitions ConfigMap ("<release fullname>-rabbitmq-definitions").
+  # If fullnameOverride or a different release name is used, update this.
+  extraVolumes:
+    - name: opentakserver-rabbitmq-definitions
+      configMap:
+        name: opentakserver-rabbitmq-definitions
+  extraVolumeMounts:
+    - name: opentakserver-rabbitmq-definitions
+      mountPath: /etc/rabbitmq/definitions
+      readOnly: true
   external:
     host: ""
     port: 5672

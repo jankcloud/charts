@@ -1,7 +1,7 @@
 {{- if .Values.web.enabled }}
 {{- include "opentakserver.deployment" (dict
       "ctx" $
-      "name" (include "opentakserver.fullname" .)
+      "name" (include "opentakserver.webDeploymentName" .)
       "component" "web"
       "containerName" .Chart.Name
       "values" .Values.web

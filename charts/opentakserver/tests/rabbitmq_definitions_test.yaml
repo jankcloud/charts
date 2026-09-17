@@ -1,0 +1,25 @@
+suite: RabbitMQ definitions
+templates:
+  - templates/rabbitmq-definitions-configmap.yaml
+tests:
+
+  - it: renders broker definitions when bundled RabbitMQ is enabled
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-rabbitmq-definitions
+      - matchRegex:
+          path: data["definitions.json"]
+          pattern: '"name": "cot_parser"'
+      - matchRegex:
+          path: data["definitions.json"]
+          pattern: '"name": "groups"'
+
+  - it: skips broker definitions when bundled RabbitMQ is disabled
+    set:
+      rabbitmq.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

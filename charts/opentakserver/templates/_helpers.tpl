@@ -77,6 +77,20 @@ OpenTAKServer web service name (UI + API).
 {{- end }}
 
 {{/*
+OpenTAKServer web deployment name.
+*/}}
+{{- define "opentakserver.webDeploymentName" -}}
+{{- printf "%s-web" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+RabbitMQ definitions ConfigMap name.
+*/}}
+{{- define "opentakserver.rabbitmqDefinitionsName" -}}
+{{- printf "%s-rabbitmq-definitions" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
 OpenTAKServer CoT service name.
 */}}
 {{- define "opentakserver.cotsServiceName" -}}
