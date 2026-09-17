@@ -9,6 +9,9 @@ metadata:
 data:
   definitions.json: |
     {
+      "vhosts": [
+        {"name": "{{ include "opentakserver.rabbitmqVhost" . }}"}
+      ],
       "exchanges": [
         {"name": "dms", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "direct", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "cot_parser", "vhost": "{{ include "opentakserver.rabbitmqVhost" . }}", "type": "direct", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},

@@ -12,6 +12,9 @@ tests:
           value: RELEASE-NAME-opentakserver-rabbitmq-definitions
       - matchRegex:
           path: data["definitions.json"]
+          pattern: '"vhosts"'
+      - matchRegex:
+          path: data["definitions.json"]
           pattern: '"name": "cot_parser"'
       - matchRegex:
           path: data["definitions.json"]
