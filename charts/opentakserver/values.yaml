@@ -350,7 +350,7 @@ rabbitmq:
     type: classic
   config:
     extra: |
-      deprecated_features.enable = transient_nonexcl_queues
+      deprecated_features.permit.transient_nonexcl_queues = true
   singleNode:
     persistence:
       enabled: false
