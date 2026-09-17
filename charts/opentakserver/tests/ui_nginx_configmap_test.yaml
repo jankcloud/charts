@@ -20,6 +20,29 @@ tests:
           path: data["default.conf"]
           pattern: 'try_files \$uri /index\.html'
 
+  - it: renders the TLS enrollment server block by default
+    asserts:
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'listen 8446 ssl'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'ssl_certificate /etc/nginx/ots-ca/opentakserver\.pem'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'location /Marti/api/tls'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'location /oauth'
+
+  - it: omits the enrollment server block when enrollment is disabled
+    set:
+      ui.enrollment.enabled: false
+    asserts:
+      - notMatchRegex:
+          path: data["default.conf"]
+          pattern: 'listen 8446 ssl'
+
   - it: skips the ConfigMap when ui is disabled
     set:
       ui.enabled: false

@@ -173,6 +173,10 @@ ui:
     failureThreshold: 5
   startupProbe:
     enabled: false
+  # TLS endpoint on 8446 for automatic certificate enrollment (iTAK/ATAK
+  # QR-code flow); nginx terminates TLS with the published OTS CA cert.
+  enrollment:
+    enabled: true
   service:
     enabled: true
     type: ClusterIP
@@ -181,6 +185,9 @@ ui:
       http:
         port: 8080
         targetPort: http
+      enrollment:
+        port: 8446
+        targetPort: 8446
   ingress:
     enabled: false
     className: ""

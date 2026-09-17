@@ -296,6 +296,7 @@ A Helm chart for deploying OpenTAKServer
 | ui.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | ui.autoscaling.targetMemoryUtilizationPercentage | string | `""` |  |
 | ui.enabled | bool | `true` |  |
+| ui.enrollment.enabled | bool | `true` |  |
 | ui.envFrom | list | `[]` |  |
 | ui.extraEnv | list | `[]` |  |
 | ui.httpRoute.annotations | object | `{}` |  |
@@ -340,6 +341,8 @@ A Helm chart for deploying OpenTAKServer
 | ui.securityContext | object | `{}` |  |
 | ui.service.annotations | object | `{}` |  |
 | ui.service.enabled | bool | `true` |  |
+| ui.service.ports.enrollment.port | int | `8446` |  |
+| ui.service.ports.enrollment.targetPort | int | `8446` |  |
 | ui.service.ports.http.port | int | `8080` |  |
 | ui.service.ports.http.targetPort | string | `"http"` |  |
 | ui.service.type | string | `"ClusterIP"` |  |

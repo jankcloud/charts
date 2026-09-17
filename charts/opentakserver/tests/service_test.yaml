@@ -72,16 +72,39 @@ tests:
           value: ui
       - equal:
           path: spec.ports[0].name
-          value: http
+          value: enrollment
       - equal:
           path: spec.ports[0].port
-          value: 8080
+          value: 8446
       - equal:
           path: spec.ports[0].targetPort
+          value: 8446
+      - equal:
+          path: spec.ports[1].name
+          value: http
+      - equal:
+          path: spec.ports[1].port
+          value: 8080
+      - equal:
+          path: spec.ports[1].targetPort
           value: http
       - equal:
           path: spec.selector["app.kubernetes.io/component"]
           value: ui
+
+  - it: omits the enrollment port when enrollment is disabled
+    documentIndex: 2
+    set:
+      ui.enrollment.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 4
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - lengthEqual:
+          path: spec.ports
+          count: 1
 
   - it: renders the mediamtx service
     documentIndex: 3

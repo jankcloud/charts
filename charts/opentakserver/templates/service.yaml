@@ -66,10 +66,12 @@ spec:
   type: {{ .Values.ui.service.type }}
   ports:
     {{- range $name, $port := .Values.ui.service.ports }}
+    {{- if or $.Values.ui.enrollment.enabled (ne $name "enrollment") }}
     - port: {{ $port.port }}
       targetPort: {{ $port.targetPort }}
       protocol: TCP
       name: {{ $name }}
+    {{- end }}
     {{- end }}
   selector:
     {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}

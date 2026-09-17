@@ -8,6 +8,9 @@
    {{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}
    - CoT: {{ include "opentakserver.cotsServiceName" . }} — TCP :{{ .Values.eudHandler.service.ports.tcp.port }}, SSL :{{ .Values.eudHandler.service.ports.ssl.port }}
    {{- end }}
+   {{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.ui.service.enabled .Values.web.enabled }}
+   - Enrollment: {{ include "opentakserver.uiServiceName" . }} — TLS :{{ .Values.ui.service.ports.enrollment.port }} (iTAK/ATAK certificate enrollment)
+   {{- end }}
    {{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
    - MediaMTX: {{ include "opentakserver.mediamtxServiceName" . }} — API :{{ .Values.mediamtx.service.ports.api.port }}, RTSP :{{ .Values.mediamtx.service.ports.rtsp.port }}, RTMP :{{ .Values.mediamtx.service.ports.rtmp.port }}, HLS :{{ .Values.mediamtx.service.ports.hls.port }}, WebRTC :{{ .Values.mediamtx.service.ports.webrtc.port }}
    {{- end }}

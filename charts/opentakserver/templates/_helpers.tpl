@@ -482,7 +482,7 @@ spec:
 {{- end }}
 
 {{- define "opentakserver.caPublishEnabled" -}}
-{{- if or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled -}}
+{{- if or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled (and .Values.ui.enabled .Values.ui.enrollment.enabled) -}}
 true
 {{- end -}}
 {{- end }}

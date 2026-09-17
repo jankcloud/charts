@@ -2761,6 +2761,22 @@
           "title": "enabled",
           "type": "boolean"
         },
+        "enrollment": {
+          "description": "TLS endpoint on 8446 for automatic certificate enrollment (iTAK/ATAK\nQR-code flow); nginx terminates TLS with the published OTS CA cert.",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "title": "enrollment",
+          "type": "object"
+        },
         "envFrom": {
           "items": {
             "required": []
@@ -3253,6 +3269,28 @@
             },
             "ports": {
               "properties": {
+                "enrollment": {
+                  "properties": {
+                    "port": {
+                      "default": 8446,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "targetPort": {
+                      "default": 8446,
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "targetPort"
+                  ],
+                  "title": "enrollment",
+                  "type": "object"
+                },
                 "http": {
                   "properties": {
                     "port": {
@@ -3277,7 +3315,8 @@
                 }
               },
               "required": [
-                "http"
+                "http",
+                "enrollment"
               ],
               "title": "ports",
               "type": "object"
@@ -3367,6 +3406,7 @@
         "livenessProbe",
         "readinessProbe",
         "startupProbe",
+        "enrollment",
         "service",
         "ingress",
         "httpRoute"

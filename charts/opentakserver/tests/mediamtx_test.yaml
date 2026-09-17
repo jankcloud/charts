@@ -105,6 +105,7 @@ tests:
     set:
       eudHandler.ssl.enabled: false
       mediamtx.enabled: false
+      ui.enrollment.enabled: false
     asserts:
       - hasDocuments:
           count: 0
