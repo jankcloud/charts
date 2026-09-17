@@ -128,3 +128,45 @@ tests:
             name: ots-data
             persistentVolumeClaim:
               claimName: my-ots-pvc
+
+  - it: uses the shared chart-managed service account by default
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-opentakserver
+
+  - it: honors a per-component serviceAccountName override
+    set:
+      web.serviceAccountName: web-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: web-sa
+
+  - it: falls back to the chart-wide podSecurityContext by default
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1024
+
+  - it: honors a per-component podSecurityContext override
+    set:
+      web.podSecurityContext:
+        runAsUser: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 2000
+
+  - it: does not render a startupProbe by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: renders a startupProbe when enabled
+    set:
+      web.startupProbe.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.path
+          value: /api/health

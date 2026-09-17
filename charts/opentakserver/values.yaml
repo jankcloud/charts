@@ -14,6 +14,10 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# Chart-wide defaults. Each of web/eudHandler/cotParser below can override
+# serviceAccountName, podSecurityContext, securityContext and
+# imagePullSecrets individually; an empty override falls back to these
+# defaults so every deployment has the same level of configurability.
 podSecurityContext:
   fsGroup: 1024
   runAsUser: 1024
@@ -45,6 +49,12 @@ env:
 web:
   enabled: true
   replicaCount: 1
+  # Overrides for the chart-wide defaults above. Empty/unset falls back to
+  # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
+  serviceAccountName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  imagePullSecrets: []
   podAnnotations: {}
   podLabels: {}
   extraEnv: []
@@ -133,6 +143,12 @@ eudHandler:
   replicaCount: 1
   # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags.
   mode: tcp
+  # Overrides for the chart-wide defaults above. Empty/unset falls back to
+  # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
+  serviceAccountName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  imagePullSecrets: []
   podAnnotations: {}
   podLabels: {}
   extraEnv: []
@@ -169,6 +185,14 @@ eudHandler:
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 5
+  startupProbe:
+    enabled: false
+    tcpSocket:
+      port: tcp
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 30
   service:
     enabled: true
     type: ClusterIP
@@ -195,6 +219,12 @@ cotParser:
   processes: 1
   # RabbitMQ consumer prefetch count.
   prefetch: 1
+  # Overrides for the chart-wide defaults above. Empty/unset falls back to
+  # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
+  serviceAccountName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  imagePullSecrets: []
   podAnnotations: {}
   podLabels: {}
   extraEnv: []
@@ -237,6 +267,17 @@ cotParser:
     periodSeconds: 30
     timeoutSeconds: 5
     failureThreshold: 5
+  startupProbe:
+    enabled: false
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - pgrep -f cot_parser >/dev/null
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 30
 
 # Optional PVC for the OTS data folder (SQLite DB, config.yml, data
 # packages, certs). Disabled by default for a minimal ephemeral install.

@@ -1,104 +1,13 @@
 {{- if .Values.web.enabled }}
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ include "opentakserver.fullname" . }}
-  labels:
-    {{- include "opentakserver.labels" . | nindent 4 }}
-    app.kubernetes.io/component: web
-spec:
-  {{- if not .Values.web.autoscaling.enabled }}
-  replicas: {{ .Values.web.replicaCount }}
-  {{- end }}
-  selector:
-    matchLabels:
-      {{- include "opentakserver.selectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      {{- with .Values.web.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      labels:
-        {{- include "opentakserver.labels" . | nindent 8 }}
-        app.kubernetes.io/component: web
-        {{- with .Values.web.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "opentakserver.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      containers:
-        - name: {{ .Chart.Name }}
-          {{- with .Values.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            {{- include "opentakserver.env" . | nindent 12 }}
-            {{- with .Values.web.extraEnv }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- with .Values.web.envFrom }}
-          envFrom:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          ports:
-            - name: api
-              containerPort: {{ .Values.env.OTS_LISTENER_PORT | default 8081 }}
-              protocol: TCP
-          {{- if .Values.web.startupProbe.enabled }}
-          startupProbe:
-            {{- omit .Values.web.startupProbe "enabled" | toYaml | nindent 12 }}
-          {{- end }}
-          {{- with .Values.web.livenessProbe }}
-          livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.web.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.web.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          volumeMounts:
-            - name: ots-data
-              mountPath: {{ .Values.persistence.mountPath }}
-            {{- with .Values.web.volumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-      volumes:
-        - name: ots-data
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ include "opentakserver.pvcName" . }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-        {{- with .Values.web.volumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- with .Values.web.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.web.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.web.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- include "opentakserver.deployment" (dict
+      "ctx" $
+      "name" (include "opentakserver.fullname" .)
+      "component" "web"
+      "containerName" .Chart.Name
+      "values" .Values.web
+      "selectorLabelsTemplate" "opentakserver.selectorLabels"
+      "ports" (list
+        (dict "name" "api" "containerPort" (.Values.env.OTS_LISTENER_PORT | default 8081 | int) "protocol" "TCP")
+      )
+    ) }}
 {{- end }}

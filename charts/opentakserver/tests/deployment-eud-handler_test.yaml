@@ -1,0 +1,86 @@
+suite: Deployment (eud-handler)
+templates:
+  - templates/deployment-eud-handler.yaml
+tests:
+
+  - it: renders a Deployment by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-eud-handler
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: ["eud_handler"]
+
+  - it: adds --ssl when mode is ssl
+    set:
+      eudHandler.mode: ssl
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: ["eud_handler", "--ssl"]
+
+  - it: adds --udp when mode is udp
+    set:
+      eudHandler.mode: udp
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: ["eud_handler", "--udp"]
+
+  - it: uses the shared chart-managed service account by default
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-opentakserver
+
+  - it: honors a per-component serviceAccountName override
+    set:
+      eudHandler.serviceAccountName: eud-handler-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: eud-handler-sa
+
+  - it: falls back to the chart-wide podSecurityContext by default
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1024
+
+  - it: honors a per-component podSecurityContext override
+    set:
+      eudHandler.podSecurityContext:
+        runAsUser: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 2000
+
+  - it: does not render a startupProbe by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: renders a startupProbe when enabled
+    set:
+      eudHandler.startupProbe.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.tcpSocket.port
+          value: tcp
+
+  - it: mounts the data PVC when persistence is enabled
+    set:
+      persistence.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-data
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-opentakserver-data

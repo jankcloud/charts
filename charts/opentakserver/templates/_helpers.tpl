@@ -295,6 +295,140 @@ Database URI value.
 {{- end }}
 
 {{/*
+Render a Deployment for one OTS workload component (web, eud-handler,
+cot-parser). All three components share the same pod-level configuration
+surface (image, security contexts, service account, scheduling, probes,
+resources, volumes, env) so this template is the single source of truth
+for that shape; per-component values override the chart-wide defaults
+where set.
+
+Expects a dict with:
+  ctx: root context (the top-level `.`)
+  name: resolved Deployment name
+  component: value for the app.kubernetes.io/component label
+  containerName: name of the container
+  values: the component's values block (.Values.web / .Values.eudHandler / .Values.cotParser)
+  selectorLabelsTemplate: name of the named template rendering this component's selector labels
+  command: optional list of command args for the container
+  ports: optional list of container ports
+  extraContainerEnv: optional list of env vars prepended before the shared OTS env vars
+*/}}
+{{- define "opentakserver.deployment" -}}
+{{- $ctx := .ctx -}}
+{{- $values := .values -}}
+{{- $component := .component -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "opentakserver.labels" $ctx | nindent 4 }}
+    app.kubernetes.io/component: {{ $component }}
+spec:
+  {{- if not $values.autoscaling.enabled }}
+  replicas: {{ $values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include .selectorLabelsTemplate $ctx | nindent 6 }}
+  template:
+    metadata:
+      {{- with $values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "opentakserver.labels" $ctx | nindent 8 }}
+        app.kubernetes.io/component: {{ $component }}
+        {{- with $values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with (default $ctx.Values.imagePullSecrets $values.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ default (include "opentakserver.serviceAccountName" $ctx) $values.serviceAccountName }}
+      {{- with (default $ctx.Values.podSecurityContext $values.podSecurityContext) }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .containerName }}
+          {{- with (default $ctx.Values.securityContext $values.securityContext) }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ $ctx.Values.image.repository }}:{{ $ctx.Values.image.tag | default $ctx.Chart.AppVersion }}"
+          imagePullPolicy: {{ $ctx.Values.image.pullPolicy }}
+          {{- with .command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- with .extraContainerEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- include "opentakserver.env" $ctx | nindent 12 }}
+            {{- with $values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with $values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .ports }}
+          ports:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if $values.startupProbe.enabled }}
+          startupProbe:
+            {{- omit $values.startupProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with $values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: ots-data
+              mountPath: {{ $ctx.Values.persistence.mountPath }}
+            {{- with $values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: ots-data
+          {{- if $ctx.Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "opentakserver.pvcName" $ctx }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- with $values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with $values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+
+{{/*
 Shared environment variables used by all OTS workloads
 (opentakserver, eud_handler, cot_parser).
 */}}

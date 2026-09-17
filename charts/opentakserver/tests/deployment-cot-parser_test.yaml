@@ -1,0 +1,81 @@
+suite: Deployment (cot-parser)
+templates:
+  - templates/deployment-cot-parser.yaml
+tests:
+
+  - it: renders a Deployment by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-cot-parser
+      - equal:
+          path: spec.template.spec.containers[0].command
+          value: ["cot_parser"]
+
+  - it: sets the processes and prefetch env vars ahead of the shared env vars
+    set:
+      cotParser.processes: 4
+      cotParser.prefetch: 2
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[0]
+          value:
+            name: OTS_COT_PARSER_PROCESSES
+            value: "4"
+      - equal:
+          path: spec.template.spec.containers[0].env[1]
+          value:
+            name: OTS_RABBITMQ_PREFETCH
+            value: "2"
+
+  - it: uses the shared chart-managed service account by default
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-opentakserver
+
+  - it: honors a per-component serviceAccountName override
+    set:
+      cotParser.serviceAccountName: cot-parser-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: cot-parser-sa
+
+  - it: honors a per-component imagePullSecrets override
+    set:
+      cotParser.imagePullSecrets:
+        - name: cot-parser-pull-secret
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets
+          value:
+            - name: cot-parser-pull-secret
+
+  - it: does not render a startupProbe by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: renders a startupProbe when enabled
+    set:
+      cotParser.startupProbe.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.exec.command
+          value: ["/bin/sh", "-c", "pgrep -f cot_parser >/dev/null"]
+
+  - it: mounts the data PVC when persistence is enabled
+    set:
+      persistence.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-data
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-opentakserver-data

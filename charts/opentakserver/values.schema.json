@@ -2,7 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "replicaCount": {"type": "integer", "minimum": 1},
     "image": {
       "type": "object",
       "properties": {
@@ -25,25 +24,61 @@
       },
       "additionalProperties": true
     },
-    "podAnnotations": {"type": "object"},
-    "podLabels": {"type": "object"},
     "podSecurityContext": {"type": "object"},
     "securityContext": {"type": "object"},
-    "env": {"type": "object"},
-    "extraEnv": {"type": "array"},
-    "envFrom": {"type": "array"},
-    "service": {
+    "env": {
       "type": "object",
       "properties": {
-        "type": {"type": "string"},
-        "ui": {"type": "object"},
-        "api": {"type": "object"},
-        "cots": {"type": "object"}
+        "OTS_DATA_FOLDER": {"type": "string"},
+        "OTS_LISTENER_ADDRESS": {"type": "string"},
+        "OTS_LISTENER_PORT": {"type": "string"},
+        "OTS_STREAMING_INTERFACE": {"type": "string"},
+        "OTS_TCP_STREAMING_PORT": {"type": "string"},
+        "OTS_SSL_STREAMING_PORT": {"type": "string"},
+        "OTS_UDP_PORT": {"type": "string"}
       },
       "additionalProperties": true
     },
-    "ingress": {"type": "object"},
-    "httpRoute": {"type": "object"},
+    "web": {
+      "$ref": "#/definitions/component",
+      "properties": {
+        "service": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "type": {"type": "string"},
+            "annotations": {"type": "object"},
+            "ports": {"type": "object"}
+          },
+          "additionalProperties": true
+        },
+        "ingress": {"type": "object"},
+        "httpRoute": {"type": "object"}
+      }
+    },
+    "eudHandler": {
+      "$ref": "#/definitions/component",
+      "properties": {
+        "mode": {"type": "string", "enum": ["tcp", "ssl", "udp"]},
+        "service": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "type": {"type": "string"},
+            "annotations": {"type": "object"},
+            "ports": {"type": "object"}
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "cotParser": {
+      "$ref": "#/definitions/component",
+      "properties": {
+        "processes": {"type": "integer", "minimum": 1},
+        "prefetch": {"type": "integer", "minimum": 1}
+      }
+    },
     "persistence": {
       "type": "object",
       "properties": {
@@ -69,6 +104,15 @@
       },
       "additionalProperties": true
     },
+    "postgresql": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "auth": {"type": "object"},
+        "primary": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
     "rabbitmq": {
       "type": "object",
       "properties": {
@@ -80,17 +124,45 @@
         "external": {"type": "object"}
       },
       "additionalProperties": true
-    },
-    "resources": {"type": "object"},
-    "livenessProbe": {"type": "object"},
-    "readinessProbe": {"type": "object"},
-    "startupProbe": {"type": "object"},
-    "autoscaling": {"type": "object"},
-    "volumes": {"type": "array"},
-    "volumeMounts": {"type": "array"},
-    "nodeSelector": {"type": "object"},
-    "tolerations": {"type": "array"},
-    "affinity": {"type": "object"}
+    }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "definitions": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "replicaCount": {"type": "integer", "minimum": 0},
+        "serviceAccountName": {"type": "string"},
+        "podSecurityContext": {"type": "object"},
+        "securityContext": {"type": "object"},
+        "imagePullSecrets": {"type": "array"},
+        "podAnnotations": {"type": "object"},
+        "podLabels": {"type": "object"},
+        "extraEnv": {"type": "array"},
+        "envFrom": {"type": "array"},
+        "volumes": {"type": "array"},
+        "volumeMounts": {"type": "array"},
+        "nodeSelector": {"type": "object"},
+        "tolerations": {"type": "array"},
+        "affinity": {"type": "object"},
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "minReplicas": {"type": "integer", "minimum": 1},
+            "maxReplicas": {"type": "integer", "minimum": 1},
+            "targetCPUUtilizationPercentage": {"type": ["integer", "string"]},
+            "targetMemoryUtilizationPercentage": {"type": ["integer", "string"]}
+          },
+          "additionalProperties": true
+        },
+        "resources": {"type": "object"},
+        "livenessProbe": {"type": "object"},
+        "readinessProbe": {"type": "object"},
+        "startupProbe": {"type": "object"}
+      },
+      "additionalProperties": true
+    }
+  }
 }
