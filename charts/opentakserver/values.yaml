@@ -530,7 +530,7 @@ postgresql:
       scripts:
         00-postgis.sh: |
           #!/bin/sh
-          psql -v ON_ERROR_STOP=1 -d "$POSTGRES_DB" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
+          psql -v ON_ERROR_STOP=1 -d "${POSTGRESQL_DATABASE:-ots}" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
 
 rabbitmq:
   enabled: true

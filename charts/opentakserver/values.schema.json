@@ -2140,7 +2140,7 @@
                   "description": "Upstream installer enables the postgis extension in the ots database.",
                   "properties": {
                     "00-postgis.sh": {
-                      "default": "#!/bin/sh\npsql -v ON_ERROR_STOP=1 -d \"$POSTGRES_DB\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
+                      "default": "#!/bin/sh\npsql -v ON_ERROR_STOP=1 -d \"${POSTGRESQL_DATABASE:-ots}\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
                       "required": [],
                       "title": "00-postgis.sh",
                       "type": "string"
