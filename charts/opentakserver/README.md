@@ -242,7 +242,7 @@ A Helm chart for deploying OpenTAKServer
 | postgresql.auth.secretKeys.userPasswordKey | string | `"password"` |  |
 | postgresql.auth.username | string | `"ots"` |  |
 | postgresql.enabled | bool | `true` |  |
-| postgresql.primary.initdb.scripts."00-postgis.sh" | string | `"#!/bin/sh\nexport PGPASSWORD=\"$(cat \"$POSTGRES_POSTGRES_PASSWORD_FILE\")\"\npsql -v ON_ERROR_STOP=1 -U postgres -d \"${POSTGRES_DATABASE:-ots}\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n"` |  |
+| postgresql.primary.initdb.scripts."00-postgis.sh" | string | `"#!/bin/sh\nexport PGPASSWORD=\"$(cat /opt/bitnami/postgresql/secrets/postgres-password)\"\npsql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n"` |  |
 | postgresql.primary.persistence.enabled | bool | `false` |  |
 | postgresql.primary.persistence.size | string | `"8Gi"` |  |
 | rabbitmq.architecture | string | `"single-node"` |  |

@@ -2137,10 +2137,10 @@
             "initdb": {
               "properties": {
                 "scripts": {
-                  "description": "Upstream installer enables the postgis extension in the ots database.\n.sql scripts authenticate via initdb.user/initdb.password which are\nempty by default (silent skip), so use a .sh script that reads the\npostgres password file the subchart mounts into the container.",
+                  "description": "Upstream installer enables the postgis extension in the ots database.\n.sql scripts authenticate via initdb.user/initdb.password which are\nempty by default (silent skip), so use a .sh script that reads the\npostgres password file the subchart mounts into the container. The\nDB name is literal — keep it in sync with postgresql.auth.database.",
                   "properties": {
                     "00-postgis.sh": {
-                      "default": "#!/bin/sh\nexport PGPASSWORD=\"$(cat \"$POSTGRES_POSTGRES_PASSWORD_FILE\")\"\npsql -v ON_ERROR_STOP=1 -U postgres -d \"${POSTGRES_DATABASE:-ots}\" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
+                      "default": "#!/bin/sh\nexport PGPASSWORD=\"$(cat /opt/bitnami/postgresql/secrets/postgres-password)\"\npsql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
                       "required": [],
                       "title": "00-postgis.sh",
                       "type": "string"

@@ -529,12 +529,13 @@ postgresql:
       # Upstream installer enables the postgis extension in the ots database.
       # .sql scripts authenticate via initdb.user/initdb.password which are
       # empty by default (silent skip), so use a .sh script that reads the
-      # postgres password file the subchart mounts into the container.
+      # postgres password file the subchart mounts into the container. The
+      # DB name is literal — keep it in sync with postgresql.auth.database.
       scripts:
         00-postgis.sh: |
           #!/bin/sh
-          export PGPASSWORD="$(cat "$POSTGRES_POSTGRES_PASSWORD_FILE")"
-          psql -v ON_ERROR_STOP=1 -U postgres -d "${POSTGRES_DATABASE:-ots}" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
+          export PGPASSWORD="$(cat /opt/bitnami/postgresql/secrets/postgres-password)"
+          psql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
 
 rabbitmq:
   enabled: true
