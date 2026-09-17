@@ -76,8 +76,11 @@ tests:
       - hasDocuments:
           count: 2
       - equal:
-          path: rules[0].resourceNames[0]
+          path: rules[1].resourceNames[0]
           value: RELEASE-NAME-opentakserver-ots-ca
+      - equal:
+          path: rules[1].verbs[0]
+          value: get
 
   - it: adds the ca-publisher sidecar and mediamtx seed to the web pod
     templates:
