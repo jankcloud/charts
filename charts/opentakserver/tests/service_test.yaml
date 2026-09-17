@@ -3,46 +3,101 @@ templates:
   - templates/service.yaml
 tests:
 
-  - it: renders three services by default
+  - it: renders two services by default
     asserts:
       - hasDocuments:
-          count: 3
+          count: 2
 
-  - it: renders the UI service
+  - it: renders the web service (UI + API)
     documentIndex: 0
     asserts:
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-opentakserver-ui
+          value: RELEASE-NAME-opentakserver-web
       - equal:
-          path: spec.ports[0].port
-          value: 8080
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: web
       - equal:
-          path: spec.ports[0].targetPort
+          path: spec.ports[0].name
           value: api
-
-  - it: renders the API service
-    documentIndex: 1
-    asserts:
-      - equal:
-          path: metadata.name
-          value: RELEASE-NAME-opentakserver-api
       - equal:
           path: spec.ports[0].port
           value: 8081
       - equal:
           path: spec.ports[0].targetPort
           value: api
+      - equal:
+          path: spec.ports[1].name
+          value: ui
+      - equal:
+          path: spec.ports[1].port
+          value: 8080
+      - equal:
+          path: spec.ports[1].targetPort
+          value: api
 
   - it: renders the CoT service
-    documentIndex: 2
+    documentIndex: 1
     asserts:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-opentakserver-cots
       - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: eud-handler
+      - equal:
+          path: spec.ports[0].name
+          value: ssl
+      - equal:
           path: spec.ports[0].port
-          value: 8088
+          value: 8089
+      - equal:
+          path: spec.ports[0].targetPort
+          value: ssl
+      - equal:
+          path: spec.ports[1].name
+          value: tcp
       - equal:
           path: spec.ports[1].port
-          value: 8089
+          value: 8088
+      - equal:
+          path: spec.ports[1].targetPort
+          value: tcp
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: eud-handler
+
+  - it: renders the udp port when enabled
+    set:
+      eudHandler.service.ports.udp.enabled: true
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: spec.ports[2].name
+          value: udp
+      - equal:
+          path: spec.ports[2].port
+          value: 8087
+      - equal:
+          path: spec.ports[2].protocol
+          value: UDP
+
+  - it: skips web service when disabled
+    set:
+      web.service.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-cots
+
+  - it: skips cots service when eudHandler disabled
+    set:
+      eudHandler.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-web
