@@ -1,0 +1,318 @@
+image:
+  repository: ghcr.io/brian7704/opentakserver
+  pullPolicy: IfNotPresent
+  # Defaults to .Chart.AppVersion when empty.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podSecurityContext:
+  fsGroup: 1024
+  runAsUser: 1024
+  runAsGroup: 1024
+  runAsNonRoot: true
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1024
+  capabilities:
+    drop:
+      - ALL
+
+# OTS connection wiring shared by all three components. These are
+# infrastructure-level settings (ports, data dir, interfaces), not
+# per-component tuning.
+env:
+  OTS_DATA_FOLDER: /app/ots
+  OTS_LISTENER_ADDRESS: 0.0.0.0
+  OTS_LISTENER_PORT: "8081"
+  OTS_STREAMING_INTERFACE: 0.0.0.0
+  OTS_TCP_STREAMING_PORT: "8088"
+  OTS_SSL_STREAMING_PORT: "8089"
+  OTS_UDP_PORT: "8087"
+
+# Web component: the main `opentakserver` binary serving UI + API on 8081.
+web:
+  enabled: true
+  replicaCount: 1
+  podAnnotations: {}
+  podLabels: {}
+  extraEnv: []
+  envFrom: []
+  volumes: []
+  volumeMounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: api
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: api
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+  startupProbe:
+    enabled: false
+    httpGet:
+      path: /api/health
+      port: api
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30
+  service:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    ports:
+      ui:
+        port: 8080
+        targetPort: api
+      api:
+        port: 8081
+        targetPort: api
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+  httpRoute:
+    enabled: false
+    annotations: {}
+    parentRefs:
+      - name: gateway
+        sectionName: http
+    hostnames:
+      - chart-example.local
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+
+# EUD handler component: `eud_handler` binary accepting CoT streams.
+eudHandler:
+  enabled: true
+  replicaCount: 1
+  # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags.
+  mode: tcp
+  podAnnotations: {}
+  podLabels: {}
+  extraEnv: []
+  envFrom: []
+  volumes: []
+  volumeMounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  livenessProbe:
+    tcpSocket:
+      port: tcp
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    tcpSocket:
+      port: tcp
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+  service:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    ports:
+      tcp:
+        enabled: true
+        port: 8088
+        targetPort: tcp
+      ssl:
+        enabled: true
+        port: 8089
+        targetPort: ssl
+      udp:
+        enabled: false
+        port: 8087
+        targetPort: udp
+
+# CoT parser component: `cot_parser` binary consuming the cot_parser queue.
+cotParser:
+  enabled: true
+  replicaCount: 1
+  # Additional worker processes forked inside each pod.
+  processes: 1
+  # RabbitMQ consumer prefetch count.
+  prefetch: 1
+  podAnnotations: {}
+  podLabels: {}
+  extraEnv: []
+  envFrom: []
+  volumes: []
+  volumeMounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  livenessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - pgrep -f cot_parser >/dev/null
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - pgrep -f cot_parser >/dev/null
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+# Optional PVC for the OTS data folder (SQLite DB, config.yml, data
+# packages, certs). Disabled by default for a minimal ephemeral install.
+persistence:
+  enabled: false
+  existingClaim: ""
+  mountPath: /app/ots
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+  storageClass: ""
+
+database:
+  # Fully-formed SQLAlchemy URI. Takes precedence over everything else.
+  uri: ""
+  # Credentials/host from an externally managed Secret (CNPG, MariaDB
+  # operator, sealed-secrets, etc.). When set, keys inside the secret are
+  # referenced instead of the values below.
+  existingSecret:
+    name: ""
+    keys:
+      uri: uri
+      host: host
+      port: port
+      database: database
+      username: username
+      password: password
+  host: ""
+  port: ""
+  database: ""
+  username: ""
+  password: ""
+
+# Bundled PostgreSQL. Enabled by default so a basic install gets a shared
+# database for all three components without any extra values. Set
+# postgresql.enabled=false and configure the `database` block above for
+# external databases (CNPG, MariaDB operator, cloud RDS, etc.).
+postgresql:
+  enabled: true
+  auth:
+    username: ots
+    password: ots
+    database: ots
+    existingSecret: ""
+    secretKeys:
+      userPasswordKey: password
+      adminPasswordKey: postgres-password
+  primary:
+    persistence:
+      enabled: false
+      size: 8Gi
+
+rabbitmq:
+  enabled: true
+  replicaCount: 1
+  clustering:
+    enabled: false
+  auth:
+    username: ots
+    password: ots
+    existingPasswordSecret: ""
+    existingSecretPasswordKey: rabbitmq-password
+  persistence:
+    enabled: false
+    size: 8Gi
+  external:
+    host: ""
+    port: 5672
+    username: guest
+    password: guest
+    vhost: /
+    existingSecret:
+      name: ""
+      keys:
+        host: host
+        port: port
+        username: username
+        password: password
+        vhost: vhost

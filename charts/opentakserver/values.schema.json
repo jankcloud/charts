@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "replicaCount": {"type": "integer", "minimum": 1},
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": {"type": "string"},
+        "pullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]},
+        "tag": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "imagePullSecrets": {"type": "array"},
+    "nameOverride": {"type": "string"},
+    "fullnameOverride": {"type": "string"},
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {"type": "boolean"},
+        "automount": {"type": "boolean"},
+        "annotations": {"type": "object"},
+        "name": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "podAnnotations": {"type": "object"},
+    "podLabels": {"type": "object"},
+    "podSecurityContext": {"type": "object"},
+    "securityContext": {"type": "object"},
+    "env": {"type": "object"},
+    "extraEnv": {"type": "array"},
+    "envFrom": {"type": "array"},
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": {"type": "string"},
+        "ui": {"type": "object"},
+        "api": {"type": "object"},
+        "cots": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "ingress": {"type": "object"},
+    "httpRoute": {"type": "object"},
+    "persistence": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "existingClaim": {"type": "string"},
+        "mountPath": {"type": "string"},
+        "accessModes": {"type": "array"},
+        "size": {"type": "string"},
+        "storageClass": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "uri": {"type": "string"},
+        "existingSecret": {"type": "object"},
+        "host": {"type": "string"},
+        "port": {"type": "string"},
+        "database": {"type": "string"},
+        "username": {"type": "string"},
+        "password": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "rabbitmq": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "replicaCount": {"type": "integer", "minimum": 1},
+        "clustering": {"type": "object"},
+        "auth": {"type": "object"},
+        "persistence": {"type": "object"},
+        "external": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "resources": {"type": "object"},
+    "livenessProbe": {"type": "object"},
+    "readinessProbe": {"type": "object"},
+    "startupProbe": {"type": "object"},
+    "autoscaling": {"type": "object"},
+    "volumes": {"type": "array"},
+    "volumeMounts": {"type": "array"},
+    "nodeSelector": {"type": "object"},
+    "tolerations": {"type": "array"},
+    "affinity": {"type": "object"}
+  },
+  "additionalProperties": true
+}

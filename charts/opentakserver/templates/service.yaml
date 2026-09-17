@@ -1,0 +1,51 @@
+{{- if and .Values.web.enabled .Values.web.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.webServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+  {{- with .Values.web.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    {{- range $name, $port := .Values.web.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: TCP
+      name: {{ $name }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.selectorLabels" . | nindent 4 }}
+---
+{{- end }}
+{{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.cotsServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: eud-handler
+  {{- with .Values.eudHandler.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.eudHandler.service.type }}
+  ports:
+    {{- range $name, $port := .Values.eudHandler.service.ports }}
+    {{- if $port.enabled }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: {{ if eq $name "udp" }}UDP{{ else }}TCP{{ end }}
+      name: {{ $name }}
+    {{- end }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.eudHandlerSelectorLabels" . | nindent 4 }}
+{{- end }}

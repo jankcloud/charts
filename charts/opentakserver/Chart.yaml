@@ -1,0 +1,29 @@
+apiVersion: v2
+name: opentakserver
+description: >
+  A Helm chart for deploying OpenTAKServer
+type: application
+version: 0.1.1
+# renovate: image=ghcr.io/brian7704/opentakserver
+appVersion: "1.7.13"
+home: https://opentakserver.io
+sources:
+  - https://github.com/jankcloud/charts/tree/main/charts/opentakserver
+  - https://github.com/brian7704/OpenTAKServer
+keywords:
+  - opentakserver
+  - tak
+  - atak
+  - cot
+maintainers:
+  - name: jankcloud
+    url: https://github.com/jankcloud
+dependencies:
+  - name: rabbitmq
+    version: "16.0.14"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    condition: rabbitmq.enabled
+  - name: postgresql
+    version: "18.11.3"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    condition: postgresql.enabled

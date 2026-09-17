@@ -1,0 +1,113 @@
+{{- if .Values.eudHandler.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opentakserver.eudHandlerName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: eud-handler
+spec:
+  {{- if not .Values.eudHandler.autoscaling.enabled }}
+  replicas: {{ .Values.eudHandler.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "opentakserver.eudHandlerSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.eudHandler.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "opentakserver.labels" . | nindent 8 }}
+        app.kubernetes.io/component: eud-handler
+        {{- with .Values.eudHandler.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "opentakserver.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: eud-handler
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - eud_handler
+            {{- if eq .Values.eudHandler.mode "ssl" }}
+            - --ssl
+            {{- else if eq .Values.eudHandler.mode "udp" }}
+            - --udp
+            {{- end }}
+          env:
+            {{- include "opentakserver.env" . | nindent 12 }}
+            {{- with .Values.eudHandler.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.eudHandler.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: tcp
+              containerPort: {{ .Values.env.OTS_TCP_STREAMING_PORT | default 8088 }}
+              protocol: TCP
+            - name: ssl
+              containerPort: {{ .Values.env.OTS_SSL_STREAMING_PORT | default 8089 }}
+              protocol: TCP
+            - name: udp
+              containerPort: {{ .Values.env.OTS_UDP_PORT | default 8087 }}
+              protocol: UDP
+          {{- with .Values.eudHandler.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.eudHandler.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.eudHandler.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: ots-data
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- with .Values.eudHandler.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: ots-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "opentakserver.pvcName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- with .Values.eudHandler.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.eudHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.eudHandler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.eudHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

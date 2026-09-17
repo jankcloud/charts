@@ -1,0 +1,47 @@
+{{- define "opentakserver.hpa" -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .name }}
+  labels:
+    {{- include "opentakserver.labels" .ctx | nindent 4 }}
+    {{- with .component }}
+    app.kubernetes.io/component: {{ . }}
+    {{- end }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .name }}
+  minReplicas: {{ .config.minReplicas }}
+  maxReplicas: {{ .config.maxReplicas }}
+  metrics:
+    {{- if .config.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .config.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .config.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .config.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end -}}
+
+{{- if and .Values.web.enabled .Values.web.autoscaling.enabled }}
+{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.fullname" .) "component" "web" "config" .Values.web.autoscaling) }}
+{{- end }}
+{{- if and .Values.eudHandler.enabled .Values.eudHandler.autoscaling.enabled }}
+---
+{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.eudHandlerName" .) "component" "eud-handler" "config" .Values.eudHandler.autoscaling) }}
+{{- end }}
+{{- if and .Values.cotParser.enabled .Values.cotParser.autoscaling.enabled }}
+---
+{{ include "opentakserver.hpa" (dict "ctx" . "name" (include "opentakserver.cotParserName" .) "component" "cot-parser" "config" .Values.cotParser.autoscaling) }}
+{{- end }}
