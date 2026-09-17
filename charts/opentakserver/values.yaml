@@ -18,9 +18,13 @@ serviceAccount:
 # serviceAccountName, podSecurityContext, securityContext and
 # imagePullSecrets individually; an empty override falls back to these
 # defaults so every deployment has the same level of configurability.
+#
+# The OpenTAKServer image runs as the `ots` user (UID 1000, GID 1024) and
+# keeps the venv in /app (mode 0700, owned by ots). These values must match
+# that user or the containers will fail to exec the OTS binaries.
 podSecurityContext:
   fsGroup: 1024
-  runAsUser: 1024
+  runAsUser: 1000
   runAsGroup: 1024
   runAsNonRoot: true
 
@@ -28,7 +32,8 @@ securityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
   runAsNonRoot: true
-  runAsUser: 1024
+  runAsUser: 1000
+  runAsGroup: 1024
   capabilities:
     drop:
       - ALL
@@ -333,11 +338,13 @@ postgresql:
 rabbitmq:
   enabled: true
   replicaCount: 1
-  clustering:
-    enabled: false
+  image:
+    tag: 4.3.6-management
+    pullPolicy: IfNotPresent
   auth:
     username: ots
     password: ots
+    vhost: /
     existingPasswordSecret: ""
     existingSecretPasswordKey: rabbitmq-password
   persistence:

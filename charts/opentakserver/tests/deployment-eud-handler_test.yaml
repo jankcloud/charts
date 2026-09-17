@@ -14,7 +14,7 @@ tests:
           value: RELEASE-NAME-opentakserver-eud-handler
       - equal:
           path: spec.template.spec.containers[0].command
-          value: ["eud_handler"]
+          value: ["/app/venv/bin/eud_handler"]
 
   - it: adds --ssl when mode is ssl
     set:
@@ -22,7 +22,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].command
-          value: ["eud_handler", "--ssl"]
+          value: ["/app/venv/bin/eud_handler", "--ssl"]
 
   - it: adds --udp when mode is udp
     set:
@@ -30,7 +30,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].command
-          value: ["eud_handler", "--udp"]
+          value: ["/app/venv/bin/eud_handler", "--udp"]
 
   - it: uses the shared chart-managed service account by default
     asserts:
@@ -50,7 +50,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.securityContext.runAsUser
-          value: 1024
+          value: 1000
 
   - it: honors a per-component podSecurityContext override
     set:

@@ -118,8 +118,25 @@
       "properties": {
         "enabled": {"type": "boolean"},
         "replicaCount": {"type": "integer", "minimum": 1},
-        "clustering": {"type": "object"},
-        "auth": {"type": "object"},
+        "image": {
+          "type": "object",
+          "properties": {
+            "tag": {"type": "string"},
+            "pullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]}
+          },
+          "additionalProperties": true
+        },
+        "auth": {
+          "type": "object",
+          "properties": {
+            "username": {"type": "string"},
+            "password": {"type": "string"},
+            "vhost": {"type": "string"},
+            "existingPasswordSecret": {"type": "string"},
+            "existingSecretPasswordKey": {"type": "string"}
+          },
+          "additionalProperties": true
+        },
         "persistence": {"type": "object"},
         "external": {"type": "object"}
       },

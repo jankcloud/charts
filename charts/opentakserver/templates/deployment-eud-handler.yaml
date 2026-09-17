@@ -1,5 +1,5 @@
 {{- if .Values.eudHandler.enabled }}
-{{- $command := list "eud_handler" }}
+{{- $command := list "/app/venv/bin/eud_handler" }}
 {{- if eq .Values.eudHandler.mode "ssl" }}
 {{- $command = append $command "--ssl" }}
 {{- else if eq .Values.eudHandler.mode "udp" }}

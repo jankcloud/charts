@@ -147,7 +147,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.securityContext.runAsUser
-          value: 1024
+          value: 1000
 
   - it: honors a per-component podSecurityContext override
     set:

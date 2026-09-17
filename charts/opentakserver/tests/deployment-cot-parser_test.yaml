@@ -14,7 +14,7 @@ tests:
           value: RELEASE-NAME-opentakserver-cot-parser
       - equal:
           path: spec.template.spec.containers[0].command
-          value: ["cot_parser"]
+          value: ["/app/venv/bin/cot_parser"]
 
   - it: sets the processes and prefetch env vars ahead of the shared env vars
     set:

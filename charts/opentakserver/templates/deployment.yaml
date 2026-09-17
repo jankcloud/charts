@@ -6,6 +6,7 @@
       "containerName" .Chart.Name
       "values" .Values.web
       "selectorLabelsTemplate" "opentakserver.selectorLabels"
+      "command" (list "/app/venv/bin/opentakserver")
       "ports" (list
         (dict "name" "api" "containerPort" (.Values.env.OTS_LISTENER_PORT | default 8081 | int) "protocol" "TCP")
       )
