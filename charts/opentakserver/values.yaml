@@ -527,13 +527,13 @@ postgresql:
       size: 8Gi
     initdb:
       # Upstream installer enables the postgis extension in the ots database.
-      # .sh initdb scripts need explicit auth during the temporary initdb
-      # server phase; POSTGRESQL_POSTGRES_PASSWORD is set by the subchart.
+      # Use a .sql script (run by the subchart's own psql with admin creds)
+      # since .sh scripts lack working auth during the initdb phase. The DB
+      # name is literal here — keep it in sync with postgresql.auth.database.
       scripts:
-        00-postgis.sh: |
-          #!/bin/sh
-          export PGPASSWORD="$POSTGRESQL_POSTGRES_PASSWORD"
-          psql -v ON_ERROR_STOP=1 -U postgres -d "${POSTGRESQL_DATABASE:-ots}" -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
+        00-postgis.sql: |
+          \connect ots
+          CREATE EXTENSION IF NOT EXISTS postgis;
 
 rabbitmq:
   enabled: true
