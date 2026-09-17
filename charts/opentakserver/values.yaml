@@ -348,20 +348,43 @@ rabbitmq:
     existingSecretErlangCookieKey: rabbitmq-erlang-cookie
   queueDefaults:
     type: classic
+  # Match the upstream installer's broker setup: MQTT for EUDs on 1883,
+  # with device auth delegated to the OTS API (auth_http -> web service).
+  # The auth_http URLs must point at "<release fullname>-web" on
+  # OTS_LISTENER_PORT; update them if fullnameOverride or a different
+  # release name is used.
+  plugins:
+    extra:
+      - rabbitmq_mqtt
+      - rabbitmq_auth_backend_http
   config:
     extra: |
       deprecated_features.permit.transient_nonexcl_queues = true
       management.load_definitions = /etc/rabbitmq/definitions/definitions.json
+      mqtt.listeners.tcp.default = 1883
+      auth_backends.1 = internal
+      auth_backends.2 = http
+      auth_http.http_method = post
+      auth_http.user_path = http://opentakserver-web:8081/api/rabbitmq/auth
+      auth_http.vhost_path = http://opentakserver-web:8081/api/rabbitmq/vhost
+      auth_http.resource_path = http://opentakserver-web:8081/api/rabbitmq/resource
+      auth_http.topic_path = http://opentakserver-web:8081/api/rabbitmq/topic
+  service:
+    extraPorts:
+      - name: mqtt
+        port: 1883
+        targetPort: 1883
+        protocol: TCP
   singleNode:
     persistence:
       enabled: false
-  # NOTE: configMap.name must match the rendered name of the
-  # rabbitmq-definitions ConfigMap ("<release fullname>-rabbitmq-definitions").
+  # NOTE: secretName must match the rendered name of the
+  # rabbitmq-definitions Secret ("<release fullname>-rabbitmq-definitions").
   # If fullnameOverride or a different release name is used, update this.
   extraVolumes:
     - name: opentakserver-rabbitmq-definitions
-      configMap:
-        name: opentakserver-rabbitmq-definitions
+      secret:
+        secretName: opentakserver-rabbitmq-definitions
   extraVolumeMounts:
     - name: opentakserver-rabbitmq-definitions
       mountPath: /etc/rabbitmq/definitions
