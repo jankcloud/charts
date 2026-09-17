@@ -346,6 +346,11 @@ rabbitmq:
     existingSecretUsernameKey: rabbitmq-username
     existingSecretPasswordKey: rabbitmq-password
     existingSecretErlangCookieKey: rabbitmq-erlang-cookie
+  queueDefaults:
+    type: classic
+  config:
+    extra: |
+      deprecated_features.enable = transient_nonexcl_queues
   singleNode:
     persistence:
       enabled: false
