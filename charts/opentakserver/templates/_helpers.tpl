@@ -504,6 +504,10 @@ true
 app.kubernetes.io/component: mediamtx
 {{- end }}
 
+{{- define "opentakserver.enrollmentServiceName" -}}
+{{ include "opentakserver.uiName" . }}-enrollment
+{{- end }}
+
 {{- define "opentakserver.mediamtxApiAddress" -}}
 {{- if .Values.mediamtx.enabled -}}
 http://{{ include "opentakserver.mediamtxServiceName" . }}:{{ .Values.mediamtx.service.ports.api.port }}

@@ -3,10 +3,10 @@ templates:
   - templates/service.yaml
 tests:
 
-  - it: renders four services by default
+  - it: renders five services by default
     asserts:
       - hasDocuments:
-          count: 4
+          count: 5
 
   - it: renders the web service (API only)
     documentIndex: 0
@@ -72,42 +72,48 @@ tests:
           value: ui
       - equal:
           path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: ui
+
+  - it: renders the enrollment service
+    documentIndex: 3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui-enrollment
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: enrollment
+      - equal:
+          path: spec.ports[0].name
           value: enrollment
       - equal:
           path: spec.ports[0].port
           value: 8446
       - equal:
           path: spec.ports[0].targetPort
-          value: 8446
-      - equal:
-          path: spec.ports[1].name
-          value: http
-      - equal:
-          path: spec.ports[1].port
-          value: 8080
-      - equal:
-          path: spec.ports[1].targetPort
-          value: http
+          value: enrollment
       - equal:
           path: spec.selector["app.kubernetes.io/component"]
           value: ui
 
-  - it: omits the enrollment port when enrollment is disabled
-    documentIndex: 2
+  - it: skips the enrollment service when enrollment is disabled
     set:
       ui.enrollment.enabled: false
     asserts:
       - hasDocuments:
           count: 4
-      - equal:
-          path: spec.ports[0].name
-          value: http
-      - lengthEqual:
-          path: spec.ports
-          count: 1
 
   - it: renders the mediamtx service
-    documentIndex: 3
+    documentIndex: 4
     asserts:
       - equal:
           path: metadata.name
@@ -163,7 +169,7 @@ tests:
     documentIndex: 0
     asserts:
       - hasDocuments:
-          count: 3
+          count: 4
       - equal:
           path: metadata.name
           value: RELEASE-NAME-opentakserver-web
@@ -180,4 +186,4 @@ tests:
       mediamtx.enabled: false
     asserts:
       - hasDocuments:
-          count: 3
+          count: 4

@@ -710,7 +710,39 @@
           "type": "array"
         },
         "livenessProbe": {
+          "description": "Check the listen socket in /proc/net/tcp (8088 = 0x1F98): tcpSocket\nprobes crash the handler on disconnect.",
           "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
             "failureThreshold": {
               "default": 5,
               "required": [],
@@ -729,21 +761,6 @@
               "title": "periodSeconds",
               "type": "integer"
             },
-            "tcpSocket": {
-              "properties": {
-                "port": {
-                  "default": "tcp",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "port"
-              ],
-              "title": "tcpSocket",
-              "type": "object"
-            },
             "timeoutSeconds": {
               "default": 5,
               "required": [],
@@ -752,7 +769,7 @@
             }
           },
           "required": [
-            "tcpSocket",
+            "exec",
             "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
@@ -790,6 +807,37 @@
         },
         "readinessProbe": {
           "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
             "failureThreshold": {
               "default": 5,
               "required": [],
@@ -808,21 +856,6 @@
               "title": "periodSeconds",
               "type": "integer"
             },
-            "tcpSocket": {
-              "properties": {
-                "port": {
-                  "default": "tcp",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "port"
-              ],
-              "title": "tcpSocket",
-              "type": "object"
-            },
             "timeoutSeconds": {
               "default": 5,
               "required": [],
@@ -831,7 +864,7 @@
             }
           },
           "required": [
-            "tcpSocket",
+            "exec",
             "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
@@ -1117,7 +1150,39 @@
               "type": "object"
             },
             "readinessProbe": {
+              "description": "Check the listen socket in /proc/net/tcp (8089 = 0x1F99): tcpSocket\nprobes crash the handler on disconnect without a TLS handshake.",
               "properties": {
+                "exec": {
+                  "properties": {
+                    "command": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "command",
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "command"
+                  ],
+                  "title": "exec",
+                  "type": "object"
+                },
                 "failureThreshold": {
                   "default": 30,
                   "required": [],
@@ -1136,21 +1201,6 @@
                   "title": "periodSeconds",
                   "type": "integer"
                 },
-                "tcpSocket": {
-                  "properties": {
-                    "port": {
-                      "default": "ssl",
-                      "required": [],
-                      "title": "port",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "port"
-                  ],
-                  "title": "tcpSocket",
-                  "type": "object"
-                },
                 "timeoutSeconds": {
                   "default": 5,
                   "required": [],
@@ -1159,7 +1209,7 @@
                 }
               },
               "required": [
-                "tcpSocket",
+                "exec",
                 "initialDelaySeconds",
                 "periodSeconds",
                 "timeoutSeconds",
@@ -1240,6 +1290,37 @@
               "title": "enabled",
               "type": "boolean"
             },
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
             "failureThreshold": {
               "default": 30,
               "required": [],
@@ -1258,21 +1339,6 @@
               "title": "periodSeconds",
               "type": "integer"
             },
-            "tcpSocket": {
-              "properties": {
-                "port": {
-                  "default": "tcp",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "port"
-              ],
-              "title": "tcpSocket",
-              "type": "object"
-            },
             "timeoutSeconds": {
               "default": 5,
               "required": [],
@@ -1282,7 +1348,7 @@
           },
           "required": [
             "enabled",
-            "tcpSocket",
+            "exec",
             "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
@@ -2762,17 +2828,46 @@
           "type": "boolean"
         },
         "enrollment": {
-          "description": "TLS endpoint on 8446 for automatic certificate enrollment (iTAK/ATAK\nQR-code flow); nginx terminates TLS with the published OTS CA cert.",
+          "description": "TLS endpoint on 8446 for automatic certificate enrollment; nginx\nterminates TLS with the published OTS CA cert. Served by a dedicated\nService so it can be exposed (e.g. LoadBalancer) independently of the\nHTTP UI service, which stays ClusterIP + Ingress.",
           "properties": {
             "enabled": {
               "default": true,
               "required": [],
               "title": "enabled",
               "type": "boolean"
+            },
+            "service": {
+              "properties": {
+                "annotations": {
+                  "required": [],
+                  "title": "annotations",
+                  "type": "object"
+                },
+                "port": {
+                  "default": 8446,
+                  "required": [],
+                  "title": "port",
+                  "type": "integer"
+                },
+                "type": {
+                  "default": "ClusterIP",
+                  "required": [],
+                  "title": "type",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "annotations",
+                "port"
+              ],
+              "title": "service",
+              "type": "object"
             }
           },
           "required": [
-            "enabled"
+            "enabled",
+            "service"
           ],
           "title": "enrollment",
           "type": "object"
@@ -3269,28 +3364,6 @@
             },
             "ports": {
               "properties": {
-                "enrollment": {
-                  "properties": {
-                    "port": {
-                      "default": 8446,
-                      "required": [],
-                      "title": "port",
-                      "type": "integer"
-                    },
-                    "targetPort": {
-                      "default": 8446,
-                      "required": [],
-                      "title": "targetPort",
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "port",
-                    "targetPort"
-                  ],
-                  "title": "enrollment",
-                  "type": "object"
-                },
                 "http": {
                   "properties": {
                     "port": {
@@ -3315,8 +3388,7 @@
                 }
               },
               "required": [
-                "http",
-                "enrollment"
+                "http"
               ],
               "title": "ports",
               "type": "object"

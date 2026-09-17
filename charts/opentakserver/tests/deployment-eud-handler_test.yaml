@@ -117,8 +117,8 @@ tests:
       eudHandler.startupProbe.enabled: true
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].startupProbe.tcpSocket.port
-          value: tcp
+          path: spec.template.spec.containers[0].startupProbe.exec.command[0]
+          value: sh
 
   - it: mounts the data PVC when persistence is enabled
     set:

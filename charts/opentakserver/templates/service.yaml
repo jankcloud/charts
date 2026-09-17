@@ -66,13 +66,34 @@ spec:
   type: {{ .Values.ui.service.type }}
   ports:
     {{- range $name, $port := .Values.ui.service.ports }}
-    {{- if or $.Values.ui.enrollment.enabled (ne $name "enrollment") }}
     - port: {{ $port.port }}
       targetPort: {{ $port.targetPort }}
       protocol: TCP
       name: {{ $name }}
     {{- end }}
-    {{- end }}
+  selector:
+    {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
+{{- end }}
+---
+{{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.web.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.enrollmentServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: enrollment
+  {{- with .Values.ui.enrollment.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.ui.enrollment.service.type }}
+  ports:
+    - port: {{ .Values.ui.enrollment.service.port }}
+      targetPort: enrollment
+      protocol: TCP
+      name: enrollment
   selector:
     {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
 {{- end }}

@@ -106,20 +106,24 @@ A Helm chart for deploying OpenTAKServer
 | eudHandler.envFrom | list | `[]` |  |
 | eudHandler.extraEnv | list | `[]` |  |
 | eudHandler.imagePullSecrets | list | `[]` |  |
+| eudHandler.livenessProbe.exec.command[0] | string | `"sh"` |  |
+| eudHandler.livenessProbe.exec.command[1] | string | `"-c"` |  |
+| eudHandler.livenessProbe.exec.command[2] | string | `"grep -q ':1F98' /proc/net/tcp"` |  |
 | eudHandler.livenessProbe.failureThreshold | int | `5` |  |
 | eudHandler.livenessProbe.initialDelaySeconds | int | `10` |  |
 | eudHandler.livenessProbe.periodSeconds | int | `15` |  |
-| eudHandler.livenessProbe.tcpSocket.port | string | `"tcp"` |  |
 | eudHandler.livenessProbe.timeoutSeconds | int | `5` |  |
 | eudHandler.mode | string | `"tcp"` |  |
 | eudHandler.nodeSelector | object | `{}` |  |
 | eudHandler.podAnnotations | object | `{}` |  |
 | eudHandler.podLabels | object | `{}` |  |
 | eudHandler.podSecurityContext | object | `{}` |  |
+| eudHandler.readinessProbe.exec.command[0] | string | `"sh"` |  |
+| eudHandler.readinessProbe.exec.command[1] | string | `"-c"` |  |
+| eudHandler.readinessProbe.exec.command[2] | string | `"grep -q ':1F98' /proc/net/tcp"` |  |
 | eudHandler.readinessProbe.failureThreshold | int | `5` |  |
 | eudHandler.readinessProbe.initialDelaySeconds | int | `10` |  |
 | eudHandler.readinessProbe.periodSeconds | int | `15` |  |
-| eudHandler.readinessProbe.tcpSocket.port | string | `"tcp"` |  |
 | eudHandler.readinessProbe.timeoutSeconds | int | `5` |  |
 | eudHandler.replicaCount | int | `1` |  |
 | eudHandler.resources.limits.cpu | string | `"1"` |  |
@@ -148,20 +152,24 @@ A Helm chart for deploying OpenTAKServer
 | eudHandler.ssl.livenessProbe.initialDelaySeconds | int | `10` |  |
 | eudHandler.ssl.livenessProbe.periodSeconds | int | `15` |  |
 | eudHandler.ssl.livenessProbe.timeoutSeconds | int | `5` |  |
+| eudHandler.ssl.readinessProbe.exec.command[0] | string | `"sh"` |  |
+| eudHandler.ssl.readinessProbe.exec.command[1] | string | `"-c"` |  |
+| eudHandler.ssl.readinessProbe.exec.command[2] | string | `"grep -q ':1F99' /proc/net/tcp"` |  |
 | eudHandler.ssl.readinessProbe.failureThreshold | int | `30` |  |
 | eudHandler.ssl.readinessProbe.initialDelaySeconds | int | `10` |  |
 | eudHandler.ssl.readinessProbe.periodSeconds | int | `15` |  |
-| eudHandler.ssl.readinessProbe.tcpSocket.port | string | `"ssl"` |  |
 | eudHandler.ssl.readinessProbe.timeoutSeconds | int | `5` |  |
 | eudHandler.ssl.resources.limits.cpu | string | `"1"` |  |
 | eudHandler.ssl.resources.limits.memory | string | `"512Mi"` |  |
 | eudHandler.ssl.resources.requests.cpu | string | `"50m"` |  |
 | eudHandler.ssl.resources.requests.memory | string | `"128Mi"` |  |
 | eudHandler.startupProbe.enabled | bool | `false` |  |
+| eudHandler.startupProbe.exec.command[0] | string | `"sh"` |  |
+| eudHandler.startupProbe.exec.command[1] | string | `"-c"` |  |
+| eudHandler.startupProbe.exec.command[2] | string | `"grep -q ':1F98' /proc/net/tcp"` |  |
 | eudHandler.startupProbe.failureThreshold | int | `30` |  |
 | eudHandler.startupProbe.initialDelaySeconds | int | `10` |  |
 | eudHandler.startupProbe.periodSeconds | int | `15` |  |
-| eudHandler.startupProbe.tcpSocket.port | string | `"tcp"` |  |
 | eudHandler.startupProbe.timeoutSeconds | int | `5` |  |
 | eudHandler.tolerations | list | `[]` |  |
 | eudHandler.volumeMounts | list | `[]` |  |
@@ -297,6 +305,9 @@ A Helm chart for deploying OpenTAKServer
 | ui.autoscaling.targetMemoryUtilizationPercentage | string | `""` |  |
 | ui.enabled | bool | `true` |  |
 | ui.enrollment.enabled | bool | `true` |  |
+| ui.enrollment.service.annotations | object | `{}` |  |
+| ui.enrollment.service.port | int | `8446` |  |
+| ui.enrollment.service.type | string | `"ClusterIP"` |  |
 | ui.envFrom | list | `[]` |  |
 | ui.extraEnv | list | `[]` |  |
 | ui.httpRoute.annotations | object | `{}` |  |
@@ -341,8 +352,6 @@ A Helm chart for deploying OpenTAKServer
 | ui.securityContext | object | `{}` |  |
 | ui.service.annotations | object | `{}` |  |
 | ui.service.enabled | bool | `true` |  |
-| ui.service.ports.enrollment.port | int | `8446` |  |
-| ui.service.ports.enrollment.targetPort | int | `8446` |  |
 | ui.service.ports.http.port | int | `8080` |  |
 | ui.service.ports.http.targetPort | string | `"http"` |  |
 | ui.service.type | string | `"ClusterIP"` |  |
