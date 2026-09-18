@@ -1,0 +1,208 @@
+suite: Deployment
+templates:
+  - templates/deployment.yaml
+tests:
+
+  - it: renders a Deployment by default
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+
+  - it: uses the component-specific resource name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-web
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/component"]
+          value: web
+
+  - it: uses the pinned image tag from values
+    set:
+      image.tag: "1.7.13"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/brian7704/opentakserver:1.7.13
+
+  - it: uses the digest-pinned default tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/brian7704/opentakserver:1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d
+
+  - it: falls back to the chart appVersion when image.tag is empty
+    set:
+      image.tag: ""
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/brian7704/opentakserver:1.7.13
+
+  - it: honors a global image registry override
+    set:
+      global.image.registry: mirror.internal
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: mirror.internal/brian7704/opentakserver:1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d
+
+  - it: sets default OTS runtime env vars
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: OTS_LISTENER_ADDRESS
+            value: "0.0.0.0"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: OTS_TCP_STREAMING_PORT
+            value: "8088"
+
+  - it: points RabbitMQ env vars at the bundled subchart by default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: OTS_RABBITMQ_SERVER_ADDRESS
+            value: RELEASE-NAME-rabbitmq
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "OTS_RABBITMQ_PASSWORD")].valueFrom.secretKeyRef.name
+          value: RELEASE-NAME-rabbitmq-auth
+
+  - it: uses external RabbitMQ settings when the subchart is disabled
+    set:
+      rabbitmq:
+        enabled: false
+        external:
+          host: rabbitmq.example.internal
+          username: ext-user
+          existingSecret:
+            name: my-rabbitmq-secret
+            keys:
+              password: rabbitmq-password
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: OTS_RABBITMQ_SERVER_ADDRESS
+            value: rabbitmq.example.internal
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "OTS_RABBITMQ_PASSWORD")].valueFrom.secretKeyRef.name
+          value: my-rabbitmq-secret
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "OTS_RABBITMQ_PASSWORD")].valueFrom.secretKeyRef.key
+          value: rabbitmq-password
+
+  - it: sets SQLALCHEMY_DATABASE_URI inline when database.uri is provided
+    set:
+      database.uri: "postgresql+psycopg://ots:pw@db.internal:5432/ots"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SQLALCHEMY_DATABASE_URI
+            value: postgresql+psycopg://ots:pw@db.internal:5432/ots
+
+  - it: reads the database URI from an existing secret when configured
+    set:
+      database.existingSecret.name: my-db-secret
+      database.existingSecret.keys.uri: connection-uri
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "SQLALCHEMY_DATABASE_URI")].valueFrom.secretKeyRef.name
+          value: my-db-secret
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "SQLALCHEMY_DATABASE_URI")].valueFrom.secretKeyRef.key
+          value: connection-uri
+
+  - it: mounts the data PVC when persistence is enabled
+    set:
+      persistence.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-data
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-opentakserver-data
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: ots-data
+            mountPath: /app/ots
+
+  - it: uses the existing claim when configured
+    set:
+      persistence.enabled: true
+      persistence.existingClaim: my-ots-pvc
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-data
+            persistentVolumeClaim:
+              claimName: my-ots-pvc
+
+  - it: uses the shared chart-managed service account by default
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-opentakserver
+
+  - it: honors a per-component serviceAccountName override
+    set:
+      web.serviceAccountName: web-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: web-sa
+
+  - it: falls back to the chart-wide podSecurityContext by default
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1000
+
+  - it: honors a per-component podSecurityContext override
+    set:
+      web.podSecurityContext:
+        runAsUser: 2000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 2000
+
+  - it: does not render a startupProbe by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: renders a startupProbe when enabled
+    set:
+      web.startupProbe.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.httpGet.path
+          value: /api/health
+
+  - it: automounts the service account token for the ca-publisher sidecar
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+
+  - it: applies the hardened securityContext to sidecar and init containers
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.initContainers[0].securityContext.runAsNonRoot
+          value: true

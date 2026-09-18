@@ -1,0 +1,124 @@
+{{- if and .Values.web.enabled .Values.web.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.webServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+  {{- with .Values.web.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    {{- range $name, $port := .Values.web.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: TCP
+      name: {{ $name }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.webSelectorLabels" . | nindent 4 }}
+---
+{{- end }}
+{{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.cotsServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: eud-handler
+  {{- with .Values.eudHandler.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.eudHandler.service.type }}
+  ports:
+    {{- range $name, $port := .Values.eudHandler.service.ports }}
+    {{- if $port.enabled }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: {{ $port.protocol | default "TCP" }}
+      name: {{ $name }}
+    {{- end }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.eudHandlerSelectorLabels" . | nindent 4 }}
+---
+{{- end }}
+{{- if and .Values.ui.enabled .Values.ui.service.enabled .Values.web.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.uiServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ui
+  {{- with .Values.ui.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.ui.service.type }}
+  ports:
+    {{- range $name, $port := .Values.ui.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: TCP
+      name: {{ $name }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
+---
+{{- end }}
+{{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.web.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.enrollmentServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: enrollment
+  {{- with .Values.ui.enrollment.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.ui.enrollment.service.type }}
+  ports:
+    - port: {{ .Values.ui.enrollment.service.port }}
+      targetPort: enrollment
+      protocol: TCP
+      name: enrollment
+  selector:
+    {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
+---
+{{- end }}
+{{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opentakserver.mediamtxServiceName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mediamtx
+  {{- with .Values.mediamtx.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.mediamtx.service.type }}
+  ports:
+    {{- range $name, $port := .Values.mediamtx.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $name | replace "_" "-" }}
+      protocol: {{ $port.protocol | default "TCP" }}
+      name: {{ $name | replace "_" "-" }}
+    {{- end }}
+  selector:
+    {{- include "opentakserver.mediamtxSelectorLabels" . | nindent 4 }}
+{{- end }}

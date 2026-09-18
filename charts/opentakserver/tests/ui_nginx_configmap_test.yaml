@@ -1,0 +1,58 @@
+suite: UI nginx ConfigMap
+templates:
+  - templates/ui-nginx-configmap.yaml
+tests:
+
+  - it: renders the nginx server config by default
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui-nginx
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'proxy_pass http://RELEASE-NAME-opentakserver-web:8081'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'location /socket\.io'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'try_files \$uri /index\.html'
+
+  - it: renders the TLS enrollment server block by default
+    asserts:
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'listen 8446 ssl'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'ssl_certificate /etc/nginx/ots-ca/opentakserver\.pem'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'location /Marti/api/tls'
+      - matchRegex:
+          path: data["default.conf"]
+          pattern: 'location /oauth'
+
+  - it: omits the enrollment server block when enrollment is disabled
+    set:
+      ui.enrollment.enabled: false
+    asserts:
+      - notMatchRegex:
+          path: data["default.conf"]
+          pattern: 'listen 8446 ssl'
+
+  - it: skips the ConfigMap when ui is disabled
+    set:
+      ui.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: skips the ConfigMap when web is disabled
+    set:
+      web.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

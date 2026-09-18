@@ -1,0 +1,139 @@
+{{- if and .Values.ui.enabled .Values.web.enabled }}
+{{- $ctx := . -}}
+{{- $values := .Values.ui -}}
+{{- $uiImage := printf "%s/%s:%s" (.Values.global.image.registry | default $values.image.registry | default "ghcr.io") $values.image.repository $values.image.tag -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opentakserver.uiName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ui
+spec:
+  {{- if not $values.autoscaling.enabled }}
+  replicas: {{ $values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "opentakserver.uiSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with $values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "opentakserver.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ui
+        {{- with $values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with (default .Values.imagePullSecrets $values.imagePullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ default (include "opentakserver.serviceAccountName" .) $values.serviceAccountName }}
+      automountServiceAccountToken: false
+      {{- with $values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $values.enrollment.enabled }}
+      initContainers:
+        - name: wait-for-ca
+          image: "{{ $uiImage }}"
+          imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          {{- with $values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command:
+            - /bin/sh
+            - -c
+            - >-
+              until [ -f /etc/nginx/ots-ca/opentakserver.pem ] &&
+                    [ -f /etc/nginx/ots-ca/opentakserver.nopass.key ];
+              do sleep 2; done
+          volumeMounts:
+            - name: ots-ca
+              mountPath: /etc/nginx/ots-ca
+      {{- end }}
+      containers:
+        - name: ui
+          {{- with $values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ $uiImage }}"
+          imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          {{- with $values.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            {{- if $values.enrollment.enabled }}
+            - name: enrollment
+              containerPort: 8446
+              protocol: TCP
+            {{- end }}
+          {{- if $values.startupProbe.enabled }}
+          startupProbe:
+            {{- omit $values.startupProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with $values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            {{- if $values.enrollment.enabled }}
+            - name: ots-ca
+              mountPath: /etc/nginx/ots-ca
+            {{- end }}
+            {{- with $values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "opentakserver.uiNginxConfigName" . }}
+        {{- if $values.enrollment.enabled }}
+        - name: ots-ca
+          secret:
+            secretName: {{ include "opentakserver.caSecretName" . }}
+            optional: true
+        {{- end }}
+        {{- with $values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with $values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

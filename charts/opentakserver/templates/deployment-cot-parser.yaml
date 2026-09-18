@@ -1,0 +1,14 @@
+{{- if .Values.cotParser.enabled }}
+{{- include "opentakserver.deployment" (dict
+      "ctx" $
+      "name" (include "opentakserver.cotParserName" .)
+      "component" "cot-parser"
+      "containerName" "cot-parser"
+      "values" .Values.cotParser
+      "selectorLabelsTemplate" "opentakserver.cotParserSelectorLabels"
+      "command" (list "/app/venv/bin/cot_parser")
+      "extraContainerEnv" (list
+        (dict "name" "OTS_COT_PARSER_PROCESSES" "value" (.Values.cotParser.processes | toString))
+      )
+    ) }}
+{{- end }}

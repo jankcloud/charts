@@ -1,0 +1,189 @@
+suite: Service
+templates:
+  - templates/service.yaml
+tests:
+
+  - it: renders five services by default
+    asserts:
+      - hasDocuments:
+          count: 5
+
+  - it: renders the web service (API only)
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-web
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: web
+      - equal:
+          path: spec.ports[0].name
+          value: api
+      - equal:
+          path: spec.ports[0].port
+          value: 8081
+      - equal:
+          path: spec.ports[0].targetPort
+          value: api
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: web
+
+  - it: renders the CoT service
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-cots
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: eud-handler
+      - equal:
+          path: spec.ports[0].name
+          value: ssl
+      - equal:
+          path: spec.ports[0].port
+          value: 8089
+      - equal:
+          path: spec.ports[0].targetPort
+          value: ssl
+      - equal:
+          path: spec.ports[1].name
+          value: tcp
+      - equal:
+          path: spec.ports[1].port
+          value: 8088
+      - equal:
+          path: spec.ports[1].targetPort
+          value: tcp
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: eud-handler
+
+  - it: renders the ui service
+    documentIndex: 2
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: ui
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: ui
+
+  - it: renders the enrollment service
+    documentIndex: 3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-ui-enrollment
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: enrollment
+      - equal:
+          path: spec.ports[0].name
+          value: enrollment
+      - equal:
+          path: spec.ports[0].port
+          value: 8446
+      - equal:
+          path: spec.ports[0].targetPort
+          value: enrollment
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: ui
+
+  - it: skips the enrollment service when enrollment is disabled
+    set:
+      ui.enrollment.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 4
+
+  - it: renders the mediamtx service
+    documentIndex: 4
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-mediamtx
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: mediamtx
+      - equal:
+          path: spec.ports[0].name
+          value: api
+      - equal:
+          path: spec.ports[0].port
+          value: 9997
+      - equal:
+          path: spec.ports[6].name
+          value: webrtc-udp
+      - equal:
+          path: spec.ports[6].protocol
+          value: UDP
+      - equal:
+          path: spec.selector["app.kubernetes.io/component"]
+          value: mediamtx
+
+  - it: renders the udp port when enabled
+    set:
+      eudHandler.service.ports.udp.enabled: true
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: spec.ports[2].name
+          value: udp
+      - equal:
+          path: spec.ports[2].port
+          value: 8087
+      - equal:
+          path: spec.ports[2].protocol
+          value: UDP
+
+  - it: skips web and ui services when web is disabled
+    set:
+      web.enabled: false
+    documentIndex: 0
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-cots
+
+  - it: skips cots service when eudHandler disabled
+    set:
+      eudHandler.enabled: false
+    documentIndex: 0
+    asserts:
+      - hasDocuments:
+          count: 4
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-web
+
+  - it: skips ui service when ui is disabled
+    set:
+      ui.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 3
+
+  - it: skips mediamtx service when mediamtx is disabled
+    set:
+      mediamtx.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 4

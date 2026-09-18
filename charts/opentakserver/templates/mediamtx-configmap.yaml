@@ -1,0 +1,150 @@
+{{- if .Values.mediamtx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "opentakserver.mediamtxConfigName" . }}
+  labels:
+    {{- include "opentakserver.labels" . | nindent 4 }}
+data:
+  mediamtx.yml: |
+    ###############################################
+    # Global settings -> General
+    logLevel: {{ .Values.mediamtx.logLevel }}
+    logDestinations: [stdout]
+
+    readTimeout: 10s
+    writeTimeout: 10s
+    writeQueueSize: 512
+    udpMaxPayloadSize: 1472
+
+    metrics: no
+    metricsAddress: :9998
+    pprof: no
+    pprofAddress: :9999
+
+    {{- $webhook := printf "wget -q -O /dev/null 'http://%s:%d/api/mediamtx/webhook?" (include "opentakserver.webServiceName" .) (.Values.web.service.ports.api.port | int) }}
+    {{- $token := .Values.env.OTS_MEDIAMTX_TOKEN | default "opentakserver" }}
+    runOnConnect: {{ $webhook }}connection_type=$MTX_CONN_TYPE&connection_id=$MTX_CONN_ID&rtsp_port=$RTSP_PORT&event=connect&token={{ $token }}' }}
+    runOnConnectRestart: no
+    runOnDisconnect: {{ $webhook }}connection_type=$MTX_CONN_TYPE&connection_id=$MTX_CONN_ID&rtsp_port=$RTSP_PORT&event=disconnect&token={{ $token }}' }}
+
+    ###############################################
+    # Global settings -> Authentication
+    authMethod: http
+    authInternalUsers:
+    - user: any
+      pass:
+      ips: []
+      permissions:
+      - action: publish
+        path:
+      - action: read
+        path:
+      - action: playback
+        path:
+    - user: any
+      pass:
+      ips: ['127.0.0.1', '::1']
+      permissions:
+      - action: api
+      - action: metrics
+      - action: pprof
+    authHTTPAddress: http://{{ include "opentakserver.webServiceName" . }}:{{ .Values.web.service.ports.api.port }}/api/external_auth
+    authHTTPExclude:
+    - action: api
+    - action: metrics
+    - action: pprof
+
+    ###############################################
+    # Global settings -> Control API
+    api: yes
+    apiAddress: :{{ .Values.mediamtx.service.ports.api.port }}
+    playback: yes
+    playbackAddress: :9996
+
+    ###############################################
+    # Global settings -> RTSP
+    rtsp: yes
+    protocols: [udp, multicast, tcp]
+    encryption: "no"
+    rtspAddress: :{{ .Values.mediamtx.service.ports.rtsp.port }}
+    rtspsAddress: :8322
+    rtpAddress: :8000
+    rtcpAddress: :8001
+    multicastIPRange: 224.1.0.0/16
+    multicastRTPPort: 8002
+    multicastRTCPPort: 8003
+    serverKey: /ca/certs/opentakserver/opentakserver.nopass.key
+    serverCert: /ca/certs/opentakserver/opentakserver.pem
+    rtspAuthMethods: [basic]
+
+    ###############################################
+    # Global settings -> RTMP
+    rtmp: yes
+    rtmpAddress: :{{ .Values.mediamtx.service.ports.rtmp.port }}
+    rtmpEncryption: "no"
+    rtmpsAddress: :1936
+    rtmpServerKey: /ca/certs/opentakserver/opentakserver.nopass.key
+    rtmpServerCert: /ca/certs/opentakserver/opentakserver.pem
+
+    ###############################################
+    # Global settings -> HLS
+    hls: yes
+    hlsAddress: :{{ .Values.mediamtx.service.ports.hls.port }}
+    hlsEncryption: yes
+    hlsServerKey: /ca/certs/opentakserver/opentakserver.nopass.key
+    hlsServerCert: /ca/certs/opentakserver/opentakserver.pem
+    hlsAlwaysRemux: no
+    hlsVariant: mpegts
+    hlsSegmentCount: 7
+    hlsSegmentDuration: 1s
+    hlsPartDuration: 200ms
+    hlsSegmentMaxSize: 50M
+    hlsAllowOrigin: '*'
+    hlsTrustedProxies: []
+
+    ###############################################
+    # Global settings -> WebRTC
+    webrtc: yes
+    webrtcAddress: :{{ .Values.mediamtx.service.ports.webrtc.port }}
+    webrtcEncryption: yes
+    webrtcServerKey: /ca/certs/opentakserver/opentakserver.nopass.key
+    webrtcServerCert: /ca/certs/opentakserver/opentakserver.pem
+    webrtcAllowOrigin: '*'
+    webrtcTrustedProxies: []
+    webrtcLocalUDPAddress: :{{ .Values.mediamtx.service.ports.webrtc_udp.port }}
+    webrtcLocalTCPAddress: ''
+    webrtcIPsFromInterfaces: yes
+    webrtcIPsFromInterfacesList: []
+    webrtcAdditionalHosts: []
+    webrtcICEServers2: []
+
+    ###############################################
+    # Global settings -> SRT
+    srt: yes
+    srtAddress: :{{ .Values.mediamtx.service.ports.srt.port }}
+
+    ###############################################
+    # Default path settings -> General
+    pathDefaults:
+      source: publisher
+      runOnInitRestart: no
+      runOnDemand:
+      runOnDemandRestart: no
+      runOnDemandStartTimeout: 10s
+      runOnDemandCloseAfter: 10s
+      runOnUnDemand:
+      runOnReady: {{ $webhook }}rtsp_port=$RTSP_PORT&path=$MTX_PATH&query=$MTX_QUERY&source_type=$MTX_SOURCE_TYPE&source_id=$MTX_SOURCE_ID&event=ready&token={{ $token }}' }}
+      runOnReadyRestart: no
+      runOnNotReady: {{ $webhook }}rtsp_port=$RTSP_PORT&path=$MTX_PATH&query=$MTX_QUERY&source_type=$MTX_SOURCE_TYPE&source_id=$MTX_SOURCE_ID&event=notready&token={{ $token }}' }}
+      runOnRead: {{ $webhook }}rtsp_port=$RTSP_PORT&path=$MTX_PATH&query=$MTX_QUERY&reader_type=$MTX_READER_TYPE&reader_id=$MTX_READER_ID&event=read&token={{ $token }}' }}
+      runOnReadRestart: no
+      runOnUnread: {{ $webhook }}rtsp_port=$RTSP_PORT&path=$MTX_PATH&query=$MTX_QUERY&reader_type=$MTX_READER_TYPE&reader_id=$MTX_READER_ID&event=unread&token={{ $token }}' }}
+      runOnRecordSegmentCreate: {{ $webhook }}path=$MTX_PATH&rtsp_port=$RTSP_PORT&segment_path=$MTX_SEGMENT_PATH&event=segment_record&token={{ $token }}' }}
+      runOnRecordSegmentComplete: {{ $webhook }}path=$MTX_PATH&rtsp_port=$RTSP_PORT&segment_path=$MTX_SEGMENT_PATH&event=segment_record_complete&token={{ $token }}' }}
+
+    paths:
+      startup:
+        runOnInit: {{ $webhook }}path=$MTX_PATH&rtsp_port=$RTSP_PORT&event=init&token={{ $token }}' }}
+      all_others:
+{{- end }}

@@ -1,0 +1,128 @@
+suite: MediaMTX + CA publisher
+templates:
+  - templates/deployment-mediamtx.yaml
+  - templates/mediamtx-configmap.yaml
+  - templates/ca-publisher-configmap.yaml
+  - templates/rbac.yaml
+  - templates/deployment.yaml
+tests:
+
+  - it: renders the mediamtx deployment by default
+    templates:
+      - templates/deployment-mediamtx.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-mediamtx
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/bluenviron/mediamtx:1.13.0-ffmpeg@sha256:1206e76bcbe9ced8975a0905a91a58b3a4a2577f395b6535e85595e755731cff
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ots-ca
+            secret:
+              secretName: RELEASE-NAME-opentakserver-ots-ca
+              optional: true
+              items:
+                - key: ca.pem
+                  path: ca.pem
+                - key: opentakserver.pem
+                  path: certs/opentakserver/opentakserver.pem
+                - key: opentakserver.nopass.key
+                  path: certs/opentakserver/opentakserver.nopass.key
+
+  - it: waits for CA material before starting mediamtx
+    templates:
+      - templates/deployment-mediamtx.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: wait-for-ca
+
+  - it: skips the mediamtx deployment when disabled
+    templates:
+      - templates/deployment-mediamtx.yaml
+    set:
+      mediamtx.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders the mediamtx config with webhook and auth wiring
+    templates:
+      - templates/mediamtx-configmap.yaml
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - matchRegex:
+          path: data["mediamtx.yml"]
+          pattern: 'authHTTPAddress: http://RELEASE-NAME-opentakserver-web:8081/api/external_auth'
+      - matchRegex:
+          path: data["mediamtx.yml"]
+          pattern: 'token=opentakserver'
+      - matchRegex:
+          path: data["mediamtx.yml"]
+          pattern: 'serverCert: /ca/certs/opentakserver/opentakserver\.pem'
+
+  - it: renders the CA publisher RBAC by default
+    templates:
+      - templates/rbac.yaml
+    documentIndex: 0
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: rules[1].resourceNames[0]
+          value: RELEASE-NAME-opentakserver-ots-ca
+      - equal:
+          path: rules[1].verbs[0]
+          value: get
+
+  - it: adds the ca-publisher sidecar and mediamtx seed to the web pod
+    templates:
+      - templates/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: mediamtx-config-seed
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: ca-publisher
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: OTS_CA_SECRET_NAME
+            value: RELEASE-NAME-opentakserver-ots-ca
+
+  - it: skips CA publisher RBAC when nothing needs the CA
+    templates:
+      - templates/rbac.yaml
+      - templates/ca-publisher-configmap.yaml
+    set:
+      eudHandler.ssl.enabled: false
+      mediamtx.enabled: false
+      ui.enrollment.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: skips CA publisher RBAC when rbac.create is false
+    templates:
+      - templates/rbac.yaml
+    set:
+      rbac.create: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: does not automount the service account token
+    templates:
+      - templates/deployment-mediamtx.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: false

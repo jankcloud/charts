@@ -1,0 +1,76 @@
+suite: RabbitMQ definitions
+templates:
+  - templates/rabbitmq-definitions-secret.yaml
+tests:
+
+  - it: renders broker definitions when bundled RabbitMQ is enabled
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: metadata.name
+          value: opentakserver-rabbitmq-definitions
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"vhosts"'
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"name": "/"'
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"name": "cot_parser"'
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"name": "groups"'
+
+  - it: seeds only the OTS user - RabbitMQ skips default-user seeding when load_definitions is set
+    asserts:
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"name": "ots"'
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"user": "ots"'
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"password": "ots"'
+      - notMatchRegex:
+          path: stringData["definitions.json"]
+          pattern: 'guest'
+
+  - it: seeds no users when the broker credentials come from an existing secret
+    set:
+      rabbitmq.auth.existingSecret: my-rabbitmq-auth
+    asserts:
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"users": \[\]'
+      - notMatchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"permissions"'
+
+  - it: names the secret after the secretName referenced by rabbitmq.extraVolumes
+    set:
+      rabbitmq.extraVolumes:
+        - name: definitions
+          secret:
+            secretName: my-release-rabbitmq-definitions
+    asserts:
+      - equal:
+          path: metadata.name
+          value: my-release-rabbitmq-definitions
+
+  - it: falls back to the fullname-derived name when no secret volume is configured
+    set:
+      rabbitmq.extraVolumes: []
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-opentakserver-rabbitmq-definitions
+
+  - it: skips broker definitions when bundled RabbitMQ is disabled
+    set:
+      rabbitmq.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

@@ -1,0 +1,4099 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "cotParser": {
+      "description": "CoT parser component: `cot_parser` binary consuming the cot_parser queue.",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 10,
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            },
+            "targetMemoryUtilizationPercentage": {
+              "default": "",
+              "required": [],
+              "title": "targetMemoryUtilizationPercentage",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage",
+            "targetMemoryUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "envFrom": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 15,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "processes": {
+          "default": 1,
+          "description": "Additional worker processes forked inside each pod.",
+          "required": [],
+          "title": "processes",
+          "type": "integer"
+        },
+        "readinessProbe": {
+          "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 15,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "1",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "1Gi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Overrides for the chart-wide defaults above. Empty/unset falls back to\nthe top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "startupProbe": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 30,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 15,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "processes",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "envFrom",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "autoscaling",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe"
+      ],
+      "title": "cotParser",
+      "type": "object"
+    },
+    "database": {
+      "properties": {
+        "database": {
+          "default": "",
+          "required": [],
+          "title": "database",
+          "type": "string"
+        },
+        "existingSecret": {
+          "description": "URI from an externally managed Secret (must contain a full SQLAlchemy\nURI under keys.uri).",
+          "properties": {
+            "keys": {
+              "properties": {
+                "uri": {
+                  "default": "uri",
+                  "required": [],
+                  "title": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "uri"
+              ],
+              "title": "keys",
+              "type": "object"
+            },
+            "name": {
+              "default": "",
+              "required": [],
+              "title": "name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "keys"
+          ],
+          "title": "existingSecret",
+          "type": "object"
+        },
+        "host": {
+          "default": "",
+          "description": "Field-wise external database. The password goes into a chart-managed\nSecret and is interpolated into SQLALCHEMY_DATABASE_URI at runtime.",
+          "required": [],
+          "title": "host",
+          "type": "string"
+        },
+        "password": {
+          "default": "",
+          "required": [],
+          "title": "password",
+          "type": "string"
+        },
+        "port": {
+          "default": "",
+          "required": [],
+          "title": "port",
+          "type": "string"
+        },
+        "uri": {
+          "default": "",
+          "description": "Fully-formed SQLAlchemy URI. Takes precedence over everything else.",
+          "required": [],
+          "title": "uri",
+          "type": "string"
+        },
+        "username": {
+          "default": "",
+          "required": [],
+          "title": "username",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uri",
+        "existingSecret",
+        "host",
+        "port",
+        "database",
+        "username",
+        "password"
+      ],
+      "title": "database",
+      "type": "object"
+    },
+    "env": {
+      "description": "OTS connection wiring shared by all components.",
+      "properties": {
+        "OTS_DATA_FOLDER": {
+          "default": "/app/ots",
+          "required": [],
+          "title": "OTS_DATA_FOLDER",
+          "type": "string"
+        },
+        "OTS_LISTENER_ADDRESS": {
+          "default": "0.0.0.0",
+          "required": [],
+          "title": "OTS_LISTENER_ADDRESS",
+          "type": "string"
+        },
+        "OTS_LISTENER_PORT": {
+          "default": "8081",
+          "required": [],
+          "title": "OTS_LISTENER_PORT",
+          "type": "string"
+        },
+        "OTS_SSL_STREAMING_PORT": {
+          "default": "8089",
+          "required": [],
+          "title": "OTS_SSL_STREAMING_PORT",
+          "type": "string"
+        },
+        "OTS_STREAMING_INTERFACE": {
+          "default": "0.0.0.0",
+          "required": [],
+          "title": "OTS_STREAMING_INTERFACE",
+          "type": "string"
+        },
+        "OTS_TCP_STREAMING_PORT": {
+          "default": "8088",
+          "required": [],
+          "title": "OTS_TCP_STREAMING_PORT",
+          "type": "string"
+        },
+        "OTS_UDP_PORT": {
+          "default": "8087",
+          "required": [],
+          "title": "OTS_UDP_PORT",
+          "type": "string"
+        }
+      },
+      "required": [
+        "OTS_DATA_FOLDER",
+        "OTS_LISTENER_ADDRESS",
+        "OTS_LISTENER_PORT",
+        "OTS_STREAMING_INTERFACE",
+        "OTS_TCP_STREAMING_PORT",
+        "OTS_SSL_STREAMING_PORT",
+        "OTS_UDP_PORT"
+      ],
+      "title": "env",
+      "type": "object"
+    },
+    "eudHandler": {
+      "description": "EUD handler component: `eud_handler` binary accepting CoT streams.",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 10,
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            },
+            "targetMemoryUtilizationPercentage": {
+              "default": "",
+              "required": [],
+              "title": "targetMemoryUtilizationPercentage",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage",
+            "targetMemoryUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "envFrom": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "description": "Check the listen socket in /proc/net/tcp (8088 = 0x1F98): tcpSocket\nprobes crash the handler on disconnect.",
+          "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "mode": {
+          "default": "tcp",
+          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container.\nNOTE: the default livenessProbe/readinessProbe check the TCP 8088\nsocket; when mode is `ssl` or `udp`, override them to match the\nlistener (8089 = 0x1F99; 8087 is UDP, see /proc/net/udp).",
+          "required": [],
+          "title": "mode",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "properties": {
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "1",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "1Gi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "ports": {
+              "properties": {
+                "ssl": {
+                  "properties": {
+                    "enabled": {
+                      "default": true,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "port": {
+                      "default": 8089,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
+                    "targetPort": {
+                      "default": "ssl",
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "port",
+                    "targetPort",
+                    "protocol"
+                  ],
+                  "title": "ssl",
+                  "type": "object"
+                },
+                "tcp": {
+                  "properties": {
+                    "enabled": {
+                      "default": true,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "port": {
+                      "default": 8088,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
+                    "targetPort": {
+                      "default": "tcp",
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "port",
+                    "targetPort",
+                    "protocol"
+                  ],
+                  "title": "tcp",
+                  "type": "object"
+                },
+                "udp": {
+                  "properties": {
+                    "enabled": {
+                      "default": false,
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "port": {
+                      "default": 8087,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
+                    "targetPort": {
+                      "default": "udp",
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "port",
+                    "targetPort",
+                    "protocol"
+                  ],
+                  "title": "udp",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "tcp",
+                "ssl",
+                "udp"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "type",
+            "annotations",
+            "ports"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Overrides for the chart-wide defaults above. Empty/unset falls back to\nthe top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "ssl": {
+          "description": "Additional `eud_handler --ssl` container (mTLS streaming); waits for the\nCA material published by the web pod.",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "livenessProbe": {
+              "properties": {
+                "exec": {
+                  "properties": {
+                    "command": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "command",
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "command"
+                  ],
+                  "title": "exec",
+                  "type": "object"
+                },
+                "failureThreshold": {
+                  "default": 5,
+                  "required": [],
+                  "title": "failureThreshold",
+                  "type": "integer"
+                },
+                "initialDelaySeconds": {
+                  "default": 10,
+                  "required": [],
+                  "title": "initialDelaySeconds",
+                  "type": "integer"
+                },
+                "periodSeconds": {
+                  "default": 15,
+                  "required": [],
+                  "title": "periodSeconds",
+                  "type": "integer"
+                },
+                "timeoutSeconds": {
+                  "default": 5,
+                  "required": [],
+                  "title": "timeoutSeconds",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "exec",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds",
+                "failureThreshold"
+              ],
+              "title": "livenessProbe",
+              "type": "object"
+            },
+            "readinessProbe": {
+              "description": "Check the listen socket in /proc/net/tcp (8089 = 0x1F99): tcpSocket\nprobes crash the handler on disconnect without a TLS handshake.",
+              "properties": {
+                "exec": {
+                  "properties": {
+                    "command": {
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "command",
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "command"
+                  ],
+                  "title": "exec",
+                  "type": "object"
+                },
+                "failureThreshold": {
+                  "default": 30,
+                  "required": [],
+                  "title": "failureThreshold",
+                  "type": "integer"
+                },
+                "initialDelaySeconds": {
+                  "default": 10,
+                  "required": [],
+                  "title": "initialDelaySeconds",
+                  "type": "integer"
+                },
+                "periodSeconds": {
+                  "default": 15,
+                  "required": [],
+                  "title": "periodSeconds",
+                  "type": "integer"
+                },
+                "timeoutSeconds": {
+                  "default": 5,
+                  "required": [],
+                  "title": "timeoutSeconds",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "exec",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds",
+                "failureThreshold"
+              ],
+              "title": "readinessProbe",
+              "type": "object"
+            },
+            "resources": {
+              "properties": {
+                "limits": {
+                  "properties": {
+                    "cpu": {
+                      "default": "1",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "properties": {
+                    "cpu": {
+                      "default": "50m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "128Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            }
+          },
+          "required": [
+            "enabled",
+            "resources",
+            "livenessProbe",
+            "readinessProbe"
+          ],
+          "title": "ssl",
+          "type": "object"
+        },
+        "startupProbe": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "exec": {
+              "properties": {
+                "command": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      },
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "command",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "title": "exec",
+              "type": "object"
+            },
+            "failureThreshold": {
+              "default": 30,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "exec",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "mode",
+        "ssl",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "envFrom",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "autoscaling",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "service"
+      ],
+      "title": "eudHandler",
+      "type": "object"
+    },
+    "fullnameOverride": {
+      "default": "",
+      "required": [],
+      "title": "fullnameOverride",
+      "type": "string"
+    },
+    "global": {
+      "description": "yaml-language-server: $schema=values.schema.json\nGlobal values shared with subcharts. image.registry overrides the registry\nfor every image in this chart (air-gapped/mirrored registries).",
+      "properties": {
+        "image": {
+          "properties": {
+            "registry": {
+              "default": "",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry"
+          ],
+          "title": "image",
+          "type": "object"
+        }
+      },
+      "required": [
+        "image"
+      ],
+      "title": "global",
+      "type": "object"
+    },
+    "image": {
+      "properties": {
+        "pullPolicy": {
+          "default": "IfNotPresent",
+          "required": [],
+          "title": "pullPolicy",
+          "type": "string"
+        },
+        "registry": {
+          "default": "ghcr.io",
+          "required": [],
+          "title": "registry",
+          "type": "string"
+        },
+        "repository": {
+          "default": "brian7704/opentakserver",
+          "required": [],
+          "title": "repository",
+          "type": "string"
+        },
+        "tag": {
+          "default": "1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d",
+          "description": "Defaults to .Chart.AppVersion when empty.",
+          "required": [],
+          "title": "tag",
+          "type": "string"
+        }
+      },
+      "required": [
+        "registry",
+        "repository",
+        "pullPolicy",
+        "tag"
+      ],
+      "title": "image",
+      "type": "object"
+    },
+    "imagePullSecrets": {
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "imagePullSecrets",
+      "type": "array"
+    },
+    "mediamtx": {
+      "description": "MediaMTX component for video streaming.",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "image": {
+          "properties": {
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "registry": {
+              "default": "docker.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bluenviron/mediamtx",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "1.13.0-ffmpeg@sha256:1206e76bcbe9ced8975a0905a91a58b3a4a2577f395b6535e85595e755731cff",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "tcpSocket": {
+              "properties": {
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "title": "tcpSocket",
+              "type": "object"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tcpSocket",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "logLevel": {
+          "default": "info",
+          "required": [],
+          "title": "logLevel",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "publisherResources": {
+          "description": "Resources for the web initContainer that seeds mediamtx.yml.",
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "64Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "10m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "16Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "publisherResources",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 15,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "tcpSocket": {
+              "properties": {
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port"
+              ],
+              "title": "tcpSocket",
+              "type": "object"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tcpSocket",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "1",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "512Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "50m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "ports": {
+              "properties": {
+                "api": {
+                  "properties": {
+                    "port": {
+                      "default": 9997,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "api",
+                  "type": "object"
+                },
+                "hls": {
+                  "properties": {
+                    "port": {
+                      "default": 8888,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "hls",
+                  "type": "object"
+                },
+                "rtmp": {
+                  "properties": {
+                    "port": {
+                      "default": 1935,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "rtmp",
+                  "type": "object"
+                },
+                "rtsp": {
+                  "properties": {
+                    "port": {
+                      "default": 8554,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "rtsp",
+                  "type": "object"
+                },
+                "srt": {
+                  "properties": {
+                    "port": {
+                      "default": 8890,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "srt",
+                  "type": "object"
+                },
+                "webrtc": {
+                  "properties": {
+                    "port": {
+                      "default": 8889,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "webrtc",
+                  "type": "object"
+                },
+                "webrtc_udp": {
+                  "properties": {
+                    "port": {
+                      "default": 8189,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "protocol"
+                  ],
+                  "title": "webrtc_udp",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "api",
+                "rtsp",
+                "rtmp",
+                "hls",
+                "webrtc",
+                "webrtc_udp",
+                "srt"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "type",
+            "annotations",
+            "ports"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Overrides for the chart-wide defaults above. Empty/unset falls back to\nthe top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "image",
+        "logLevel",
+        "publisherResources",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "service"
+      ],
+      "title": "mediamtx",
+      "type": "object"
+    },
+    "nameOverride": {
+      "default": "",
+      "required": [],
+      "title": "nameOverride",
+      "type": "string"
+    },
+    "persistence": {
+      "description": "Optional PVC for the OTS data folder; disabled by default (ephemeral).",
+      "properties": {
+        "accessModes": {
+          "items": {
+            "anyOf": [
+              {
+                "required": [],
+                "type": "string"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "accessModes",
+          "type": "array"
+        },
+        "annotations": {
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "enabled": {
+          "default": false,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "existingClaim": {
+          "default": "",
+          "required": [],
+          "title": "existingClaim",
+          "type": "string"
+        },
+        "mountPath": {
+          "default": "/app/ots",
+          "required": [],
+          "title": "mountPath",
+          "type": "string"
+        },
+        "size": {
+          "default": "8Gi",
+          "required": [],
+          "title": "size",
+          "type": "string"
+        },
+        "storageClass": {
+          "default": "",
+          "required": [],
+          "title": "storageClass",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "existingClaim",
+        "mountPath",
+        "annotations",
+        "accessModes",
+        "size",
+        "storageClass"
+      ],
+      "title": "persistence",
+      "type": "object"
+    },
+    "podSecurityContext": {
+      "description": "Chart-wide defaults; each component below can override these individually.\nThe OTS image runs as UID 1000 / GID 1024; security contexts must match.",
+      "properties": {
+        "fsGroup": {
+          "default": 1024,
+          "required": [],
+          "title": "fsGroup",
+          "type": "integer"
+        },
+        "runAsGroup": {
+          "default": 1024,
+          "required": [],
+          "title": "runAsGroup",
+          "type": "integer"
+        },
+        "runAsNonRoot": {
+          "default": true,
+          "required": [],
+          "title": "runAsNonRoot",
+          "type": "boolean"
+        },
+        "runAsUser": {
+          "default": 1000,
+          "required": [],
+          "title": "runAsUser",
+          "type": "integer"
+        },
+        "seccompProfile": {
+          "properties": {
+            "type": {
+              "default": "RuntimeDefault",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "title": "seccompProfile",
+          "type": "object"
+        }
+      },
+      "required": [
+        "fsGroup",
+        "runAsUser",
+        "runAsGroup",
+        "runAsNonRoot",
+        "seccompProfile"
+      ],
+      "title": "podSecurityContext",
+      "type": "object"
+    },
+    "postgresql": {
+      "description": "Bundled PostgreSQL; set enabled=false and use the `database` block for\nexternal databases.",
+      "properties": {
+        "auth": {
+          "properties": {
+            "database": {
+              "default": "ots",
+              "required": [],
+              "title": "database",
+              "type": "string"
+            },
+            "existingSecret": {
+              "default": "",
+              "required": [],
+              "title": "existingSecret",
+              "type": "string"
+            },
+            "password": {
+              "default": "ots",
+              "required": [],
+              "title": "password",
+              "type": "string"
+            },
+            "secretKeys": {
+              "properties": {
+                "adminPasswordKey": {
+                  "default": "postgres-password",
+                  "required": [],
+                  "title": "adminPasswordKey",
+                  "type": "string"
+                },
+                "userPasswordKey": {
+                  "default": "password",
+                  "required": [],
+                  "title": "userPasswordKey",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "userPasswordKey",
+                "adminPasswordKey"
+              ],
+              "title": "secretKeys",
+              "type": "object"
+            },
+            "username": {
+              "default": "ots",
+              "required": [],
+              "title": "username",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "password",
+            "database",
+            "existingSecret",
+            "secretKeys"
+          ],
+          "title": "auth",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "image": {
+          "properties": {
+            "digest": {
+              "default": "sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d",
+              "required": [],
+              "title": "digest",
+              "type": "string"
+            },
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "registry": {
+              "default": "registry-1.docker.io",
+              "description": "The upstream bitnami chart defaults to the floating `latest` tag.\nPin the frozen bitnamilegacy build instead so the DB engine version\nis fixed. (Bitnami publishes only `latest` on docker.io/bitnami.)",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bitnamilegacy/postgresql",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "17.6.0-debian-12-r4",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "digest",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "primary": {
+          "properties": {
+            "initdb": {
+              "properties": {
+                "scripts": {
+                  "description": "Enable the postgis extension in the ots database. Keep the DB name\nin sync with postgresql.auth.database.",
+                  "properties": {
+                    "00-postgis.sh": {
+                      "default": "#!/bin/sh\nexport PGPASSWORD=\"$(cat /opt/bitnami/postgresql/secrets/postgres-password)\"\npsql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n",
+                      "required": [],
+                      "title": "00-postgis.sh",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "00-postgis.sh"
+                  ],
+                  "title": "scripts",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "scripts"
+              ],
+              "title": "initdb",
+              "type": "object"
+            },
+            "persistence": {
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "size": {
+                  "default": "8Gi",
+                  "required": [],
+                  "title": "size",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enabled",
+                "size"
+              ],
+              "title": "persistence",
+              "type": "object"
+            }
+          },
+          "required": [
+            "persistence",
+            "initdb"
+          ],
+          "title": "primary",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "auth",
+        "primary"
+      ],
+      "title": "postgresql",
+      "type": "object"
+    },
+    "rabbitmq": {
+      "properties": {
+        "architecture": {
+          "default": "single-node",
+          "required": [],
+          "title": "architecture",
+          "type": "string"
+        },
+        "auth": {
+          "properties": {
+            "existingSecret": {
+              "default": "",
+              "required": [],
+              "title": "existingSecret",
+              "type": "string"
+            },
+            "existingSecretErlangCookieKey": {
+              "default": "rabbitmq-erlang-cookie",
+              "required": [],
+              "title": "existingSecretErlangCookieKey",
+              "type": "string"
+            },
+            "existingSecretPasswordKey": {
+              "default": "rabbitmq-password",
+              "required": [],
+              "title": "existingSecretPasswordKey",
+              "type": "string"
+            },
+            "existingSecretUsernameKey": {
+              "default": "rabbitmq-username",
+              "required": [],
+              "title": "existingSecretUsernameKey",
+              "type": "string"
+            },
+            "password": {
+              "default": "ots",
+              "required": [],
+              "title": "password",
+              "type": "string"
+            },
+            "username": {
+              "default": "ots",
+              "required": [],
+              "title": "username",
+              "type": "string"
+            },
+            "vhost": {
+              "default": "/",
+              "required": [],
+              "title": "vhost",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "password",
+            "vhost",
+            "existingSecret",
+            "existingSecretUsernameKey",
+            "existingSecretPasswordKey",
+            "existingSecretErlangCookieKey"
+          ],
+          "title": "auth",
+          "type": "object"
+        },
+        "config": {
+          "properties": {
+            "extra": {
+              "default": "deprecated_features.permit.transient_nonexcl_queues = true\nmanagement.load_definitions = /etc/rabbitmq/definitions/definitions.json\nmqtt.listeners.tcp.default = 1883\nauth_backends.1 = internal\nauth_backends.2 = http\nauth_http.http_method = post\nauth_http.user_path = http://opentakserver-web:8081/api/rabbitmq/auth\nauth_http.vhost_path = http://opentakserver-web:8081/api/rabbitmq/vhost\nauth_http.resource_path = http://opentakserver-web:8081/api/rabbitmq/resource\nauth_http.topic_path = http://opentakserver-web:8081/api/rabbitmq/topic\n",
+              "required": [],
+              "title": "extra",
+              "type": "string"
+            }
+          },
+          "required": [
+            "extra"
+          ],
+          "title": "config",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "external": {
+          "description": "OTS only supports the default vhost (/) and AMQP port (5672), so only\nhost and credentials are configurable here.",
+          "properties": {
+            "existingSecret": {
+              "properties": {
+                "keys": {
+                  "properties": {
+                    "password": {
+                      "default": "password",
+                      "required": [],
+                      "title": "password",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "password"
+                  ],
+                  "title": "keys",
+                  "type": "object"
+                },
+                "name": {
+                  "default": "",
+                  "required": [],
+                  "title": "name",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "keys"
+              ],
+              "title": "existingSecret",
+              "type": "object"
+            },
+            "host": {
+              "default": "",
+              "required": [],
+              "title": "host",
+              "type": "string"
+            },
+            "password": {
+              "default": "guest",
+              "description": "password goes into a chart-managed Secret unless existingSecret is set",
+              "required": [],
+              "title": "password",
+              "type": "string"
+            },
+            "username": {
+              "default": "guest",
+              "required": [],
+              "title": "username",
+              "type": "string"
+            }
+          },
+          "required": [
+            "host",
+            "username",
+            "password",
+            "existingSecret"
+          ],
+          "title": "external",
+          "type": "object"
+        },
+        "extraVolumeMounts": {
+          "items": {
+            "anyOf": [
+              {
+                "properties": {
+                  "mountPath": {
+                    "default": "/etc/rabbitmq/definitions",
+                    "required": [],
+                    "title": "mountPath",
+                    "type": "string"
+                  },
+                  "name": {
+                    "default": "opentakserver-rabbitmq-definitions",
+                    "required": [],
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "readOnly": {
+                    "default": true,
+                    "required": [],
+                    "title": "readOnly",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "mountPath",
+                  "readOnly"
+                ],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumeMounts",
+          "type": "array"
+        },
+        "extraVolumes": {
+          "description": "The chart creates the definitions Secret under whatever secretName is\nreferenced here, so any release name works.",
+          "items": {
+            "anyOf": [
+              {
+                "properties": {
+                  "name": {
+                    "default": "opentakserver-rabbitmq-definitions",
+                    "required": [],
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "secret": {
+                    "properties": {
+                      "secretName": {
+                        "default": "opentakserver-rabbitmq-definitions",
+                        "required": [],
+                        "title": "secretName",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "secretName"
+                    ],
+                    "title": "secret",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name",
+                  "secret"
+                ],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "extraVolumes",
+          "type": "array"
+        },
+        "plugins": {
+          "description": "MQTT on 1883 with device auth delegated to the OTS API. The auth_http\nURLs must point at \"\u003crelease fullname\u003e-web\" on OTS_LISTENER_PORT; the\nshipped defaults assume the release is literally named \"opentakserver\".\nFor any other release name, rewrite the host in these URLs (subchart\nvalues cannot be templated).",
+          "properties": {
+            "extra": {
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  },
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "extra",
+              "type": "array"
+            }
+          },
+          "required": [
+            "extra"
+          ],
+          "title": "plugins",
+          "type": "object"
+        },
+        "queueDefaults": {
+          "properties": {
+            "type": {
+              "default": "classic",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "title": "queueDefaults",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "extraPorts": {
+              "items": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "name": {
+                        "default": "mqtt",
+                        "required": [],
+                        "title": "name",
+                        "type": "string"
+                      },
+                      "port": {
+                        "default": 1883,
+                        "required": [],
+                        "title": "port",
+                        "type": "integer"
+                      },
+                      "protocol": {
+                        "default": "TCP",
+                        "required": [],
+                        "title": "protocol",
+                        "type": "string"
+                      },
+                      "targetPort": {
+                        "default": 1883,
+                        "required": [],
+                        "title": "targetPort",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "port",
+                      "targetPort",
+                      "protocol"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "extraPorts",
+              "type": "array"
+            }
+          },
+          "required": [
+            "extraPorts"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "singleNode": {
+          "properties": {
+            "persistence": {
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "title": "persistence",
+              "type": "object"
+            }
+          },
+          "required": [
+            "persistence"
+          ],
+          "title": "singleNode",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "architecture",
+        "auth",
+        "queueDefaults",
+        "plugins",
+        "config",
+        "service",
+        "singleNode",
+        "extraVolumes",
+        "extraVolumeMounts",
+        "external"
+      ],
+      "title": "rabbitmq",
+      "type": "object"
+    },
+    "rbac": {
+      "properties": {
+        "create": {
+          "default": true,
+          "description": "Create the Role/RoleBinding used by the ca-publisher sidecar.",
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "create"
+      ],
+      "title": "rbac",
+      "type": "object"
+    },
+    "securityContext": {
+      "properties": {
+        "allowPrivilegeEscalation": {
+          "default": false,
+          "required": [],
+          "title": "allowPrivilegeEscalation",
+          "type": "boolean"
+        },
+        "capabilities": {
+          "properties": {
+            "drop": {
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "drop",
+              "type": "array"
+            }
+          },
+          "required": [
+            "drop"
+          ],
+          "title": "capabilities",
+          "type": "object"
+        },
+        "readOnlyRootFilesystem": {
+          "default": false,
+          "required": [],
+          "title": "readOnlyRootFilesystem",
+          "type": "boolean"
+        },
+        "runAsGroup": {
+          "default": 1024,
+          "required": [],
+          "title": "runAsGroup",
+          "type": "integer"
+        },
+        "runAsNonRoot": {
+          "default": true,
+          "required": [],
+          "title": "runAsNonRoot",
+          "type": "boolean"
+        },
+        "runAsUser": {
+          "default": 1000,
+          "required": [],
+          "title": "runAsUser",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "allowPrivilegeEscalation",
+        "readOnlyRootFilesystem",
+        "runAsNonRoot",
+        "runAsUser",
+        "runAsGroup",
+        "capabilities"
+      ],
+      "title": "securityContext",
+      "type": "object"
+    },
+    "serviceAccount": {
+      "properties": {
+        "annotations": {
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "automount": {
+          "default": true,
+          "description": "Pod specs override this: only the web pod mounts the token (for the\nca-publisher sidecar); all other components set it false.",
+          "required": [],
+          "title": "automount",
+          "type": "boolean"
+        },
+        "create": {
+          "default": true,
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        },
+        "name": {
+          "default": "",
+          "required": [],
+          "title": "name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "create",
+        "automount",
+        "annotations",
+        "name"
+      ],
+      "title": "serviceAccount",
+      "type": "object"
+    },
+    "ui": {
+      "description": "UI component: nginx serving the SPA and proxying /api, /Marti and\n/socket.io to the web service (separate image, no OTS security defaults).",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 10,
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            },
+            "targetMemoryUtilizationPercentage": {
+              "default": "",
+              "required": [],
+              "title": "targetMemoryUtilizationPercentage",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage",
+            "targetMemoryUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "enrollment": {
+          "description": "TLS endpoint on 8446 for automatic certificate enrollment; nginx\nterminates TLS with the published OTS CA cert. Served by a dedicated\nService so it can be exposed (e.g. LoadBalancer) independently of the\nHTTP UI service, which stays ClusterIP + Ingress.",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "service": {
+              "properties": {
+                "annotations": {
+                  "required": [],
+                  "title": "annotations",
+                  "type": "object"
+                },
+                "port": {
+                  "default": 8446,
+                  "required": [],
+                  "title": "port",
+                  "type": "integer"
+                },
+                "type": {
+                  "default": "ClusterIP",
+                  "required": [],
+                  "title": "type",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "annotations",
+                "port"
+              ],
+              "title": "service",
+              "type": "object"
+            }
+          },
+          "required": [
+            "enabled",
+            "service"
+          ],
+          "title": "enrollment",
+          "type": "object"
+        },
+        "envFrom": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "httpRoute": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "hostnames": {
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "hostnames",
+              "type": "array"
+            },
+            "parentRefs": {
+              "items": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "name": {
+                        "default": "gateway",
+                        "required": [],
+                        "title": "name",
+                        "type": "string"
+                      },
+                      "sectionName": {
+                        "default": "http",
+                        "required": [],
+                        "title": "sectionName",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "sectionName"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "parentRefs",
+              "type": "array"
+            },
+            "rules": {
+              "items": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "matches": {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "properties": {
+                                "path": {
+                                  "properties": {
+                                    "type": {
+                                      "default": "PathPrefix",
+                                      "required": [],
+                                      "title": "type",
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "default": "/",
+                                      "required": [],
+                                      "title": "value",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "value"
+                                  ],
+                                  "title": "path",
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "type": "object"
+                            }
+                          ],
+                          "required": []
+                        },
+                        "required": [],
+                        "title": "matches",
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "matches"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "rules",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "annotations",
+            "parentRefs",
+            "hostnames",
+            "rules"
+          ],
+          "title": "httpRoute",
+          "type": "object"
+        },
+        "image": {
+          "properties": {
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "registry": {
+              "default": "ghcr.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "brian7704/opentakserver-ui",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "master@sha256:da740d87f1d8a67821bd051591a037abcf7c714c0a15be6f578eef25cda7b81d",
+              "description": "Upstream only publishes the rolling `master` tag; pin the digest.",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "ingress": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "className": {
+              "default": "",
+              "required": [],
+              "title": "className",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "hosts": {
+              "items": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "host": {
+                        "default": "chart-example.local",
+                        "required": [],
+                        "title": "host",
+                        "type": "string"
+                      },
+                      "paths": {
+                        "items": {
+                          "anyOf": [
+                            {
+                              "properties": {
+                                "path": {
+                                  "default": "/",
+                                  "required": [],
+                                  "title": "path",
+                                  "type": "string"
+                                },
+                                "pathType": {
+                                  "default": "ImplementationSpecific",
+                                  "required": [],
+                                  "title": "pathType",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path",
+                                "pathType"
+                              ],
+                              "type": "object"
+                            }
+                          ],
+                          "required": []
+                        },
+                        "required": [],
+                        "title": "paths",
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "host",
+                      "paths"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "hosts",
+              "type": "array"
+            },
+            "tls": {
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "tls",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "className",
+            "annotations",
+            "hosts",
+            "tls"
+          ],
+          "title": "ingress",
+          "type": "object"
+        },
+        "livenessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "properties": {
+                "path": {
+                  "default": "/",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "properties": {
+                "path": {
+                  "default": "/",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 5,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "500m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "50m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "64Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "ports": {
+              "properties": {
+                "http": {
+                  "properties": {
+                    "port": {
+                      "default": 8080,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "targetPort": {
+                      "default": "http",
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "targetPort"
+                  ],
+                  "title": "http",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "http"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "type",
+            "annotations",
+            "ports"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Empty/unset serviceAccountName and imagePullSecrets fall back to the\nchart-wide defaults. podSecurityContext/securityContext stay empty by\ndefault: stock nginx must run its master process as root.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "startupProbe": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "image",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "envFrom",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "autoscaling",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "enrollment",
+        "service",
+        "ingress",
+        "httpRoute"
+      ],
+      "title": "ui",
+      "type": "object"
+    },
+    "web": {
+      "description": "Web component: the main `opentakserver` binary serving UI + API on 8081.",
+      "properties": {
+        "affinity": {
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 10,
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            },
+            "targetMemoryUtilizationPercentage": {
+              "default": "",
+              "required": [],
+              "title": "targetMemoryUtilizationPercentage",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage",
+            "targetMemoryUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "caPublisherResources": {
+          "description": "Resources for the ca-publisher sidecar.",
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "10m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "32Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "caPublisherResources",
+          "type": "object"
+        },
+        "enabled": {
+          "default": true,
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "envFrom": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "extraEnv": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraEnv",
+          "type": "array"
+        },
+        "imagePullSecrets": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "properties": {
+                "path": {
+                  "default": "/api/health",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 30,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 30,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "required": [],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "properties": {
+            "failureThreshold": {
+              "default": 5,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "properties": {
+                "path": {
+                  "default": "/api/health",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicaCount": {
+          "default": 1,
+          "required": [],
+          "title": "replicaCount",
+          "type": "integer"
+        },
+        "resources": {
+          "properties": {
+            "limits": {
+              "properties": {
+                "cpu": {
+                  "default": "1",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "1Gi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "256Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "required": [],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "properties": {
+            "annotations": {
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "enabled": {
+              "default": true,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "ports": {
+              "properties": {
+                "api": {
+                  "properties": {
+                    "port": {
+                      "default": 8081,
+                      "required": [],
+                      "title": "port",
+                      "type": "integer"
+                    },
+                    "targetPort": {
+                      "default": "api",
+                      "required": [],
+                      "title": "targetPort",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "port",
+                    "targetPort"
+                  ],
+                  "title": "api",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "api"
+              ],
+              "title": "ports",
+              "type": "object"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "enabled",
+            "type",
+            "annotations",
+            "ports"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccountName": {
+          "default": "",
+          "description": "Overrides for the chart-wide defaults above. Empty/unset falls back to\nthe top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.",
+          "required": [],
+          "title": "serviceAccountName",
+          "type": "string"
+        },
+        "startupProbe": {
+          "properties": {
+            "enabled": {
+              "default": false,
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "failureThreshold": {
+              "default": 30,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "properties": {
+                "path": {
+                  "default": "/api/health",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "api",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 10,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 5,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
+        "tolerations": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled",
+        "replicaCount",
+        "serviceAccountName",
+        "podSecurityContext",
+        "securityContext",
+        "imagePullSecrets",
+        "podAnnotations",
+        "podLabels",
+        "extraEnv",
+        "envFrom",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "caPublisherResources",
+        "autoscaling",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "startupProbe",
+        "service"
+      ],
+      "title": "web",
+      "type": "object"
+    }
+  },
+  "required": [
+    "global",
+    "image",
+    "imagePullSecrets",
+    "nameOverride",
+    "fullnameOverride",
+    "rbac",
+    "serviceAccount",
+    "podSecurityContext",
+    "securityContext",
+    "env",
+    "web",
+    "ui",
+    "eudHandler",
+    "cotParser",
+    "mediamtx",
+    "persistence",
+    "database",
+    "postgresql",
+    "rabbitmq"
+  ],
+  "type": "object"
+}
