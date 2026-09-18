@@ -23,20 +23,31 @@ tests:
           path: stringData["definitions.json"]
           pattern: '"name": "groups"'
 
-  - it: never seeds credentials or the guest user into definitions
+  - it: seeds only the OTS user - RabbitMQ skips default-user seeding when load_definitions is set
     asserts:
-      - notMatchRegex:
+      - matchRegex:
           path: stringData["definitions.json"]
-          pattern: '"users"'
-      - notMatchRegex:
+          pattern: '"name": "ots"'
+      - matchRegex:
           path: stringData["definitions.json"]
-          pattern: '"permissions"'
-      - notMatchRegex:
+          pattern: '"user": "ots"'
+      - matchRegex:
           path: stringData["definitions.json"]
-          pattern: '"password"'
+          pattern: '"password": "ots"'
       - notMatchRegex:
           path: stringData["definitions.json"]
           pattern: 'guest'
+
+  - it: seeds no users when the broker credentials come from an existing secret
+    set:
+      rabbitmq.auth.existingSecret: my-rabbitmq-auth
+    asserts:
+      - matchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"users": \[\]'
+      - notMatchRegex:
+          path: stringData["definitions.json"]
+          pattern: '"permissions"'
 
   - it: names the secret after the secretName referenced by rabbitmq.extraVolumes
     set:
