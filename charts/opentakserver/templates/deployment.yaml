@@ -1,12 +1,13 @@
 {{- if .Values.web.enabled }}
 {{- $mountPath := .Values.persistence.mountPath }}
+{{- $image := printf "%s/%s:%s" (.Values.global.image.registry | default .Values.image.registry | default "ghcr.io") .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
 {{- $initContainers := list }}
 {{- $extraContainers := list }}
 {{- $extraVolumes := list }}
 {{- if .Values.mediamtx.enabled }}
 {{- $initContainers = append $initContainers (dict
   "name" "mediamtx-config-seed"
-  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "image" $image
   "imagePullPolicy" .Values.image.pullPolicy
   "command" (list "/bin/sh" "-ec" (printf "mkdir -p %s/mediamtx && cp /seed/mediamtx.yml %s/mediamtx/mediamtx.yml" $mountPath $mountPath))
   "volumeMounts" (list
@@ -23,7 +24,7 @@
 {{- if eq (include "opentakserver.caPublishEnabled" .) "true" }}
 {{- $extraContainers = append $extraContainers (dict
   "name" "ca-publisher"
-  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "image" $image
   "imagePullPolicy" .Values.image.pullPolicy
   "command" (list "/app/venv/bin/python" "/scripts/ca_publisher.py")
   "env" (list
@@ -55,5 +56,6 @@
       "initContainers" $initContainers
       "extraContainers" $extraContainers
       "extraVolumes" $extraVolumes
+      "automountServiceAccountToken" (eq (include "opentakserver.caPublishEnabled" .) "true")
     ) }}
 {{- end }}

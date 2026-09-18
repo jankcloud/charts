@@ -42,14 +42,14 @@ spec:
     {{- if $port.enabled }}
     - port: {{ $port.port }}
       targetPort: {{ $port.targetPort }}
-      protocol: {{ if eq $name "udp" }}UDP{{ else }}TCP{{ end }}
+      protocol: {{ $port.protocol | default "TCP" }}
       name: {{ $name }}
     {{- end }}
     {{- end }}
   selector:
     {{- include "opentakserver.eudHandlerSelectorLabels" . | nindent 4 }}
-{{- end }}
 ---
+{{- end }}
 {{- if and .Values.ui.enabled .Values.ui.service.enabled .Values.web.enabled }}
 apiVersion: v1
 kind: Service
@@ -73,8 +73,8 @@ spec:
     {{- end }}
   selector:
     {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
-{{- end }}
 ---
+{{- end }}
 {{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.web.enabled }}
 apiVersion: v1
 kind: Service
@@ -96,8 +96,8 @@ spec:
       name: enrollment
   selector:
     {{- include "opentakserver.uiSelectorLabels" . | nindent 4 }}
-{{- end }}
 ---
+{{- end }}
 {{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
 apiVersion: v1
 kind: Service

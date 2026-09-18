@@ -9,7 +9,6 @@
       "command" (list "/app/venv/bin/cot_parser")
       "extraContainerEnv" (list
         (dict "name" "OTS_COT_PARSER_PROCESSES" "value" (.Values.cotParser.processes | toString))
-        (dict "name" "OTS_RABBITMQ_PREFETCH" "value" (.Values.cotParser.prefetch | toString))
       )
     ) }}
 {{- end }}

@@ -19,7 +19,6 @@ data:
     SECRET = os.environ["OTS_CA_SECRET_NAME"]
     SA_DIR = "/var/run/secrets/kubernetes.io/serviceaccount"
     NAMESPACE = open(os.path.join(SA_DIR, "namespace")).read().strip()
-    TOKEN = open(os.path.join(SA_DIR, "token")).read().strip()
     API = "https://kubernetes.default.svc"
     CTX = ssl.create_default_context(cafile=os.path.join(SA_DIR, "ca.crt"))
 
@@ -45,16 +44,18 @@ data:
 
 
     def request(method, url, body):
+        # Re-read the token each call: bound service-account tokens rotate.
+        token = open(os.path.join(SA_DIR, "token")).read().strip()
         req = urllib.request.Request(
             url,
             method=method,
             data=json.dumps(body).encode(),
             headers={
-                "Authorization": "Bearer " + TOKEN,
+                "Authorization": "Bearer " + token,
                 "Content-Type": "application/json",
             },
         )
-        return urllib.request.urlopen(req, context=CTX)
+        return urllib.request.urlopen(req, context=CTX, timeout=15)
 
 
     def publish(data):

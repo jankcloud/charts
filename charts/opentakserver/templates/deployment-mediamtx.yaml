@@ -2,6 +2,7 @@
 {{- $ctx := . -}}
 {{- $values := .Values.mediamtx -}}
 {{- $caDir := "/ca" }}
+{{- $mtxImage := printf "%s/%s:%s" (.Values.global.image.registry | default $values.image.registry | default "docker.io") $values.image.repository $values.image.tag -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,14 +33,19 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ default (include "opentakserver.serviceAccountName" .) $values.serviceAccountName }}
+      automountServiceAccountToken: false
       {{- with $values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
         - name: wait-for-ca
-          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          image: "{{ $mtxImage }}"
           imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          {{- with $values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           command:
             - /bin/sh
             - -ec
@@ -54,7 +60,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          image: "{{ $mtxImage }}"
           imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
           args:
             - /etc/mediamtx/mediamtx.yml

@@ -49,7 +49,6 @@ A Helm chart for deploying OpenTAKServer
 | cotParser.podAnnotations | object | `{}` |  |
 | cotParser.podLabels | object | `{}` |  |
 | cotParser.podSecurityContext | object | `{}` |  |
-| cotParser.prefetch | int | `1` |  |
 | cotParser.processes | int | `1` |  |
 | cotParser.readinessProbe.exec.command[0] | string | `"/bin/sh"` |  |
 | cotParser.readinessProbe.exec.command[1] | string | `"-c"` |  |
@@ -77,12 +76,7 @@ A Helm chart for deploying OpenTAKServer
 | cotParser.volumeMounts | list | `[]` |  |
 | cotParser.volumes | list | `[]` |  |
 | database.database | string | `""` |  |
-| database.existingSecret.keys.database | string | `"database"` |  |
-| database.existingSecret.keys.host | string | `"host"` |  |
-| database.existingSecret.keys.password | string | `"password"` |  |
-| database.existingSecret.keys.port | string | `"port"` |  |
 | database.existingSecret.keys.uri | string | `"uri"` |  |
-| database.existingSecret.keys.username | string | `"username"` |  |
 | database.existingSecret.name | string | `""` |  |
 | database.host | string | `""` |  |
 | database.password | string | `""` |  |
@@ -135,12 +129,15 @@ A Helm chart for deploying OpenTAKServer
 | eudHandler.service.enabled | bool | `true` |  |
 | eudHandler.service.ports.ssl.enabled | bool | `true` |  |
 | eudHandler.service.ports.ssl.port | int | `8089` |  |
+| eudHandler.service.ports.ssl.protocol | string | `"TCP"` |  |
 | eudHandler.service.ports.ssl.targetPort | string | `"ssl"` |  |
 | eudHandler.service.ports.tcp.enabled | bool | `true` |  |
 | eudHandler.service.ports.tcp.port | int | `8088` |  |
+| eudHandler.service.ports.tcp.protocol | string | `"TCP"` |  |
 | eudHandler.service.ports.tcp.targetPort | string | `"tcp"` |  |
 | eudHandler.service.ports.udp.enabled | bool | `false` |  |
 | eudHandler.service.ports.udp.port | int | `8087` |  |
+| eudHandler.service.ports.udp.protocol | string | `"UDP"` |  |
 | eudHandler.service.ports.udp.targetPort | string | `"udp"` |  |
 | eudHandler.service.type | string | `"ClusterIP"` |  |
 | eudHandler.serviceAccountName | string | `""` |  |
@@ -175,16 +172,19 @@ A Helm chart for deploying OpenTAKServer
 | eudHandler.volumeMounts | list | `[]` |  |
 | eudHandler.volumes | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
+| global.image.registry | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"ghcr.io/brian7704/opentakserver"` |  |
-| image.tag | string | `""` |  |
+| image.registry | string | `"ghcr.io"` |  |
+| image.repository | string | `"brian7704/opentakserver"` |  |
+| image.tag | string | `"1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d"` |  |
 | imagePullSecrets | list | `[]` |  |
 | mediamtx.affinity | object | `{}` |  |
 | mediamtx.enabled | bool | `true` |  |
 | mediamtx.extraEnv | list | `[]` |  |
 | mediamtx.image.pullPolicy | string | `"IfNotPresent"` |  |
+| mediamtx.image.registry | string | `"docker.io"` |  |
 | mediamtx.image.repository | string | `"bluenviron/mediamtx"` |  |
-| mediamtx.image.tag | string | `"1.13.0-ffmpeg"` |  |
+| mediamtx.image.tag | string | `"1.13.0-ffmpeg@sha256:1206e76bcbe9ced8975a0905a91a58b3a4a2577f395b6535e85595e755731cff"` |  |
 | mediamtx.imagePullSecrets | list | `[]` |  |
 | mediamtx.livenessProbe.failureThreshold | int | `5` |  |
 | mediamtx.livenessProbe.initialDelaySeconds | int | `10` |  |
@@ -234,6 +234,7 @@ A Helm chart for deploying OpenTAKServer
 | mediamtx.volumes | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `false` |  |
 | persistence.existingClaim | string | `""` |  |
 | persistence.mountPath | string | `"/app/ots"` |  |
@@ -243,6 +244,7 @@ A Helm chart for deploying OpenTAKServer
 | podSecurityContext.runAsGroup | int | `1024` |  |
 | podSecurityContext.runAsNonRoot | bool | `true` |  |
 | podSecurityContext.runAsUser | int | `1000` |  |
+| podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | postgresql.auth.database | string | `"ots"` |  |
 | postgresql.auth.existingSecret | string | `""` |  |
 | postgresql.auth.password | string | `"ots"` |  |
@@ -250,6 +252,11 @@ A Helm chart for deploying OpenTAKServer
 | postgresql.auth.secretKeys.userPasswordKey | string | `"password"` |  |
 | postgresql.auth.username | string | `"ots"` |  |
 | postgresql.enabled | bool | `true` |  |
+| postgresql.image.digest | string | `"sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d"` |  |
+| postgresql.image.pullPolicy | string | `"IfNotPresent"` |  |
+| postgresql.image.registry | string | `"registry-1.docker.io"` |  |
+| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
+| postgresql.image.tag | string | `"17.6.0-debian-12-r4"` |  |
 | postgresql.primary.initdb.scripts."00-postgis.sh" | string | `"#!/bin/sh\nexport PGPASSWORD=\"$(cat /opt/bitnami/postgresql/secrets/postgres-password)\"\npsql -v ON_ERROR_STOP=1 -U postgres -d ots -c 'CREATE EXTENSION IF NOT EXISTS postgis;'\n"` |  |
 | postgresql.primary.persistence.enabled | bool | `false` |  |
 | postgresql.primary.persistence.size | string | `"8Gi"` |  |
@@ -263,17 +270,11 @@ A Helm chart for deploying OpenTAKServer
 | rabbitmq.auth.vhost | string | `"/"` |  |
 | rabbitmq.config.extra | string | `"deprecated_features.permit.transient_nonexcl_queues = true\nmanagement.load_definitions = /etc/rabbitmq/definitions/definitions.json\nmqtt.listeners.tcp.default = 1883\nauth_backends.1 = internal\nauth_backends.2 = http\nauth_http.http_method = post\nauth_http.user_path = http://opentakserver-web:8081/api/rabbitmq/auth\nauth_http.vhost_path = http://opentakserver-web:8081/api/rabbitmq/vhost\nauth_http.resource_path = http://opentakserver-web:8081/api/rabbitmq/resource\nauth_http.topic_path = http://opentakserver-web:8081/api/rabbitmq/topic\n"` |  |
 | rabbitmq.enabled | bool | `true` |  |
-| rabbitmq.external.existingSecret.keys.host | string | `"host"` |  |
 | rabbitmq.external.existingSecret.keys.password | string | `"password"` |  |
-| rabbitmq.external.existingSecret.keys.port | string | `"port"` |  |
-| rabbitmq.external.existingSecret.keys.username | string | `"username"` |  |
-| rabbitmq.external.existingSecret.keys.vhost | string | `"vhost"` |  |
 | rabbitmq.external.existingSecret.name | string | `""` |  |
 | rabbitmq.external.host | string | `""` |  |
 | rabbitmq.external.password | string | `"guest"` |  |
-| rabbitmq.external.port | int | `5672` |  |
 | rabbitmq.external.username | string | `"guest"` |  |
-| rabbitmq.external.vhost | string | `"/"` |  |
 | rabbitmq.extraVolumeMounts[0].mountPath | string | `"/etc/rabbitmq/definitions"` |  |
 | rabbitmq.extraVolumeMounts[0].name | string | `"opentakserver-rabbitmq-definitions"` |  |
 | rabbitmq.extraVolumeMounts[0].readOnly | bool | `true` |  |
@@ -287,6 +288,7 @@ A Helm chart for deploying OpenTAKServer
 | rabbitmq.service.extraPorts[0].protocol | string | `"TCP"` |  |
 | rabbitmq.service.extraPorts[0].targetPort | int | `1883` |  |
 | rabbitmq.singleNode.persistence.enabled | bool | `false` |  |
+| rbac.create | bool | `true` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.readOnlyRootFilesystem | bool | `false` |  |
@@ -318,8 +320,9 @@ A Helm chart for deploying OpenTAKServer
 | ui.httpRoute.rules[0].matches[0].path.type | string | `"PathPrefix"` |  |
 | ui.httpRoute.rules[0].matches[0].path.value | string | `"/"` |  |
 | ui.image.pullPolicy | string | `"IfNotPresent"` |  |
-| ui.image.repository | string | `"ghcr.io/brian7704/opentakserver-ui"` |  |
-| ui.image.tag | string | `"master"` |  |
+| ui.image.registry | string | `"ghcr.io"` |  |
+| ui.image.repository | string | `"brian7704/opentakserver-ui"` |  |
+| ui.image.tag | string | `"master@sha256:da740d87f1d8a67821bd051591a037abcf7c714c0a15be6f578eef25cda7b81d"` |  |
 | ui.imagePullSecrets | list | `[]` |  |
 | ui.ingress.annotations | object | `{}` |  |
 | ui.ingress.className | string | `""` |  |

@@ -113,10 +113,21 @@ app.kubernetes.io/component: ui
 {{- end }}
 
 {{/*
-RabbitMQ definitions ConfigMap name.
+Name of the RabbitMQ definitions Secret. Matches the secretName referenced
+in rabbitmq.extraVolumes (which is static values and cannot be templated),
+falling back to "<fullname>-rabbitmq-definitions" when no secret volume is
+configured.
 */}}
 {{- define "opentakserver.rabbitmqDefinitionsName" -}}
-{{- printf "%s-rabbitmq-definitions" (include "opentakserver.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- $name := printf "%s-rabbitmq-definitions" (include "opentakserver.fullname" .) -}}
+{{- range .Values.rabbitmq.extraVolumes -}}
+{{- with .secret -}}
+{{- if .secretName -}}
+{{- $name = .secretName -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- $name | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -175,29 +186,37 @@ PVC name for the OTS data folder.
 {{- end }}
 
 {{/*
+Fullname of the bundled rabbitmq subchart (mirrors its own naming logic:
+<release>-rabbitmq unless the release already contains "rabbitmq", with
+nameOverride/fullnameOverride support).
+*/}}
+{{- define "opentakserver.rabbitmqFullname" -}}
+{{- if .Values.rabbitmq.fullnameOverride -}}
+{{- .Values.rabbitmq.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "rabbitmq" .Values.rabbitmq.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Resolved RabbitMQ host for the OTS container.
 */}}
 {{- define "opentakserver.rabbitmqHost" -}}
 {{- if .Values.rabbitmq.enabled }}
-{{- printf "%s-rabbitmq" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- include "opentakserver.rabbitmqFullname" . -}}
 {{- else }}
-{{- default (printf "%s-rabbitmq" .Release.Name) .Values.rabbitmq.external.host | trunc 63 | trimSuffix "-" -}}
+{{- default (include "opentakserver.rabbitmqFullname" .) .Values.rabbitmq.external.host | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 {{- end }}
 
 {{/*
-Resolved RabbitMQ AMQP port for the OTS container.
-*/}}
-{{- define "opentakserver.rabbitmqPort" -}}
-{{- if .Values.rabbitmq.enabled }}
-{{- 5672 -}}
-{{- else }}
-{{- .Values.rabbitmq.external.port | default 5672 -}}
-{{- end }}
-{{- end }}
-
-{{/*
-Resolved RabbitMQ username for the OTS container.
+Resolved RabbitMQ username for the OTS container. OTS only supports the
+default vhost (/) and port (5672), so neither is resolved here.
 */}}
 {{- define "opentakserver.rabbitmqUsername" -}}
 {{- if .Values.rabbitmq.enabled }}
@@ -219,21 +238,28 @@ Resolved RabbitMQ password for the OTS container.
 {{- end }}
 
 {{/*
-Resolved RabbitMQ vhost for the OTS container.
+Fullname of the bundled postgresql subchart (mirrors the bitnami naming
+logic: <release>-postgresql unless the release already contains
+"postgresql", with nameOverride/fullnameOverride support).
 */}}
-{{- define "opentakserver.rabbitmqVhost" -}}
-{{- if .Values.rabbitmq.enabled }}
-{{- .Values.rabbitmq.auth.vhost | default "/" -}}
-{{- else }}
-{{- .Values.rabbitmq.external.vhost | default "/" -}}
-{{- end }}
-{{- end }}
+{{- define "opentakserver.postgresqlFullname" -}}
+{{- if .Values.postgresql.fullnameOverride -}}
+{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Name of the bundled PostgreSQL service.
 */}}
 {{- define "opentakserver.postgresqlHost" -}}
-{{- printf "%s-postgresql" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- include "opentakserver.postgresqlFullname" . -}}
 {{- end }}
 
 {{/*
@@ -304,7 +330,7 @@ Key within the database secret that holds the user password.
 {{- if .Values.postgresql.enabled -}}
 {{- .Values.postgresql.auth.secretKeys.userPasswordKey | default "password" -}}
 {{- else -}}
-{{- .Values.database.existingSecret.keys.password | default "password" -}}
+{{- "db-password" -}}
 {{- end -}}
 {{- end }}
 
@@ -316,7 +342,7 @@ RabbitMQ secret name.
 {{- if .Values.rabbitmq.auth.existingSecret -}}
 {{- .Values.rabbitmq.auth.existingSecret -}}
 {{- else -}}
-{{- printf "%s-rabbitmq-auth" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-auth" (include "opentakserver.rabbitmqFullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- else -}}
 {{- if .Values.rabbitmq.external.existingSecret.name -}}
@@ -333,8 +359,10 @@ Key within the RabbitMQ secret that holds the password.
 {{- define "opentakserver.rabbitmqPasswordKey" -}}
 {{- if .Values.rabbitmq.enabled -}}
 {{- .Values.rabbitmq.auth.existingSecretPasswordKey | default "rabbitmq-password" -}}
-{{- else -}}
+{{- else if .Values.rabbitmq.external.existingSecret.name -}}
 {{- .Values.rabbitmq.external.existingSecret.keys.password | default "password" -}}
+{{- else -}}
+{{- "rabbitmq-password" -}}
 {{- end -}}
 {{- end }}
 
@@ -356,6 +384,13 @@ cot-parser).
 {{- $initContainers := .initContainers -}}
 {{- $extraContainers := .extraContainers -}}
 {{- $extraVolumes := .extraVolumes -}}
+{{- $registry := $ctx.Values.global.image.registry | default $ctx.Values.image.registry | default "ghcr.io" -}}
+{{- $resolvedSC := default $ctx.Values.securityContext $values.securityContext -}}
+{{- range $c := concat (default (list) $initContainers) (default (list) $extraContainers) -}}
+{{- if not (hasKey $c "securityContext") -}}
+{{- $_ := set $c "securityContext" $resolvedSC -}}
+{{- end -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -388,6 +423,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ default (include "opentakserver.serviceAccountName" $ctx) $values.serviceAccountName }}
+      automountServiceAccountToken: {{ .automountServiceAccountToken | default false }}
       {{- with (default $ctx.Values.podSecurityContext $values.podSecurityContext) }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -398,11 +434,11 @@ spec:
       {{- end }}
       containers:
         - name: {{ .containerName }}
-          {{- with (default $ctx.Values.securityContext $values.securityContext) }}
+          {{- with $resolvedSC }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $ctx.Values.image.repository }}:{{ $ctx.Values.image.tag | default $ctx.Chart.AppVersion }}"
+          image: "{{ $registry }}/{{ $ctx.Values.image.repository }}:{{ $ctx.Values.image.tag | default $ctx.Chart.AppVersion }}"
           imagePullPolicy: {{ $ctx.Values.image.pullPolicy }}
           {{- with .command }}
           command:
@@ -482,7 +518,7 @@ spec:
 {{- end }}
 
 {{- define "opentakserver.caPublishEnabled" -}}
-{{- if or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled (and .Values.ui.enabled .Values.ui.enrollment.enabled) -}}
+{{- if and .Values.web.enabled (or (and .Values.eudHandler.enabled .Values.eudHandler.ssl.enabled) (and .Values.eudHandler.enabled (eq .Values.eudHandler.mode "ssl")) .Values.mediamtx.enabled (and .Values.ui.enabled .Values.ui.enrollment.enabled)) -}}
 true
 {{- end -}}
 {{- end }}
@@ -540,8 +576,6 @@ http://localhost:{{ .Values.mediamtx.service.ports.api.port }}
     secretKeyRef:
       name: {{ include "opentakserver.rabbitmqSecretName" . }}
       key: {{ include "opentakserver.rabbitmqPasswordKey" . }}
-- name: OTS_RABBITMQ_VHOST
-  value: {{ include "opentakserver.rabbitmqVhost" . | quote }}
 - name: OTS_MEDIAMTX_ENABLE
   value: {{ .Values.env.OTS_MEDIAMTX_ENABLE | default .Values.mediamtx.enabled | quote }}
 - name: OTS_MEDIAMTX_API_ADDRESS
@@ -559,14 +593,6 @@ http://localhost:{{ .Values.mediamtx.service.ports.api.port }}
       key: {{ .Values.database.existingSecret.keys.uri | default "uri" }}
       optional: true
 {{- else if .Values.postgresql.enabled }}
-- name: OTS_DB_HOST
-  value: {{ include "opentakserver.databaseHost" . | quote }}
-- name: OTS_DB_PORT
-  value: {{ include "opentakserver.databasePort" . | quote }}
-- name: OTS_DB_NAME
-  value: {{ include "opentakserver.databaseName" . | quote }}
-- name: OTS_DB_USERNAME
-  value: {{ include "opentakserver.databaseUsername" . | quote }}
 - name: OTS_DB_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -574,27 +600,13 @@ http://localhost:{{ .Values.mediamtx.service.ports.api.port }}
       key: {{ include "opentakserver.databasePasswordKey" . }}
 - name: SQLALCHEMY_DATABASE_URI
   value: {{ printf "postgresql+psycopg://%s:$(OTS_DB_PASSWORD)@%s:%s/%s" (include "opentakserver.databaseUsername" .) (include "opentakserver.databaseHost" .) (include "opentakserver.databasePort" .) (include "opentakserver.databaseName" .) | quote }}
-{{- else }}
-- name: SQLALCHEMY_DATABASE_URI
-  valueFrom:
-    secretKeyRef:
-      name: {{ include "opentakserver.databaseSecretName" . }}
-      key: {{ .Values.database.existingSecret.keys.uri | default "uri" }}
-      optional: true
-{{- if .Values.database.host }}
-- name: OTS_DB_HOST
-  value: {{ .Values.database.host | quote }}
-- name: OTS_DB_PORT
-  value: {{ .Values.database.port | quote }}
-- name: OTS_DB_NAME
-  value: {{ .Values.database.database | quote }}
-- name: OTS_DB_USERNAME
-  value: {{ .Values.database.username | quote }}
+{{- else if .Values.database.host }}
 - name: OTS_DB_PASSWORD
   valueFrom:
     secretKeyRef:
       name: {{ include "opentakserver.databaseSecretName" . }}
       key: {{ include "opentakserver.databasePasswordKey" . }}
-{{- end }}
+- name: SQLALCHEMY_DATABASE_URI
+  value: {{ printf "postgresql+psycopg://%s:$(OTS_DB_PASSWORD)@%s:%s/%s" .Values.database.username .Values.database.host (.Values.database.port | default 5432 | toString) .Values.database.database | quote }}
 {{- end }}
 {{- end }}

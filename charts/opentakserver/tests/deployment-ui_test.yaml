@@ -14,7 +14,7 @@ tests:
           value: RELEASE-NAME-opentakserver-ui
       - equal:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/brian7704/opentakserver-ui:master
+          value: ghcr.io/brian7704/opentakserver-ui:master@sha256:da740d87f1d8a67821bd051591a037abcf7c714c0a15be6f578eef25cda7b81d
       - equal:
           path: spec.template.spec.containers[0].ports[0].containerPort
           value: 80
@@ -53,7 +53,8 @@ tests:
 
   - it: honors a per-component image override
     set:
-      ui.image.repository: example.com/ots-ui
+      ui.image.registry: example.com
+      ui.image.repository: ots-ui
       ui.image.tag: v1.2.3
     asserts:
       - equal:
@@ -108,3 +109,9 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: does not automount the service account token
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: false

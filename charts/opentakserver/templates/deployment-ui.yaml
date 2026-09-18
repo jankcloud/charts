@@ -1,6 +1,7 @@
 {{- if and .Values.ui.enabled .Values.web.enabled }}
 {{- $ctx := . -}}
 {{- $values := .Values.ui -}}
+{{- $uiImage := printf "%s/%s:%s" (.Values.global.image.registry | default $values.image.registry | default "ghcr.io") $values.image.repository $values.image.tag -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,6 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ default (include "opentakserver.serviceAccountName" .) $values.serviceAccountName }}
+      automountServiceAccountToken: false
       {{- with $values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -40,8 +42,12 @@ spec:
       {{- if $values.enrollment.enabled }}
       initContainers:
         - name: wait-for-ca
-          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          image: "{{ $uiImage }}"
           imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
+          {{- with $values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           command:
             - /bin/sh
             - -c
@@ -59,7 +65,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $values.image.repository }}:{{ $values.image.tag }}"
+          image: "{{ $uiImage }}"
           imagePullPolicy: {{ $values.image.pullPolicy | default "IfNotPresent" }}
           {{- with $values.extraEnv }}
           env:

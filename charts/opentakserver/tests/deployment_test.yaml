@@ -27,11 +27,27 @@ tests:
           path: spec.template.spec.containers[0].image
           value: ghcr.io/brian7704/opentakserver:1.7.13
 
+  - it: uses the digest-pinned default tag
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/brian7704/opentakserver:1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d
+
   - it: falls back to the chart appVersion when image.tag is empty
+    set:
+      image.tag: ""
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
           value: ghcr.io/brian7704/opentakserver:1.7.13
+
+  - it: honors a global image registry override
+    set:
+      global.image.registry: mirror.internal
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: mirror.internal/brian7704/opentakserver:1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d
 
   - it: sets default OTS runtime env vars
     asserts:
@@ -63,7 +79,6 @@ tests:
         enabled: false
         external:
           host: rabbitmq.example.internal
-          port: 5673
           username: ext-user
           existingSecret:
             name: my-rabbitmq-secret
@@ -173,3 +188,21 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.httpGet.path
           value: /api/health
+
+  - it: automounts the service account token for the ca-publisher sidecar
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+
+  - it: applies the hardened securityContext to sidecar and init containers
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.initContainers[0].securityContext.runAsNonRoot
+          value: true

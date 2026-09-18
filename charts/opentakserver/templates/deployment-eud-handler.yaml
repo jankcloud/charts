@@ -18,7 +18,7 @@
 {{- if $sslSidecar }}
 {{- $extraContainers = append $extraContainers (dict
   "name" "eud-handler-ssl"
-  "image" (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
+  "image" (printf "%s/%s:%s" (.Values.global.image.registry | default .Values.image.registry | default "ghcr.io") .Values.image.repository (.Values.image.tag | default .Chart.AppVersion))
   "imagePullPolicy" .Values.image.pullPolicy
   "command" (list "/bin/sh" "-ec" (printf "%s /app/venv/bin/eud_handler --ssl" $waitForCa))
   "env" (include "opentakserver.env" $ | fromYamlArray)

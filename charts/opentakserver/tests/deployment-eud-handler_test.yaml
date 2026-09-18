@@ -130,3 +130,18 @@ tests:
             name: ots-data
             persistentVolumeClaim:
               claimName: RELEASE-NAME-opentakserver-data
+
+  - it: does not automount the service account token
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: false
+
+  - it: applies the hardened securityContext to the ssl sidecar
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[1].securityContext.allowPrivilegeEscalation
+          value: false

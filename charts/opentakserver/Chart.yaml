@@ -7,6 +7,7 @@ version: 0.2.0
 # renovate: image=ghcr.io/brian7704/opentakserver
 appVersion: "1.7.13"
 home: https://opentakserver.io
+icon: https://opentakserver.io/wp-content/uploads/2024/09/cropped-ots-logo-1-32x32.png
 sources:
   - https://github.com/jankcloud/charts/tree/main/charts/opentakserver
   - https://github.com/brian7704/OpenTAKServer

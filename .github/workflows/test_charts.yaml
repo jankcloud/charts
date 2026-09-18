@@ -95,8 +95,8 @@ jobs:
             dependencies:
               fetch: true
               repositories:
-                - name: bitnami
-                  url: https://charts.bitnami.com/bitnami
+                - name: helmforge
+                  url: https://repo.helmforge.dev
           - chart: servarr-stack
             chart_path: charts/servarr-stack
             unit_tests_enabled: true

@@ -170,13 +170,6 @@
           "title": "podSecurityContext",
           "type": "object"
         },
-        "prefetch": {
-          "default": 1,
-          "description": "RabbitMQ consumer prefetch count.",
-          "required": [],
-          "title": "prefetch",
-          "type": "integer"
-        },
         "processes": {
           "default": 1,
           "description": "Additional worker processes forked inside each pod.",
@@ -428,7 +421,6 @@
         "enabled",
         "replicaCount",
         "processes",
-        "prefetch",
         "serviceAccountName",
         "podSecurityContext",
         "securityContext",
@@ -460,54 +452,19 @@
           "type": "string"
         },
         "existingSecret": {
-          "description": "Credentials/host from an externally managed Secret.",
+          "description": "URI from an externally managed Secret (must contain a full SQLAlchemy\nURI under keys.uri).",
           "properties": {
             "keys": {
               "properties": {
-                "database": {
-                  "default": "database",
-                  "required": [],
-                  "title": "database",
-                  "type": "string"
-                },
-                "host": {
-                  "default": "host",
-                  "required": [],
-                  "title": "host",
-                  "type": "string"
-                },
-                "password": {
-                  "default": "password",
-                  "required": [],
-                  "title": "password",
-                  "type": "string"
-                },
-                "port": {
-                  "default": "port",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                },
                 "uri": {
                   "default": "uri",
                   "required": [],
                   "title": "uri",
                   "type": "string"
-                },
-                "username": {
-                  "default": "username",
-                  "required": [],
-                  "title": "username",
-                  "type": "string"
                 }
               },
               "required": [
-                "uri",
-                "host",
-                "port",
-                "database",
-                "username",
-                "password"
+                "uri"
               ],
               "title": "keys",
               "type": "object"
@@ -528,6 +485,7 @@
         },
         "host": {
           "default": "",
+          "description": "Field-wise external database. The password goes into a chart-managed\nSecret and is interpolated into SQLALCHEMY_DATABASE_URI at runtime.",
           "required": [],
           "title": "host",
           "type": "string"
@@ -780,7 +738,7 @@
         },
         "mode": {
           "default": "tcp",
-          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container.",
+          "description": "One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the\nprimary container.\nNOTE: the default livenessProbe/readinessProbe check the TCP 8088\nsocket; when mode is `ssl` or `udp`, override them to match the\nlistener (8089 = 0x1F99; 8087 is UDP, see /proc/net/udp).",
           "required": [],
           "title": "mode",
           "type": "string"
@@ -967,6 +925,12 @@
                       "title": "port",
                       "type": "integer"
                     },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
                     "targetPort": {
                       "default": "ssl",
                       "required": [],
@@ -977,7 +941,8 @@
                   "required": [
                     "enabled",
                     "port",
-                    "targetPort"
+                    "targetPort",
+                    "protocol"
                   ],
                   "title": "ssl",
                   "type": "object"
@@ -996,6 +961,12 @@
                       "title": "port",
                       "type": "integer"
                     },
+                    "protocol": {
+                      "default": "TCP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
                     "targetPort": {
                       "default": "tcp",
                       "required": [],
@@ -1006,7 +977,8 @@
                   "required": [
                     "enabled",
                     "port",
-                    "targetPort"
+                    "targetPort",
+                    "protocol"
                   ],
                   "title": "tcp",
                   "type": "object"
@@ -1025,6 +997,12 @@
                       "title": "port",
                       "type": "integer"
                     },
+                    "protocol": {
+                      "default": "UDP",
+                      "required": [],
+                      "title": "protocol",
+                      "type": "string"
+                    },
                     "targetPort": {
                       "default": "udp",
                       "required": [],
@@ -1035,7 +1013,8 @@
                   "required": [
                     "enabled",
                     "port",
-                    "targetPort"
+                    "targetPort",
+                    "protocol"
                   ],
                   "title": "udp",
                   "type": "object"
@@ -1417,13 +1396,31 @@
       "type": "string"
     },
     "global": {
-      "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
-      "required": [],
+      "description": "yaml-language-server: $schema=values.schema.json\nGlobal values shared with subcharts. image.registry overrides the registry\nfor every image in this chart (air-gapped/mirrored registries).",
+      "properties": {
+        "image": {
+          "properties": {
+            "registry": {
+              "default": "",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry"
+          ],
+          "title": "image",
+          "type": "object"
+        }
+      },
+      "required": [
+        "image"
+      ],
       "title": "global",
       "type": "object"
     },
     "image": {
-      "description": "yaml-language-server: $schema=values.schema.json",
       "properties": {
         "pullPolicy": {
           "default": "IfNotPresent",
@@ -1431,14 +1428,20 @@
           "title": "pullPolicy",
           "type": "string"
         },
+        "registry": {
+          "default": "ghcr.io",
+          "required": [],
+          "title": "registry",
+          "type": "string"
+        },
         "repository": {
-          "default": "ghcr.io/brian7704/opentakserver",
+          "default": "brian7704/opentakserver",
           "required": [],
           "title": "repository",
           "type": "string"
         },
         "tag": {
-          "default": "",
+          "default": "1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d",
           "description": "Defaults to .Chart.AppVersion when empty.",
           "required": [],
           "title": "tag",
@@ -1446,6 +1449,7 @@
         }
       },
       "required": [
+        "registry",
         "repository",
         "pullPolicy",
         "tag"
@@ -1491,6 +1495,12 @@
               "title": "pullPolicy",
               "type": "string"
             },
+            "registry": {
+              "default": "docker.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
             "repository": {
               "default": "bluenviron/mediamtx",
               "required": [],
@@ -1498,13 +1508,14 @@
               "type": "string"
             },
             "tag": {
-              "default": "1.13.0-ffmpeg",
+              "default": "1.13.0-ffmpeg@sha256:1206e76bcbe9ced8975a0905a91a58b3a4a2577f395b6535e85595e755731cff",
               "required": [],
               "title": "tag",
               "type": "string"
             }
           },
           "required": [
+            "registry",
             "repository",
             "tag",
             "pullPolicy"
@@ -2049,6 +2060,11 @@
           "title": "accessModes",
           "type": "array"
         },
+        "annotations": {
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
         "enabled": {
           "default": false,
           "required": [],
@@ -2084,6 +2100,7 @@
         "enabled",
         "existingClaim",
         "mountPath",
+        "annotations",
         "accessModes",
         "size",
         "storageClass"
@@ -2117,13 +2134,29 @@
           "required": [],
           "title": "runAsUser",
           "type": "integer"
+        },
+        "seccompProfile": {
+          "properties": {
+            "type": {
+              "default": "RuntimeDefault",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "title": "seccompProfile",
+          "type": "object"
         }
       },
       "required": [
         "fsGroup",
         "runAsUser",
         "runAsGroup",
-        "runAsNonRoot"
+        "runAsNonRoot",
+        "seccompProfile"
       ],
       "title": "podSecurityContext",
       "type": "object"
@@ -2196,6 +2229,50 @@
           "title": "enabled",
           "type": "boolean"
         },
+        "image": {
+          "properties": {
+            "digest": {
+              "default": "sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d",
+              "required": [],
+              "title": "digest",
+              "type": "string"
+            },
+            "pullPolicy": {
+              "default": "IfNotPresent",
+              "required": [],
+              "title": "pullPolicy",
+              "type": "string"
+            },
+            "registry": {
+              "default": "registry-1.docker.io",
+              "description": "The upstream bitnami chart defaults to the floating `latest` tag.\nPin the frozen bitnamilegacy build instead so the DB engine version\nis fixed. (Bitnami publishes only `latest` on docker.io/bitnami.)",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
+            "repository": {
+              "default": "bitnamilegacy/postgresql",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "17.6.0-debian-12-r4",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "registry",
+            "repository",
+            "tag",
+            "digest",
+            "pullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
         "primary": {
           "properties": {
             "initdb": {
@@ -2256,6 +2333,7 @@
       },
       "required": [
         "enabled",
+        "image",
         "auth",
         "primary"
       ],
@@ -2349,48 +2427,21 @@
           "type": "boolean"
         },
         "external": {
+          "description": "OTS only supports the default vhost (/) and AMQP port (5672), so only\nhost and credentials are configurable here.",
           "properties": {
             "existingSecret": {
               "properties": {
                 "keys": {
                   "properties": {
-                    "host": {
-                      "default": "host",
-                      "required": [],
-                      "title": "host",
-                      "type": "string"
-                    },
                     "password": {
                       "default": "password",
                       "required": [],
                       "title": "password",
                       "type": "string"
-                    },
-                    "port": {
-                      "default": "port",
-                      "required": [],
-                      "title": "port",
-                      "type": "string"
-                    },
-                    "username": {
-                      "default": "username",
-                      "required": [],
-                      "title": "username",
-                      "type": "string"
-                    },
-                    "vhost": {
-                      "default": "vhost",
-                      "required": [],
-                      "title": "vhost",
-                      "type": "string"
                     }
                   },
                   "required": [
-                    "host",
-                    "port",
-                    "username",
-                    "password",
-                    "vhost"
+                    "password"
                   ],
                   "title": "keys",
                   "type": "object"
@@ -2417,35 +2468,22 @@
             },
             "password": {
               "default": "guest",
+              "description": "password goes into a chart-managed Secret unless existingSecret is set",
               "required": [],
               "title": "password",
               "type": "string"
-            },
-            "port": {
-              "default": 5672,
-              "required": [],
-              "title": "port",
-              "type": "integer"
             },
             "username": {
               "default": "guest",
               "required": [],
               "title": "username",
               "type": "string"
-            },
-            "vhost": {
-              "default": "/",
-              "required": [],
-              "title": "vhost",
-              "type": "string"
             }
           },
           "required": [
             "host",
-            "port",
             "username",
             "password",
-            "vhost",
             "existingSecret"
           ],
           "title": "external",
@@ -2490,7 +2528,7 @@
           "type": "array"
         },
         "extraVolumes": {
-          "description": "secretName must match \"\u003crelease fullname\u003e-rabbitmq-definitions\".",
+          "description": "The chart creates the definitions Secret under whatever secretName is\nreferenced here, so any release name works.",
           "items": {
             "anyOf": [
               {
@@ -2531,7 +2569,7 @@
           "type": "array"
         },
         "plugins": {
-          "description": "MQTT on 1883 with device auth delegated to the OTS API. The auth_http\nURLs must point at \"\u003crelease fullname\u003e-web\" on OTS_LISTENER_PORT.",
+          "description": "MQTT on 1883 with device auth delegated to the OTS API. The auth_http\nURLs must point at \"\u003crelease fullname\u003e-web\" on OTS_LISTENER_PORT; the\nshipped defaults assume the release is literally named \"opentakserver\".\nFor any other release name, rewrite the host in these URLs (subchart\nvalues cannot be templated).",
           "properties": {
             "extra": {
               "items": {
@@ -2668,6 +2706,22 @@
       "title": "rabbitmq",
       "type": "object"
     },
+    "rbac": {
+      "properties": {
+        "create": {
+          "default": true,
+          "description": "Create the Role/RoleBinding used by the ca-publisher sidecar.",
+          "required": [],
+          "title": "create",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "create"
+      ],
+      "title": "rbac",
+      "type": "object"
+    },
     "securityContext": {
       "properties": {
         "allowPrivilegeEscalation": {
@@ -2744,6 +2798,7 @@
         },
         "automount": {
           "default": true,
+          "description": "Pod specs override this: only the web pod mounts the token (for the\nca-publisher sidecar); all other components set it false.",
           "required": [],
           "title": "automount",
           "type": "boolean"
@@ -3023,20 +3078,28 @@
               "title": "pullPolicy",
               "type": "string"
             },
+            "registry": {
+              "default": "ghcr.io",
+              "required": [],
+              "title": "registry",
+              "type": "string"
+            },
             "repository": {
-              "default": "ghcr.io/brian7704/opentakserver-ui",
+              "default": "brian7704/opentakserver-ui",
               "required": [],
               "title": "repository",
               "type": "string"
             },
             "tag": {
-              "default": "master",
+              "default": "master@sha256:da740d87f1d8a67821bd051591a037abcf7c714c0a15be6f578eef25cda7b81d",
+              "description": "Upstream only publishes the rolling `master` tag; pin the digest.",
               "required": [],
               "title": "tag",
               "type": "string"
             }
           },
           "required": [
+            "registry",
             "repository",
             "tag",
             "pullPolicy"
@@ -4012,10 +4075,12 @@
     }
   },
   "required": [
+    "global",
     "image",
     "imagePullSecrets",
     "nameOverride",
     "fullnameOverride",
+    "rbac",
     "serviceAccount",
     "podSecurityContext",
     "securityContext",

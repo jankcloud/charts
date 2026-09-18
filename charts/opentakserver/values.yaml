@@ -1,16 +1,29 @@
 # yaml-language-server: $schema=values.schema.json
+# Global values shared with subcharts. image.registry overrides the registry
+# for every image in this chart (air-gapped/mirrored registries).
+global:
+  image:
+    registry: ""
+
 image:
-  repository: ghcr.io/brian7704/opentakserver
+  registry: ghcr.io
+  repository: brian7704/opentakserver
   pullPolicy: IfNotPresent
   # Defaults to .Chart.AppVersion when empty.
-  tag: ""
+  tag: "1.7.13@sha256:96190757acb799fa9d1e3be50469706610b64fbc9c5c1ed280e55fa6f0b06e4d"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+rbac:
+  # Create the Role/RoleBinding used by the ca-publisher sidecar.
+  create: true
+
 serviceAccount:
   create: true
+  # Pod specs override this: only the web pod mounts the token (for the
+  # ca-publisher sidecar); all other components set it false.
   automount: true
   annotations: {}
   name: ""
@@ -22,6 +35,8 @@ podSecurityContext:
   runAsUser: 1000
   runAsGroup: 1024
   runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
 
 securityContext:
   allowPrivilegeEscalation: false
@@ -123,8 +138,10 @@ ui:
   enabled: true
   replicaCount: 1
   image:
-    repository: ghcr.io/brian7704/opentakserver-ui
-    tag: master
+    registry: ghcr.io
+    repository: brian7704/opentakserver-ui
+    # Upstream only publishes the rolling `master` tag; pin the digest.
+    tag: "master@sha256:da740d87f1d8a67821bd051591a037abcf7c714c0a15be6f578eef25cda7b81d"
     pullPolicy: IfNotPresent
   # Empty/unset serviceAccountName and imagePullSecrets fall back to the
   # chart-wide defaults. podSecurityContext/securityContext stay empty by
@@ -221,6 +238,9 @@ eudHandler:
   replicaCount: 1
   # One of: tcp, ssl, udp. Maps to the eud_handler --ssl/--udp flags for the
   # primary container.
+  # NOTE: the default livenessProbe/readinessProbe check the TCP 8088
+  # socket; when mode is `ssl` or `udp`, override them to match the
+  # listener (8089 = 0x1F99; 8087 is UDP, see /proc/net/udp).
   mode: tcp
   # Additional `eud_handler --ssl` container (mTLS streaming); waits for the
   # CA material published by the web pod.
@@ -310,14 +330,17 @@ eudHandler:
         enabled: true
         port: 8088
         targetPort: tcp
+        protocol: TCP
       ssl:
         enabled: true
         port: 8089
         targetPort: ssl
+        protocol: TCP
       udp:
         enabled: false
         port: 8087
         targetPort: udp
+        protocol: UDP
 
 # CoT parser component: `cot_parser` binary consuming the cot_parser queue.
 cotParser:
@@ -325,8 +348,6 @@ cotParser:
   replicaCount: 1
   # Additional worker processes forked inside each pod.
   processes: 1
-  # RabbitMQ consumer prefetch count.
-  prefetch: 1
   # Overrides for the chart-wide defaults above. Empty/unset falls back to
   # the top-level serviceAccount/podSecurityContext/securityContext/imagePullSecrets.
   serviceAccountName: ""
@@ -392,8 +413,9 @@ mediamtx:
   enabled: true
   replicaCount: 1
   image:
+    registry: docker.io
     repository: bluenviron/mediamtx
-    tag: "1.13.0-ffmpeg"
+    tag: "1.13.0-ffmpeg@sha256:1206e76bcbe9ced8975a0905a91a58b3a4a2577f395b6535e85595e755731cff"
     pullPolicy: IfNotPresent
   logLevel: info
   # Resources for the web initContainer that seeds mediamtx.yml.
@@ -471,6 +493,7 @@ persistence:
   enabled: false
   existingClaim: ""
   mountPath: /app/ots
+  annotations: {}
   accessModes:
     - ReadWriteOnce
   size: 8Gi
@@ -479,16 +502,14 @@ persistence:
 database:
   # Fully-formed SQLAlchemy URI. Takes precedence over everything else.
   uri: ""
-  # Credentials/host from an externally managed Secret.
+  # URI from an externally managed Secret (must contain a full SQLAlchemy
+  # URI under keys.uri).
   existingSecret:
     name: ""
     keys:
       uri: uri
-      host: host
-      port: port
-      database: database
-      username: username
-      password: password
+  # Field-wise external database. The password goes into a chart-managed
+  # Secret and is interpolated into SQLALCHEMY_DATABASE_URI at runtime.
   host: ""
   port: ""
   database: ""
@@ -499,6 +520,15 @@ database:
 # external databases.
 postgresql:
   enabled: true
+  image:
+    # The upstream bitnami chart defaults to the floating `latest` tag.
+    # Pin the frozen bitnamilegacy build instead so the DB engine version
+    # is fixed. (Bitnami publishes only `latest` on docker.io/bitnami.)
+    registry: registry-1.docker.io
+    repository: bitnamilegacy/postgresql
+    tag: "17.6.0-debian-12-r4"
+    digest: "sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d"
+    pullPolicy: IfNotPresent
   auth:
     username: ots
     password: ots
@@ -534,7 +564,10 @@ rabbitmq:
   queueDefaults:
     type: classic
   # MQTT on 1883 with device auth delegated to the OTS API. The auth_http
-  # URLs must point at "<release fullname>-web" on OTS_LISTENER_PORT.
+  # URLs must point at "<release fullname>-web" on OTS_LISTENER_PORT; the
+  # shipped defaults assume the release is literally named "opentakserver".
+  # For any other release name, rewrite the host in these URLs (subchart
+  # values cannot be templated).
   plugins:
     extra:
       - rabbitmq_mqtt
@@ -560,7 +593,8 @@ rabbitmq:
   singleNode:
     persistence:
       enabled: false
-  # secretName must match "<release fullname>-rabbitmq-definitions".
+  # The chart creates the definitions Secret under whatever secretName is
+  # referenced here, so any release name works.
   extraVolumes:
     - name: opentakserver-rabbitmq-definitions
       secret:
@@ -569,17 +603,14 @@ rabbitmq:
     - name: opentakserver-rabbitmq-definitions
       mountPath: /etc/rabbitmq/definitions
       readOnly: true
+  # OTS only supports the default vhost (/) and AMQP port (5672), so only
+  # host and credentials are configurable here.
   external:
     host: ""
-    port: 5672
     username: guest
+    # password goes into a chart-managed Secret unless existingSecret is set
     password: guest
-    vhost: /
     existingSecret:
       name: ""
       keys:
-        host: host
-        port: port
-        username: username
         password: password
-        vhost: vhost

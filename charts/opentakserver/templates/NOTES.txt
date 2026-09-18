@@ -8,7 +8,7 @@
    {{- if and .Values.eudHandler.enabled .Values.eudHandler.service.enabled }}
    - CoT: {{ include "opentakserver.cotsServiceName" . }} — TCP :{{ .Values.eudHandler.service.ports.tcp.port }}, SSL :{{ .Values.eudHandler.service.ports.ssl.port }}
    {{- end }}
-   {{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.ui.service.enabled .Values.web.enabled }}
+   {{- if and .Values.ui.enabled .Values.ui.enrollment.enabled .Values.web.enabled }}
    - Enrollment: {{ include "opentakserver.enrollmentServiceName" . }} — TLS :{{ .Values.ui.enrollment.service.port }} (certificate enrollment)
    {{- end }}
    {{- if and .Values.mediamtx.enabled .Values.mediamtx.service.enabled }}
@@ -16,7 +16,7 @@
    {{- end }}
 
 2. Configuration summary:
-   - Database mode: {{ if .Values.database.uri }}external SQLAlchemy URI{{ else if .Values.database.existingSecret.name }}external database via existingSecret{{ else }}SQLite (local, ephemeral unless persistence is enabled){{ end }}
+   - Database mode: {{ if .Values.postgresql.enabled }}bundled PostgreSQL ({{ include "opentakserver.postgresqlHost" . }}){{ else if .Values.database.uri }}external SQLAlchemy URI{{ else if .Values.database.existingSecret.name }}external database via existingSecret{{ else if .Values.database.host }}external database ({{ .Values.database.host }}){{ else }}SQLite (local, ephemeral unless persistence is enabled){{ end }}
    - RabbitMQ mode: {{ if .Values.rabbitmq.enabled }}bundled subchart{{ else }}external RabbitMQ{{ end }}
    - Persistence mode: {{ if .Values.persistence.enabled }}PVC ({{ include "opentakserver.pvcName" . }}){{ else }}ephemeral{{ end }}
    - Web: {{ if .Values.web.enabled }}{{ if .Values.web.autoscaling.enabled }}HPA {{ .Values.web.autoscaling.minReplicas }}-{{ .Values.web.autoscaling.maxReplicas }}{{ else }}{{ .Values.web.replicaCount }} replica(s){{ end }}{{ else }}disabled{{ end }}
@@ -25,5 +25,14 @@
    - Web UI: {{ if and .Values.ui.enabled .Values.web.enabled }}{{ if .Values.ui.autoscaling.enabled }}HPA {{ .Values.ui.autoscaling.minReplicas }}-{{ .Values.ui.autoscaling.maxReplicas }}{{ else }}{{ .Values.ui.replicaCount }} replica(s){{ end }}{{ else }}disabled{{ end }}
    - MediaMTX: {{ if .Values.mediamtx.enabled }}{{ .Values.mediamtx.replicaCount }} replica(s){{ else }}disabled{{ end }}
 
+{{- if and .Values.ui.enabled .Values.ui.service.enabled .Values.web.enabled }}
 3. Port-forward the web UI:
    kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "opentakserver.uiServiceName" . }} 8080:{{ .Values.ui.service.ports.http.port }}
+{{- end }}
+{{- if and .Values.rabbitmq.enabled (not (contains (include "opentakserver.webServiceName" .) (default "" .Values.rabbitmq.config.extra))) }}
+
+WARNING: rabbitmq.config.extra does not reference the web service
+"{{ include "opentakserver.webServiceName" . }}" in its auth_http URLs.
+MQTT device authentication will fail until the URLs are updated for this
+release name.
+{{- end }}
